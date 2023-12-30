@@ -1,0 +1,18 @@
+# Kickoff
+
+## 2023-12-29
+
+### Goals
+
+1) Using TDD develop the project in TypeScript
+2) Implement the project to run as a real-time system using the keyboard to simulate end users performing actions like inserting coins, selecting items to vend, pressing coin return to abort a transaction etc.
+3) Implement Continuous Delivery for the project
+4) Implement ATDD *acceptance test driven design*.
+5) Implement the real-time system as a FSM *finite state machine*.
+
+### Thoughts on where to begin
+
+* Diagram a physical vending machine to help to us think through what are the parts of a vending machine
+* Draw a FSM diagram to help us get our heads around how the machine works
+* Write more stories to augment the stories already given in the description
+* Pick one of the simplest things to implement from the stories and then write one test to get us going, following TDD rules.
