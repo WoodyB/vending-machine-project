@@ -1,7 +1,7 @@
 #git ignore
 node_modules/
 coverage/
-dist/
+bin/
 .DS_Store
 
 
