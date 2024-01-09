@@ -1,0 +1,7 @@
+#git ignore
+node_modules/
+coverage/
+dist/
+.DS_Store
+
+
