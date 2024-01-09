@@ -1,4 +1,4 @@
-import { VendingMachine } from '../../src/index';
+import { VendingMachine } from '../../src/VendingMachine';
 let lastStringDisplayed: string;
 
 describe('Vending Machine', () => {
