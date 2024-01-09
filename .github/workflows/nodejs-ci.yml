@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    concurrency:
+      group: commit_stage
+      cancel-in-progress: true
 
     strategy:
       matrix:
@@ -23,7 +26,11 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Install dependencies
       run: npm ci
-    - name: Commit Stage Tests
-      run: npm test
+    - name: Buid
+      run: npm run build
+    - name: Commit Stage Tests (linter)
+      run: npm run lint
+    - name: Commit Stage Tests (unit tests)      
+      run: npm run test:commit
 
   
