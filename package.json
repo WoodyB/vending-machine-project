@@ -1,0 +1,31 @@
+{
+  "name": "vending-machine-project",
+  "version": "0.0.1",
+  "description": "See project README.md",
+  "main": "bin/index.js",
+  "bin": { 
+  "vmp": "./bin/index.js"
+  }, 
+  "scripts": {
+    "build": "tsc src/* --outDir 'bin'",
+    "test:commit": "jest test/commit/",
+    "test:acceptance": "jest test/acceptance/",
+    "lint": "eslint ./src --ext .ts",
+    "start": "node bin/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "vending-machine-project"
+  },
+  "author": "Woody Beverley",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^29.5.8",
+    "@typescript-eslint/eslint-plugin": "^6.11.0",
+    "@typescript-eslint/parser": "^6.11.0",
+    "eslint": "^8.53.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  }
+}
