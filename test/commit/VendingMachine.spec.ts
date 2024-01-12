@@ -6,7 +6,7 @@ describe('Vending Machine', () => {
 
     it('Should display Hello world', () => {
       vendingMachine.start();  
-      expect(lastStringDisplayed).toBe('Hello world');
+      expect(lastStringDisplayed).toBe('Hello World');
     });
 });
 
