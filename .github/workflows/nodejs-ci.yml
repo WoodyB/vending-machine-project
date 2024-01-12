@@ -40,5 +40,7 @@ jobs:
       if: env.previous_tag
       with:
           package-path: ./package.json
+    - name: Build Tag
+      run: echo "patchVersion - ${{ steps.create_tag.outputs.patchVersion }}"
 
   
