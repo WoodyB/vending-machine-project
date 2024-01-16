@@ -1,11 +1,11 @@
 {
   "name": "vending-machine-project",
-  "version": "0.0.1-rc.1",
+  "version": "0.0.1-rc.2",
   "description": "See project README.md",
   "main": "bin/index.js",
-  "bin": { 
-  "vmp": "./bin/index.js"
-  }, 
+  "bin": {
+    "vmp": "./bin/index.js"
+  },
   "scripts": {
     "build": "tsc src/* --outDir 'bin'",
     "test:commit": "jest test/commit/",
