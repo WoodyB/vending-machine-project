@@ -6,7 +6,7 @@ I think the the vending machine code kata is particularly interesting to me for 
 
 ## Design Notes
 
-See the *design* directory in this project for a diary along with supporting documents
+See the [design directory](https://github.com/WoodyB/vending-machine-project/tree/main/design/developers-log) in this project for a developer's log along with supporting documents
 
 ## Instructions as presented at <https://cyber-dojo.org>
 
