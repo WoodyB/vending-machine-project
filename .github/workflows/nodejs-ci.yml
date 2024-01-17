@@ -32,5 +32,8 @@ jobs:
       run: npm run lint
     - name: Commit Stage Tests (unit tests)      
       run: npm run test:commit
+    - name: Bump Version
+      run: npm version prereleasec
+      
 
   
