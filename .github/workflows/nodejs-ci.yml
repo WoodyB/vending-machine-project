@@ -40,9 +40,10 @@ jobs:
       run: npm run test:commit
     - name: Merge to main if tests pass 
       if: success()
-      run: | GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
-      API_URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.after }}"
-      curl -X PUT -H "Authorization: Bearer $GITHUB_TOKEN" "$API_URL/merge"
+      run: |
+        GITHUB_TOKEN="${{ secrets.USER_TOKEN }}"
+        API_URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.after }}"
+        curl -X PUT -H "Authorization: Bearer $GITHUB_TOKEN" "$API_URL/merge"
     
 
   
