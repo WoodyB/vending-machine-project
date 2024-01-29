@@ -5,7 +5,7 @@ describe('Vending Machine', () => {
     const vendingMachine = new VendingMachine(myDisplay);
 
     it('Should display Hello world', () => {
-      vendingMachine.start();  
+      vendingMachine.start();
       expect(lastStringDisplayed).toBe('Hello world');
     });
 });
