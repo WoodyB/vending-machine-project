@@ -1,8 +1,6 @@
 name: NodeJS CI
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
     
@@ -42,8 +40,8 @@ jobs:
       if: success()
       run: |
         GITHUB_TOKEN="${{ secrets.USER_TOKEN }}"
-        API_URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.after }}"
-        curl -X PUT -H "Authorization: Bearer $GITHUB_TOKEN" "$API_URL/merge"
+        API_URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge"
+        curl -X PUT -H "Authorization: Bearer $GITHUB_TOKEN" "$API_URL"
     
 
   
