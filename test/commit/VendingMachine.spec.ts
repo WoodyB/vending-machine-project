@@ -6,8 +6,7 @@ describe('Vending Machine', () => {
 
     it('Should display Hello world', () => {
       vendingMachine.start();
-      // Break test so we can test ci workflow  
-      expect(lastStringDisplayed).toBe('XHello world');
+      expect(lastStringDisplayed).toBe('Hello world');
     });
 });
 
