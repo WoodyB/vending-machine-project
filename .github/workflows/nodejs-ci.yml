@@ -1,21 +1,17 @@
 name: NodeJS CI
-
 on:
   pull_request:
     branches: [ "main" ]
-    
-# Reference: https://docs.github.com/en/actions/security-guides/automatic-token-authentication
+
 permissions:
-  # Need `contents: read` to checkout the repository.
-  # Need `contents: write` to update the step metadata.
   contents: write
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build_and_test:
+
     concurrency:
       group: commit_stage
-      cancel-in-progress: true
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -28,19 +24,30 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+
     - name: Install dependencies
       run: npm ci
+
     - name: Build
       run: npm run build
+
     - name: Commit Stage Tests (linter)
       run: npm run lint
-    - name: Commit Stage Tests (unit tests)      
+
+    - name: Commit Stage Tests (unit tests)
       run: npm run test:commit
+
+  merge_to_main:
+    needs: build_and_test
+    concurrency:
+      group: commit_stage
+
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Merge to main if tests pass 
       run: |
         GITHUB_TOKEN="${{ secrets.USER_TOKEN }}"
         API_URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge"
         curl -X PUT -H "Authorization: Bearer $GITHUB_TOKEN" "$API_URL"
-    
-
-  
+        
