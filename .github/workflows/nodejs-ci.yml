@@ -37,20 +37,22 @@ jobs:
     - name: Commit Stage Tests (unit tests)
       run: npm run test:commit
       
-    - name: Show GitHub context   
-      env: 
-        GITHUB_CONTEXT: ${{ toJson(github) }}   
-      run: echo "$GITHUB_CONTEXT"
-      shell: bash
+    # - name: Show GitHub context   
+    #  env: 
+    #    GITHUB_CONTEXT: ${{ toJson(github) }}   
+    #  run: echo "$GITHUB_CONTEXT"
+    #  shell: bash
       
     - name: Tell Git who we are
       run: |
-        git config user.name "WoodyB"
+        git config user.name "${{ GITHUB_CONTEXT.actor }}"
+        # git config user.name "WoodyB"
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+        GITHUB_CONTEXT: ${{ toJson(github) }}
       
     - name: Tag Source Files for Release Candidate
-      run: git tag -a "rc-${{ github.run_number }}" -m "Build tag for v${{ github.run_number }}"
+      run: git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
         
