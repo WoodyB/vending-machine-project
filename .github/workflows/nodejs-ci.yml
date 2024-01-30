@@ -36,6 +36,13 @@ jobs:
 
     - name: Commit Stage Tests (unit tests)
       run: npm run test:commit
+
+    - name: Tell Git who we are
+      run: |
+        git config user.email "woodybeverley@gmail.com"
+        git config --global user.name "WoodyB"
+      env:
+        GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
       
     - name: Tag Source Files for Release Candidate
       run: git tag -a "rc-${{ github.run_number }}" -m "Build tag for v${{ github.run_number }}"
