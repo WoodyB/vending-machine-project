@@ -36,6 +36,17 @@ jobs:
 
     - name: Commit Stage Tests (unit tests)
       run: npm run test:commit
+      
+    - name: Tag Source Files for Release Candidate
+      run: git tag -a "rc-${{ github.run_number }}" -m "Build tag for v${{ github.run_number }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+        
+    - name: Push Tags
+      run: git push origin --tags
+      env:
+        GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+      
 
   merge_to_main:
     needs: build_and_test
@@ -45,19 +56,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Tag Source Files for Release Candidate
-      run: git tag -a "rc-${{ github.run_number }}" -m "Build tag for v${{ github.run_number }}"
-      env:
-        GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
-    - name: Push Tags
-      run: git push origin --tags
-      env:
-        GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
     - name: Merge to main if tests pass 
       run: |
         GITHUB_TOKEN="${{ secrets.USER_TOKEN }}"
         API_URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge"
         curl -X PUT -H "Authorization: Bearer $GITHUB_TOKEN" "$API_URL"
+        
     - name: Delete the branch after merge 
       run: |        
         DELETE_BRANCH_API_URL="https://api.github.com/repos/${{ github.repository }}/git/refs/heads/${{ github.head_ref }}"
