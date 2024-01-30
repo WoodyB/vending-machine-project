@@ -45,7 +45,6 @@ jobs:
       
     - name: Tell Git who we are
       run: |
-        git config user.email "woodybeverley@gmail.com"
         git config user.name "WoodyB"
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
