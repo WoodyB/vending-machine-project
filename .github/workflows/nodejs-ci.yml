@@ -45,6 +45,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Tag Source Files for Release Candidate
+      run: git tag -a "rc-${{ github.run_number }}" -m "Build tag for v${{ github.run_number }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+    - name: Push Tags
+      run: git push origin --tags
+      env:
+        GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
     - name: Merge to main if tests pass 
       run: |
         GITHUB_TOKEN="${{ secrets.USER_TOKEN }}"
