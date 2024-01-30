@@ -36,7 +36,13 @@ jobs:
 
     - name: Commit Stage Tests (unit tests)
       run: npm run test:commit
-
+      
+    - name: Show GitHub context   
+      env: 
+        GITHUB_CONTEXT: ${{ toJson(github) }}   
+      run: echo "$GITHUB_CONTEXT"
+      shell: bash
+      
     - name: Tell Git who we are
       run: |
         git config user.email "woodybeverley@gmail.com"
