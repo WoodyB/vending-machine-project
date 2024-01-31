@@ -48,9 +48,18 @@ jobs:
         git config user.name "WoodyB"
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+
+    - name: Create Compressed Immutable Binary
+      run: tar -czvf rc-binary.tar.gz node_modules bin
       
+    - name: Upload Compressed Binary as Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: rc-${{ github.run_number }}-binary
+        path: rc-binary.tar.gz
+            
     - name: Tag Source Files for Release Candidate
-      run: git tag -a "rc-${{ github.run_number }}" -m "Build tag for v${{ github.run_number }}"
+      run: git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
         
