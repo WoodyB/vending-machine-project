@@ -48,6 +48,18 @@ jobs:
         git config user.name "WoodyB"
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+
+    - name: Create Compressed Immutable Binary
+      run: tar -czvf rc-binary.tar.gz node_modules bin
+      # Adjust the directories as needed
+
+    - name: Upload Compressed immutable Binary to GitHub Releases
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./rc-binary.tar.gz
+        asset_name: rc-${{ github.run_number }}-binary.tar.gz
+        asset_content_type: application/gzip
       
     - name: Tag Source Files for Release Candidate
       run: git tag -a "rc-${{ github.run_number }}" -m "Build tag for v${{ github.run_number }}"
