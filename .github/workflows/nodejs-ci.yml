@@ -44,8 +44,7 @@ jobs:
       shell: bash
       
     - name: Tell Git who we are
-      run: |
-        git config user.name "WoodyB"
+      run: git config user.name "${{ github.actor }}"
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
 
