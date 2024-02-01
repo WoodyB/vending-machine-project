@@ -31,6 +31,19 @@ jobs:
     - name: Build
       run: npm run build
 
+    - name: Read Version from package.json
+      id: read-version
+      run: |
+        version=$(node -pe "require('./package.json').version")
+        echo "::set-output name=version::$version"
+    
+    - name: Find and Replace in app-data.js
+      run: |
+        version=$(echo "${{ steps.read-version.outputs.version }}")
+        run_number=${{ github.run_number }}
+        sed -i "s/version: \"x.x.x\"/version: \"$version-$run_number-RC\"/g" ./bin/app-data.js
+        cat bin/app-data.js
+
     - name: Commit Stage Tests (linter)
       run: npm run lint
 
