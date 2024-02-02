@@ -42,6 +42,7 @@ jobs:
         version=$(echo "${{ steps.read-version.outputs.version }}")
         run_number=${{ github.run_number }}
         sed -i "s/version: \"x.x.x\"/version: \"$version.$run_number-RC\"/g" ./bin/app-data.js
+        echo New version => $version.$run_number-RC
 
     - name: Commit Stage Tests (linter)
       run: npm run lint
@@ -49,8 +50,8 @@ jobs:
     - name: Commit Stage Tests (unit tests)
       run: npm run test:commit
       
-    - name: Run our app (for debugging remember to delete this)
-      run: node bin/index.js
+    # - name: Run our app (for debugging remember to delete this)
+    #  run: node bin/index.js
       
     - name: Show GitHub context   
       env: 
