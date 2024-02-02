@@ -3,9 +3,6 @@
   "version": "0.1.x",
   "description": "See project README.md",
   "main": "bin/index.js",
-  "bin": {
-    "vmp": "./bin/index.js"
-  },
   "scripts": {
     "build": "tsc src/* --outDir 'bin'",
     "test:commit": "jest test/commit/",
