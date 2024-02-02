@@ -43,6 +43,15 @@ jobs:
         run_number=${{ github.run_number }}
         sed -i "s/version: \"x.x.x\"/version: \"$version.$run_number-RC\"/g" ./bin/app-data.js
 
+    - name: Read New Version from app-data.js
+      run: |
+        new_version=$(node -e "console.log(require('./bin/app-data.js').appData.version)")
+        echo "new_version=$new_version" >> $GITHUB_ENV
+
+    - name: New Version 
+      run: |
+        echo "The new version is $new_version"
+        
     - name: Commit Stage Tests (linter)
       run: npm run lint
 
@@ -82,7 +91,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
       
-
   merge_to_main:
     needs: build_and_test
     concurrency:
