@@ -45,7 +45,7 @@ jobs:
 
     - name: Read New Version from app-data.js
       run: |
-        new_version=$(node -e "console.log(require('bin/app-data.js').appData.version)")
+        new_version=$(node -e "console.log(require('./bin/app-data.js').appData.version)")
         echo "new_version=$new_version" >> $GITHUB_ENV
 
     - name: New Version 
