@@ -41,7 +41,7 @@ jobs:
       run: |
         version=$(echo "${{ steps.read-version.outputs.version }}")
         run_number=${{ github.run_number }}
-        sed -i "s/version: \"x.x.x\"/version: \"$version-$run_number-RC\"/g" ./bin/app-data.js
+        sed -i "s/version: \"x.x.x\"/version: \"$version.$run_number-RC\"/g" ./bin/app-data.js
         cat bin/app-data.js
 
     - name: Commit Stage Tests (linter)
