@@ -42,7 +42,6 @@ jobs:
         version=$(echo "${{ steps.read-version.outputs.version }}")
         run_number=${{ github.run_number }}
         sed -i "s/version: \"x.x.x\"/version: \"$version.$run_number-RC\"/g" ./bin/app-data.js
-        echo New version => $version.$run_number-RC
 
     - name: Commit Stage Tests (linter)
       run: npm run lint
