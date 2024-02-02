@@ -35,7 +35,6 @@ jobs:
       id: read-version
       run: |
         version=$(node -pe "require('./package.json').version.match(/^\d+\.\d+/)[0]")        
-        # echo "::set-output name=version::$version"
         echo "version=$version" >> $GITHUB_OUTPUT
     
     - name: Find and Replace version in app-data.js
@@ -43,13 +42,15 @@ jobs:
         version=$(echo "${{ steps.read-version.outputs.version }}")
         run_number=${{ github.run_number }}
         sed -i "s/version: \"x.x.x\"/version: \"$version.$run_number-RC\"/g" ./bin/app-data.js
-        cat bin/app-data.js
 
     - name: Commit Stage Tests (linter)
       run: npm run lint
 
     - name: Commit Stage Tests (unit tests)
       run: npm run test:commit
+      
+    - name: Run our app (for debugging remember to delete this)
+      run: node bin/index.js
       
     - name: Show GitHub context   
       env: 
