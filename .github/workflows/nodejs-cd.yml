@@ -14,8 +14,8 @@ jobs:
       id: get-tags
       run: |
         git remote add origin https://github.com/${{ github.repository }}
-        git fetch --tags --force --quiet --depth=1 origin "+refs/tags/rc-*:refs/tags/rc-*"
-        tags=$(git ls-remote --tags origin "refs/tags/rc-*" | cut -d '/' -f 3 | cut -d '^' -f 1)
+        git fetch --tags --force --quiet origin
+        tags=$(git tag -l "rc-*")
         echo "GITHUB_OUTPUT_TAGS=$tags" >> $GITHUB_ENV
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
