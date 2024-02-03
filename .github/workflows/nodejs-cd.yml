@@ -27,7 +27,7 @@ jobs:
 
     - name: Determine Latest Release Candidate
       id: latest-rc
-        echo ${{ steps.get-tags.outputs.tags }}
+      run: echo ${{ steps.get-tags.outputs.tags }}
     #  run: |
     #    tags=($(echo "${{ steps.get-tags.outputs.tags }}" | tr ' ' '\n' | grep "rc-*" | sort -V))
     #    latest_rc=${tags[-1]}
