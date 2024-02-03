@@ -33,6 +33,6 @@ jobs:
       id: latest-rc
       run: |
         tags=$(echo "${{ steps.get-tags.outputs.tags }}")
-        latest_rc=$(echo $tags | tr ' ' '\n' | grep "rc-*" | sort -V | tail -n 1)
+        latest_rc=$(echo $tags | tr ' ' '\n' | grep "rc-*" | sort -t'-' -k2,2n | tail -n 1)
         echo "::set-output name=latest_rc::$latest_rc"
         echo "Latest Release Candidate: $latest_rc"
