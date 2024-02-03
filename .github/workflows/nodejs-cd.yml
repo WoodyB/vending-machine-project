@@ -19,7 +19,7 @@ jobs:
         tags=$(git tag -l "rc-*")
         echo "GITHUB_OUTPUT_TAGS=$tags" >> $GITHUB_ENV
       env:
-        USER_TOKEN: ${{ secrets.USER_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
 
     - name: Determine Latest Release Candidate
       id: latest-rc
