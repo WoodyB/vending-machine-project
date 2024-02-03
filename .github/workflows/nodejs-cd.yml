@@ -13,7 +13,7 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
-        ref: "refs/tags/"
+        ref: ${{ steps.latest-rc.outputs.latest_rc }}
         fetch-depth: 0
 
     - name: Get List of Release Candidate Tags
