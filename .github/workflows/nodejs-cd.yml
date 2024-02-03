@@ -1,0 +1,34 @@
+name: NodeJS Continuous Delivery
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Get List of Release Candidate Tags
+      id: get-tags
+      run: |
+        tags=$(git ls-remote --tags origin "refs/tags/rc-*" | cut -d '/' -f 3 | cut -d '^' -f 1)
+        echo "GITHUB_OUTPUT_TAGS=$tags" >> $GITHUB_ENV
+
+    - name: Determine Latest Release Candidate
+      id: latest-rc
+      run: |
+        tags=($GITHUB_OUTPUT_TAGS)
+        latest_rc=""
+        latest_build_number=0
+
+        for tag in "${tags[@]}"; do
+          build_number=$(echo "$tag" | cut -d '-' -f 2)
+          if ((build_number > latest_build_number)); then
+            latest_build_number=$build_number
+            latest_rc=$tag
+          fi
+        done
+
+        echo "GITHUB_OUTPUT_LATEST_RC=$latest_rc" >> $GITHUB_ENV
+        echo "Latest Release Candidate: $latest_rc"
