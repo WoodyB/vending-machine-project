@@ -21,15 +21,18 @@ jobs:
       run: |
         tags=$(git tag -l "rc-*")
         echo "::set-output name=tags::$tags"
-        # echo $tags
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
 
+    - name: Debug Tags
+      run: |
+        echo "Tags:" 
+        echo "${{ steps.get-tags.outputs.tags }}"
+
     - name: Determine Latest Release Candidate
       id: latest-rc
-      run: echo ${{ steps.get-tags.outputs.tags }}
-    #  run: |
-    #    tags=($(echo "${{ steps.get-tags.outputs.tags }}" | tr ' ' '\n' | grep "rc-*" | sort -V))
-    #    latest_rc=${tags[-1]}
-    #    echo "::set-output name=latest_rc::$latest_rc"
-    #    echo "Latest Release Candidate: $latest_rc"
+      run: |
+        tags=($(echo "${{ steps.get-tags.outputs.tags }}" | tr ' ' '\n' | grep "rc-*" | sort -V))
+        latest_rc=${tags[-1]}
+        echo "::set-output name=latest_rc::$latest_rc"
+        echo "Latest Release Candidate: $latest_rc"
