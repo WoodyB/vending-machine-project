@@ -13,12 +13,13 @@ jobs:
     - name: Get List of Release Candidate Tags
       id: get-tags
       run: |
+        git init
         git remote add origin https://github.com/${{ github.repository }}
         git fetch --tags --force --quiet origin
         tags=$(git tag -l "rc-*")
         echo "GITHUB_OUTPUT_TAGS=$tags" >> $GITHUB_ENV
       env:
-        GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+        USER_TOKEN: ${{ secrets.USER_TOKEN }}
 
     - name: Determine Latest Release Candidate
       id: latest-rc
