@@ -20,14 +20,14 @@ jobs:
       id: get-tags
       run: |
         tags=$(git tag -l "rc-*")
-        echo "GITHUB_OUTPUT_TAGS=$tags" >> $GITHUB_ENV
+        echo "::set-output name=tags::$tags"
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
 
     - name: Determine Latest Release Candidate
       id: latest-rc
       run: |
-        tags=($(echo "$GITHUB_OUTPUT_TAGS" | tr ' ' '\n' | grep "rc-*" | sort -t- -k2 -n))
+        tags=($(echo "${{ steps.get-tags.outputs.tags }}" | tr ' ' '\n' | grep "rc-*" | sort -t- -k2 -n))
         latest_rc=${tags[-1]}
-        echo "GITHUB_OUTPUT_LATEST_RC=$latest_rc" >> $GITHUB_ENV
+        echo "::set-output name=latest_rc::$latest_rc"
         echo "Latest Release Candidate: $latest_rc"
