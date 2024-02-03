@@ -21,5 +21,5 @@ jobs:
       run: |
         tags=$(git tag -l "rc-*" | grep "rc-*" | sort -V)
         latest_rc=$(echo $tags | awk '{print $NF}')
-        echo "::set-output name=latest_rc::$latest_rc"
+        echo "latest_rc=$latest_rc" >> $GITHUB_ENV
         echo "Latest Release Candidate: $latest_rc"
