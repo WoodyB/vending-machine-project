@@ -16,24 +16,10 @@ jobs:
         ref: ${{ steps.latest-rc.outputs.latest_rc }}
         fetch-depth: 0
 
-    - name: Get List of Release Candidate Tags
-      id: get-tags
-      run: |
-        tags=$(git tag -l "rc-*")
-        IFS=' ' read -ra tags_array <<< "$tags"
-        echo "::set-output name=tags::${tags_array[@]}"
-      env:
-        GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
-
-    - name: Debug Tags
-      run: |
-        echo "Tags:"
-        echo "${{ steps.get-tags.outputs.tags }}"
-
     - name: Determine Latest Release Candidate
       id: latest-rc
       run: |
-        tags=("${{ steps.get-tags.outputs.tags }}")
-        latest_rc=$(printf "%s\n" "${tags[@]}" | grep "rc-*" | sort -V | tail -n 1)
+        tags=$(git tag -l "rc-*" | grep "rc-*" | sort -V)
+        latest_rc=$(echo $tags | awk '{print $NF}')
         echo "::set-output name=latest_rc::$latest_rc"
         echo "Latest Release Candidate: $latest_rc"
