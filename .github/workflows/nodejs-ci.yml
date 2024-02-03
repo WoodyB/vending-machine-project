@@ -67,11 +67,27 @@ jobs:
       run: echo "$GITHUB_CONTEXT"
       shell: bash
       
+  make_git_happy:
+    needs: build_and_test
+    concurrency:
+      group: commit_stage
+
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Tell Git who we are
       run: git config user.name "${{ github.actor }}"
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
 
+  tag_and_upload_binary:
+    needs: make_git_happy
+    concurrency:
+      group: commit_stage
+
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Create Compressed Immutable Binary
       run: tar -czvf rc-binary.tar.gz node_modules bin
       
@@ -92,7 +108,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
       
   merge_to_main:
-    needs: build_and_test
+    needs: [build_and_test, make_git_happy, tag_and_upload_binary]
     concurrency:
       group: commit_stage
 
