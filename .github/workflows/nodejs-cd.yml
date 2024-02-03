@@ -13,6 +13,7 @@ jobs:
     - name: Get List of Release Candidate Tags
       id: get-tags
       run: |
+        git init
         git remote add origin https://github.com/${{ github.repository }}
         git fetch --tags --force --quiet origin
         tags=$(git tag -l "rc-*")
