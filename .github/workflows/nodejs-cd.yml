@@ -30,7 +30,9 @@ jobs:
     - name: Fetch The Binary For The RC
       uses: actions/download-artifact@v2
       with:
-        name: rc-106-binary
+        name: rc-108-binary
+        github-token: ${{ secrets.USER_TOKEN }}
+        run-id: 108
         path: ./bin
       
     - name: Extract Archive
