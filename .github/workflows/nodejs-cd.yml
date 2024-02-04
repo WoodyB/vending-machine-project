@@ -17,7 +17,7 @@ jobs:
         fetch-depth: 0
 
     - name: Determine Latest Release Candidate
-      # id: latest-rc
+      id: latest-rc
       run: |
         tags=$(git tag -l "rc-*" | grep "rc-*" | sort -V)
         latest_rc=$(echo $tags | awk '{print $NF}')
