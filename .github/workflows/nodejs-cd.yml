@@ -6,7 +6,10 @@ on:
   #  - cron: '*/5 * * * *'
 
 jobs:
-  deploy:
+  test_and_deploy:
+    concurrency:
+      group: acceptance_stage
+  
     runs-on: ubuntu-latest
 
     steps:
@@ -23,3 +26,15 @@ jobs:
         latest_rc=$(echo $tags | awk '{print $NF}')
         echo "latest_rc=$latest_rc" >> $GITHUB_ENV
         echo "Latest Release Candidate: $latest_rc"
+
+    - name: Fetch The Binary For The RC
+      uses: actions/download-artifact@v2
+      with:
+        name: ${{ steps.latest-rc.outputs.latest_rc }}-binary
+        path: ./bin
+      
+    - name: Extract Archive
+      run: |
+        tar -xzvf ./bin/rc-binary.tar.gz -C ./bin
+        npm run test:acceptance
+        
