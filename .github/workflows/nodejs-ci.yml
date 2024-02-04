@@ -76,7 +76,7 @@ jobs:
       run: tar -czvf rc-binary.tar.gz node_modules bin
       
     - name: Upload Compressed Binary as Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: rc-${{ github.run_number }}-binary
         path: rc-binary.tar.gz
