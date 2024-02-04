@@ -12,12 +12,12 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
-      with:
-        ref: ${{ steps.latest-rc.outputs.latest_rc }}
-        fetch-depth: 0
+      #with:
+      #  ref: ${{ steps.latest-rc.outputs.latest_rc }}
+      #  fetch-depth: 0
 
     - name: Determine Latest Release Candidate
-      id: latest-rc
+      # id: latest-rc
       run: |
         tags=$(git tag -l "rc-*" | grep "rc-*" | sort -V)
         latest_rc=$(echo $tags | awk '{print $NF}')
