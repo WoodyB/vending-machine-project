@@ -30,7 +30,7 @@ jobs:
     - name: Fetch The Binary For The RC
       uses: actions/download-artifact@v2
       with:
-        name: ${{ steps.latest-rc.outputs.latest_rc }}-binary
+        name: rc-106-binary
         path: ./bin
       
     - name: Extract Archive
