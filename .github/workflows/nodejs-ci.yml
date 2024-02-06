@@ -102,3 +102,8 @@ jobs:
         DELETE_BRANCH_API_URL="https://api.github.com/repos/${{ github.repository }}/git/refs/heads/${{ github.head_ref }}"
         curl -X DELETE -H "Authorization: Bearer $GITHUB_TOKEN" "$DELETE_BRANCH_API_URL"
         
+    - name: Fetch The Binaries For The RC Debugging
+      uses: actions/download-artifact@v4
+      with:
+        name: rc-${{ github.run_number }}-binaries
+        github-token: ${{ secrets.USER_TOKEN }}
