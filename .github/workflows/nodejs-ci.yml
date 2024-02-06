@@ -72,15 +72,18 @@ jobs:
     #  env:
     #    GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
 
-    - name: Create Compressed Immutable Binary
-      run: tar -czvf rc-binary.tar.gz node_modules bin
+    #- name: Create Compressed Immutable Binary
+    #  run: tar -czvf rc-binary.tar.gz node_modules bin
       
-    - name: Upload Compressed Binary as Artifact
+    - name: Upload Binary as Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: rc-${{ github.run_number }}-binary
-        path: rc-binary.tar.gz
-            
+        name: rc-${{ github.run_number }}-binaries
+        # path: rc-binary.tar.gz
+        path: |
+          ./bin
+          ./node_modules
+        
     - name: Tag Source Files for Release Candidate
       run: git config user.name "${{ github.actor }}" && git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
       env:
@@ -99,7 +102,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Merge to main if tests pass 
+    - name: Merge to main trunk 
       run: |
         GITHUB_TOKEN="${{ secrets.USER_TOKEN }}"
         API_URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge"
