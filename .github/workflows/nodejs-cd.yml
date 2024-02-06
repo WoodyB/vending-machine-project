@@ -36,5 +36,5 @@ jobs:
         repository: WoodyB/vending-machine-project
         run-id: 7807196884              
       
-    - name: Display structure of downloaded files
-      run: ls -R         
+    - name: Display downloaded files
+      run: ls      
