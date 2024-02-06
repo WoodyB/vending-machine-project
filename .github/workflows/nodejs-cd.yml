@@ -36,6 +36,5 @@ jobs:
         repository: WoodyB/vending-machine-project
         run-id: 7807196884              
       
-    - name: Extract Archive
-      run: unzip rc-118-binaries.zip
-        
+    - name: Display structure of downloaded files
+      run: ls -R         
