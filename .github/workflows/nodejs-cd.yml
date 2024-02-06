@@ -30,9 +30,11 @@ jobs:
     - name: Fetch The Binaries For The RC
       uses: actions/download-artifact@v4
       with:
-        name: rc-113-binaries
-        run-id: 7805421475
+        name: rc-118-binaries
         github-token: ${{ secrets.USER_TOKEN }}
+        merge-multiple: false
+        repository: WoodyB/vending-machine-project
+        run-id: 7807196884              
       
     - name: Extract Archive
       run: unzip rc-113-binaries.zip
