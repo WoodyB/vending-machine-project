@@ -27,16 +27,12 @@ jobs:
         echo "latest_rc=$latest_rc" >> $GITHUB_ENV
         echo "Latest Release Candidate: $latest_rc"
 
-    - name: Fetch The Binary For The RC
+    - name: Fetch The Binaries For The RC
       uses: actions/download-artifact@v4
       with:
-        name: rc-110-binary
+        name: rc-113-binaries
         github-token: ${{ secrets.USER_TOKEN }}
-        run-id: 110
-        path: ./bin
       
     - name: Extract Archive
-      run: |
-        tar -xzvf ./bin/rc-binary.tar.gz -C ./bin
-        npm run test:acceptance
+      run: unzip rc-113-binaries.zip
         
