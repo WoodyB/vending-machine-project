@@ -13,19 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-      with:
-        ref: ${{ steps.latest-rc.outputs.latest_rc }}
-        fetch-depth: 0
+    #- name: Checkout Repository
+    #  uses: actions/checkout@v4
+    #  with:
+    #    ref: ${{ steps.latest-rc.outputs.latest_rc }}
+    #    fetch-depth: 0
 
-    - name: Determine Latest Release Candidate
-      id: latest-rc
-      run: |
-        tags=$(git tag -l "rc-*" | grep "rc-*" | sort -V)
-        latest_rc=$(echo $tags | awk '{print $NF}')
-        echo "latest_rc=$latest_rc" >> $GITHUB_ENV
-        echo "Latest Release Candidate: $latest_rc"
+    #- name: Determine Latest Release Candidate
+    #  id: latest-rc
+    #  run: |
+    #    tags=$(git tag -l "rc-*" | grep "rc-*" | sort -V)
+    #    latest_rc=$(echo $tags | awk '{print $NF}')
+    #    echo "latest_rc=$latest_rc" >> $GITHUB_ENV
+    #    echo "Latest Release Candidate: $latest_rc"
 
     - name: Fetch The Binaries For The RC
       uses: actions/download-artifact@v4
@@ -37,4 +37,7 @@ jobs:
         run-id: 7807196884              
       
     - name: Display downloaded files
-      run: ls      
+      run: ls
+
+    - name: Print app-data.js
+      run: cat ./bin/app-data.js
