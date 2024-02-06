@@ -57,29 +57,17 @@ jobs:
 
     - name: Commit Stage Tests (unit tests)
       run: npm run test:commit
-      
-    # - name: Run our app (for debugging remember to delete this)
-    #  run: node bin/index.js
-      
+            
     - name: Show GitHub context   
       env: 
         GITHUB_CONTEXT: ${{ toJson(github) }}   
       run: echo "$GITHUB_CONTEXT"
       shell: bash
-      
-    #- name: Tell Git who we are
-    #  run: git config user.name "${{ github.actor }}"
-    #  env:
-    #    GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
-
-    #- name: Create Compressed Immutable Binary
-    #  run: tar -czvf rc-binary.tar.gz node_modules bin
-      
-    - name: Upload Binary as Artifact
+            
+    - name: Upload Binaries as Artifact
       uses: actions/upload-artifact@v4
       with:
         name: rc-${{ github.run_number }}-binaries
-        # path: rc-binary.tar.gz
         path: |
           ./bin
           ./node_modules
