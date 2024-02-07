@@ -51,8 +51,8 @@ jobs:
     - name: Run Acceptance Tests
       run: |
         # chmod -R a+x node_modules
-        chmod a+x node_modules/jest-cli/bin/jest.js
-        chmod a+x node_modules/jest/bin/jest.js
+        # chmod a+x node_modules/jest-cli/bin/jest.js
+        # chmod a+x node_modules/jest/bin/jest.js
         chmod a+x node_modules/.bin/jest
         npm run test:acceptance
       # run: npm --version
