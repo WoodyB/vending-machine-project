@@ -6,7 +6,7 @@ on:
   #  - cron: '*/5 * * * *'
 
 jobs:
-  test_and_deploy:
+  determine_latest_rc:
     concurrency:
       group: acceptance_stage
   
@@ -31,6 +31,15 @@ jobs:
         latest_rc=$(echo $tags | awk '{print $NF}')
         echo "latest_rc=$latest_rc" >> $GITHUB_ENV
         echo "Latest Release Candidate: $latest_rc"
+
+  fetch_release_candidate:
+    needs: determine_latest_rc
+    concurrency:
+      group: acceptance_stage
+  
+    runs-on: ubuntu-latest
+
+    steps:
 
     - name: Fetch The Binaries For The RC
       uses: actions/download-artifact@v4
