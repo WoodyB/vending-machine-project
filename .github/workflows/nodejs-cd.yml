@@ -30,7 +30,7 @@ jobs:
         tags=$(git tag -l "rc-*" | grep "rc-*" | sort -V)
         latest_rc=$(echo $tags | awk '{print $NF}')
         echo "latest_rc=$latest_rc" >> $GITHUB_ENV
-        echo "Latest Release Candidate: $latest_rc"
+        echo "::set-output name=latest_rc::$latest_rc"
 
   fetch_release_candidate:
     needs: determine_latest_rc
@@ -48,7 +48,7 @@ jobs:
         latest_rc=${latest_rc#*=}
         run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${latest_rc}-binaries" | jq -r '.artifacts[0].run_id')
         echo "Run ID: $run_id"
-        echo "::set-env name=RUN_ID::$run_id"
+        echo "::set-output name=run_id::$run_id"
       
     - name: Download Binaries Artifact
       uses: actions/download-artifact@v4
@@ -57,7 +57,7 @@ jobs:
         github-token: ${{ secrets.USER_TOKEN }}
         merge-multiple: false
         repository: WoodyB/vending-machine-project
-        run-id: ${{ env.RUN_ID }}
+        run-id: ${{ steps.fetch-binaries.outputs.run_id }}
       
     - name: Display downloaded files
       run: ls
