@@ -7,6 +7,9 @@ permissions:
   contents: write
 
 jobs:
+  #
+  # Job
+  #
   build_and_test:
 
     concurrency:
@@ -69,8 +72,9 @@ jobs:
       with:
         name: rc-${{ github.run_number }}-binaries
         path: |
-          ./bin
-          ./node_modules
+          ./
+          # ./bin
+          # ./node_modules
         
     - name: Tag Source Files for Release Candidate
       run: git config user.name "${{ github.actor }}" && git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
@@ -81,7 +85,9 @@ jobs:
       run: git push origin --tags
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
-      
+  #
+  # Job
+  #      
   merge_to_main:
     needs: build_and_test
     concurrency:
