@@ -27,6 +27,11 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+        
+    - name: Set git user name
+      run: git config user.name "${{ github.actor }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
 
     - name: Install dependencies
       run: npm ci
@@ -73,11 +78,9 @@ jobs:
         name: rc-${{ github.run_number }}-binaries
         path: |
           ./
-          # ./bin
-          # ./node_modules
         
     - name: Tag Source Files for Release Candidate
-      run: git config user.name "${{ github.actor }}" && git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
+      run: git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
         
@@ -108,8 +111,8 @@ jobs:
         DELETE_BRANCH_API_URL="https://api.github.com/repos/${{ github.repository }}/git/refs/heads/${{ github.head_ref }}"
         curl -X DELETE -H "Authorization: Bearer $GITHUB_TOKEN" "$DELETE_BRANCH_API_URL"
         
-    - name: Fetch The Binaries For The RC Debugging
-      uses: actions/download-artifact@v4
-      with:
-        name: rc-${{ github.run_number }}-binaries
-        github-token: ${{ secrets.USER_TOKEN }}
+    #- name: Fetch The Binaries For The RC Debugging
+    #  uses: actions/download-artifact@v4
+    #  with:
+    #    name: rc-${{ github.run_number }}-binaries
+    #    github-token: ${{ secrets.USER_TOKEN }}
