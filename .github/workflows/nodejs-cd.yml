@@ -21,7 +21,7 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
-        ref: ${{ steps.latest-rc.outputs.latest_rc }}
+        ref: ${{ github.ref }}
         fetch-depth: 0
 
     - name: Determine Latest Release Candidate
@@ -42,14 +42,22 @@ jobs:
     steps:
 
     - name: Fetch The Binaries For The RC
+      id: fetch-binaries
+      run: |
+        latest_rc=$GITHUB_ENV
+        latest_rc=${latest_rc#*=}
+        run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${latest_rc}-binaries" | jq -r '.artifacts[0].run_id')
+        echo "Run ID: $run_id"
+        echo "::set-env name=RUN_ID::$run_id"
+      
+    - name: Download Binaries Artifact
       uses: actions/download-artifact@v4
       with:
-        name: rc-138-binaries
+        name: ${{ steps.latest-rc.outputs.latest_rc }}-binaries
         github-token: ${{ secrets.USER_TOKEN }}
         merge-multiple: false
         repository: WoodyB/vending-machine-project
-        # Debug: We will need to find this run-id using the github api
-        run-id: 7821570509              
+        run-id: ${{ env.RUN_ID }}
       
     - name: Display downloaded files
       run: ls
