@@ -52,6 +52,7 @@ jobs:
       run: |
         # chmod -R a+x node_modules
         chmod a+x node_modules/jest-cli/bin/jest.js
+        chmod a+x node_modules/jest/bin/jest.js
         npm run test:acceptance
       # run: npm --version
       # run: npm run test:acceptance
