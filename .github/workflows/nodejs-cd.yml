@@ -49,4 +49,5 @@ jobs:
       run: cat ./bin/app-data.js
 
     - name: Run Acceptance Tests
-      run: npm run test:acceptance
+      # run: npm run test:acceptance
+      run: npx jest test/acceptance
