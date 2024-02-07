@@ -51,6 +51,7 @@ jobs:
     - name: Run Acceptance Tests
       run: |
         chmod -R a+x node_modules
-        run: npm --version
+        npm run test:acceptance
+      # run: npm --version
       # run: npm run test:acceptance
       # run: npx jest test/acceptance
