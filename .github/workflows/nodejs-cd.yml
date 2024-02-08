@@ -25,11 +25,10 @@ jobs:
         fetch-depth: 0
 
     - name: Determine Latest Release Candidate
-      id: latest-rc
       run: |
         tags=$(git tag -l "rc-*" | grep "rc-*" | sort -V)
-        latest_rc=$(echo $tags | awk '{print $NF}')
-        echo "latest_rc=$latest_rc" >> $GITHUB_ENV
+        latest-rc=$(echo $tags | awk '{print $NF}')
+        echo "latest_rc=$latest-rc" >> $GITHUB_ENV
         # echo "::set-output name=latest_rc::$latest_rc"
         # echo "{name}={value}" >> $GITHUB_OUTPUT
         echo "Latest Release Candidate is $latest_rc"
@@ -45,7 +44,7 @@ jobs:
 
     - name: Fetch The Binaries For The RC    
       id: fetch-binaries
-      run: echo "Latest RC found in in determine_latest_rc =>${{ needs.determine_latest_rc.outputs.latest_rc }}"
+      run: echo "Latest RC found in in determine_latest_rc => ${{ needs.determine_latest_rc.outputs.latest_rc }}"
   #    #run: |
       #  latest_rc=$GITHUB_ENV
       #  latest_rc=${latest_rc#*=}
