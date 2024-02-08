@@ -45,7 +45,7 @@ jobs:
 
     - name: Fetch The Binaries For The RC    
       id: fetch-binaries
-      run: echo "Latest RC found in in determine_latest_rc =>${{ needs.determine_latest_rc.outputs.latest-rc }}"
+      run: echo "Latest RC found in in determine_latest_rc =>${{ needs.determine_latest_rc.outputs.latest_rc }}"
   #    #run: |
       #  latest_rc=$GITHUB_ENV
       #  latest_rc=${latest_rc#*=}
