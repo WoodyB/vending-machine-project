@@ -28,10 +28,11 @@ jobs:
       run: |
         tags=$(git tag -l "rc-*" | grep "rc-*" | sort -V)
         latestRC=$(echo $tags | awk '{print $NF}')
-        # echo "latest_rc=$latestRC" >> $GITHUB_ENV
+        echo "latest_rc=$latestRC" >> $GITHUB_ENV
         # echo "::set-output name=latest_rc::$latest_rc"
         # echo "{name}={value}" >> $GITHUB_OUTPUT
         echo "Latest Release Candidate is $latestRC"
+        echo "Latest Release saved in env is $latest_rc
 
   fetch_release_candidate:
     needs: determine_latest_rc
