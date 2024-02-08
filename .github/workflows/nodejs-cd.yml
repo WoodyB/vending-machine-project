@@ -29,22 +29,23 @@ jobs:
       run: |
         tags=$(git tag -l "rc-*" | grep "rc-*" | sort -V)
         latest_rc=$(echo $tags | awk '{print $NF}')
-        # echo "latest_rc=$latest_rc" >> $GITHUB_ENV
+        echo "latest_rc=$latest_rc" >> $GITHUB_ENV
         # echo "::set-output name=latest_rc::$latest_rc"
         # echo "{name}={value}" >> $GITHUB_OUTPUT
         echo "Latest Release Candidate is $latest_rc"
 
-  #fetch_release_candidate:
-  #  needs: determine_latest_rc
-  #  concurrency:
-  #    group: acceptance_stage
+  fetch_release_candidate:
+    needs: determine_latest_rc
+    concurrency:
+      group: acceptance_stage
   
-  #  runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-  #  steps:
+    steps:
 
-  #  - name: Fetch The Binaries For The RC    
-  #    #id: fetch-binaries
+    - name: Fetch The Binaries For The RC    
+      id: fetch-binaries
+      run: echo "Latest RC found in in determine_latest_rc =>${{ needs.determine_latest_rc.outputs.latest-rc }}"
   #    #run: |
       #  latest_rc=$GITHUB_ENV
       #  latest_rc=${latest_rc#*=}
