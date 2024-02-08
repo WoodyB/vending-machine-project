@@ -32,7 +32,7 @@ jobs:
         # echo "::set-output name=latest_rc::$latest_rc"
         # echo "{name}={value}" >> $GITHUB_OUTPUT
         echo "Latest Release Candidate is $latestRC"
-        echo "Latest Release saved in env is $latest_rc
+        echo "Latest Release saved in env is $latest_rc"
 
   fetch_release_candidate:
     needs: determine_latest_rc
