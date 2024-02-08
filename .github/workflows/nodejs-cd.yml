@@ -45,7 +45,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
+    - name: Debug Environment Variables
+      run: |
+        env
     - name: Fetch The Binaries For The RC    
       id: fetch-binaries
       run: echo "Latest RC found in in determine_latest_rc => ${{ needs.determine_latest_rc.outputs.latest_rc }}"
