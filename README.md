@@ -5,6 +5,7 @@
 I think the the vending machine code kata is particularly interesting to me for two reasons. Firstly, it is a little larger than other katas like FizzBuzz. Secondly, the first assignment in a software engineering class at university back in the day was to implement a vending machine in code. I was really disappointed that my team received a grade of B. We failed to understand that we were supposed to implement a real-time system. The assignment didn't mention a real-time system, but to be fair, we didn't ask. I learned a valuable lesson and ended up with an A for the class at the end so no damage. However, I think it will be fun to correct the past wrong.
 
 ## Test 1
+## Test 2
 
 ## Design Notes
 
