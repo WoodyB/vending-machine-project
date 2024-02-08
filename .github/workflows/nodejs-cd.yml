@@ -36,6 +36,9 @@ jobs:
     - name: Debug Environment Variables
       run: |
         env
+
+    - name: Print Latest RC
+      run: echo "RC is $latest_rc"
         
   fetch_release_candidate:
     needs: determine_latest_rc
