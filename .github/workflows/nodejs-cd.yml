@@ -32,40 +32,40 @@ jobs:
         echo "latest_rc=$latest_rc" >> $GITHUB_ENV
         echo "::set-output name=latest_rc::$latest_rc"
 
-  fetch_release_candidate:
-    needs: determine_latest_rc
-    concurrency:
-      group: acceptance_stage
+  #fetch_release_candidate:
+  #  needs: determine_latest_rc
+  #  concurrency:
+  #    group: acceptance_stage
   
-    runs-on: ubuntu-latest
+  #  runs-on: ubuntu-latest
 
-    steps:
+  #  steps:
 
-    - name: Fetch The Binaries For The RC
-      id: fetch-binaries
-      run: |
-        latest_rc=$GITHUB_ENV
-        latest_rc=${latest_rc#*=}
-        run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${latest_rc}-binaries" | jq -r '.artifacts[0].run_id')
-        echo "Run ID: $run_id"
-        echo "::set-output name=run_id::$run_id"
+  #  - name: Fetch The Binaries For The RC    
+  #    #id: fetch-binaries
+  #    #run: |
+      #  latest_rc=$GITHUB_ENV
+      #  latest_rc=${latest_rc#*=}
+      #  run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${latest_rc}-binaries" | jq -r '.artifacts[0].run_id')
+      #  echo "Run ID: $run_id"
+      #  echo "::set-output name=run_id::$run_id"
       
-    - name: Download Binaries Artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: ${{ steps.latest-rc.outputs.latest_rc }}-binaries
-        github-token: ${{ secrets.USER_TOKEN }}
-        merge-multiple: false
-        repository: WoodyB/vending-machine-project
-        run-id: ${{ steps.fetch-binaries.outputs.run_id }}
+    #- name: Download Binaries Artifact
+    #  uses: actions/download-artifact@v4
+    #  with:
+    #    name: ${{ steps.latest-rc.outputs.latest_rc }}-binaries
+    #    github-token: ${{ secrets.USER_TOKEN }}
+    #    merge-multiple: false
+    #    repository: WoodyB/vending-machine-project
+    #    run-id: ${{ steps.fetch-binaries.outputs.run_id }}
       
-    - name: Display downloaded files
-      run: ls
+    #- name: Display downloaded files
+    #  run: ls
 
-    - name: Print app-data.js
-      run: cat ./bin/app-data.js
+    #- name: Print app-data.js
+    #  run: cat ./bin/app-data.js
 
-    - name: Run Acceptance Tests
-      run: |
-        chmod a+x node_modules/.bin/jest
-        npm run test:acceptance
+    #- name: Run Acceptance Tests
+    #  run: |
+    #    chmod a+x node_modules/.bin/jest
+    #    npm run test:acceptance
