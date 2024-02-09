@@ -45,7 +45,7 @@ jobs:
       run: |
         # curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].id'
         run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].id')
-      
+        echo "run_id is $run_id"      
     #- name: Download Binaries Artifact
     #  uses: actions/download-artifact@v4
     #  with:
