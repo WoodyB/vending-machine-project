@@ -49,7 +49,7 @@ jobs:
         #latest_rc = ${{ needs.determine_latest_rc.outputs.LATEST_RC }}
         # Debug: Hardcoded name in curl to rc-158-binaries
         # run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=rc-158-binaries" | jq -r '.artifacts[0].run_id')
-        run_id = curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=rc-158-binaries" | jq -r '.artifacts[0].id'
+        run_id = ${curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=rc-158-binaries" | jq -r '.artifacts[0].id'}
         echo "Run ID: $run_id"
         
       #  echo "::set-output name=run_id::$run_id"
