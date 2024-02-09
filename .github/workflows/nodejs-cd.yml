@@ -53,7 +53,7 @@ jobs:
         github-token: ${{ secrets.USER_TOKEN }}
         merge-multiple: false
         repository: WoodyB/vending-machine-project
-        run-id: echo $run_id
+        run-id: ${{ env.run_id }}
         
     - name: Display downloaded files
       run: ls
