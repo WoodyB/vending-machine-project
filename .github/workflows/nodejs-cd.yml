@@ -50,7 +50,8 @@ jobs:
         # Debug: Hardcoded name in curl to rc-158-binaries
         # run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=rc-158-binaries" | jq -r '.artifacts[0].run_id')
         run_id = $(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=rc-158-binaries" | jq -r '.artifacts[0].id')
-        echo "run_id=$run_id" >> $GITHUB_ENV
+        curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=rc-158-binaries" | jq -r '.artifacts[0].id'
+        # echo "run_id=$run_id" >> $GITHUB_ENV
 
     - name: Debug Info
       run: env
