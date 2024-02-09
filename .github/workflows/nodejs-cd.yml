@@ -44,7 +44,7 @@ jobs:
       id: fetch-binaries
       run: |
         #run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].id')
-        run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].id.workflow_run.id')
+        run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].workflow_run.id')
         echo "run_id is $run_id"
         echo "run_id=$run_id" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
     #
