@@ -43,15 +43,8 @@ jobs:
     - name: Fetch The Binaries For The RC    
       id: fetch-binaries
       run: |
-        # run_id = $(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=rc-158-binaries" | jq -r '.artifacts[0].id')
         # curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].id'
-        run_id=$(echo curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].id')
-        echo "run_id=$run_id" >> $GITHUB_ENV
-
-    - name: Debug Info
-      run: env
-        
-      #  echo "::set-output name=run_id::$run_id"
+        run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].id')
       
     #- name: Download Binaries Artifact
     #  uses: actions/download-artifact@v4
