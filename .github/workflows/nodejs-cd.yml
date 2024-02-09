@@ -9,9 +9,9 @@ jobs:
   determine_latest_rc:
     concurrency:
       group: acceptance_stage
-  
     runs-on: ubuntu-latest
-
+    outputs:
+      LATEST_RC: ${{ steps.get-latest-rc.outputs.LATEST_RC }}
     steps:
     - name: Setup node
       uses: actions/setup-node@v4
@@ -25,35 +25,24 @@ jobs:
         fetch-depth: 0
 
     - name: Determine Latest Release Candidate
+      id: get-latest-rc
       run: |
         tags=$(git tag -l "rc-*" | grep "rc-*" | sort -V)
         latestRC=$(echo $tags | awk '{print $NF}')
-        echo "latest_rc=$latestRC" >> $GITHUB_ENV
-        # echo "::set-output name=latest_rc::$latest_rc"
-        # echo "{name}={value}" >> $GITHUB_OUTPUT
         echo "Latest Release Candidate is $latestRC"
+        echo "LATEST_RC=$latestRC" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
 
-    - name: Debug Environment Variables
-      run: |
-        env
 
-    - name: Print Latest RC
-      run: echo "RC is $latest_rc"
-        
   fetch_release_candidate:
     needs: determine_latest_rc
     concurrency:
       group: acceptance_stage
-  
     runs-on: ubuntu-latest
 
     steps:
-    - name: Debug Environment Variables
-      run: |
-        env
     - name: Fetch The Binaries For The RC    
       id: fetch-binaries
-      run: echo "Latest RC found in in determine_latest_rc => ${{ needs.determine_latest_rc.outputs.latest_rc }}"
+      run: echo "Latest RC found in in determine_latest_rc => ${{ needs.determine_latest_rc.outputs.LATEST_RC }}"
   #    #run: |
       #  latest_rc=$GITHUB_ENV
       #  latest_rc=${latest_rc#*=}
