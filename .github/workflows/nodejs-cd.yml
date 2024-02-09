@@ -52,8 +52,8 @@ jobs:
         run_id = $(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=rc-158-binaries" | jq -r '.artifacts[0].id')
         echo "run_id=$run_id" >> $GITHUB_ENV
 
-    - name: Echo run_id
-      run: echo "run_id is $run_id"
+    - name: Debug Info
+      run: env
         
       #  echo "::set-output name=run_id::$run_id"
       
