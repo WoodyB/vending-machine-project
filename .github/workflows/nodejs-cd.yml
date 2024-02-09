@@ -50,11 +50,13 @@ jobs:
     - name: Download Binaries Artifact
       uses: actions/download-artifact@v4
       with:
-        name: ${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries
+        #name: ${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries
+        name: rc-178-binaries
         github-token: ${{ secrets.USER_TOKEN }}
         merge-multiple: false
         repository: WoodyB/vending-machine-project
-        run-id: ${{ env.run_id }}
+        # run-id: ${{ env.run_id }}
+        run-id: 1232454659
       
     - name: Display downloaded files
       run: ls
