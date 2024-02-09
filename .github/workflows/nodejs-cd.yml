@@ -40,18 +40,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Print the latest RC    
-      run: echo "Latest RC found in in determine_latest_rc => ${{ needs.determine_latest_rc.outputs.LATEST_RC }}"
-  
     - name: Fetch The Binaries For The RC    
       id: fetch-binaries
       run: |
-        #latest_rc = ${{ needs.determine_latest_rc.outputs.LATEST_RC }}
-        # Debug: Hardcoded name in curl to rc-158-binaries
-        # run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=rc-158-binaries" | jq -r '.artifacts[0].run_id')
         # run_id = $(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=rc-158-binaries" | jq -r '.artifacts[0].id')
-        curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].id'
-        # echo "run_id=$run_id" >> $GITHUB_ENV
+        # curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].id'
+        run_id=$(echo curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].id')
+        echo "run_id=$run_id" >> $GITHUB_ENV
 
     - name: Debug Info
       run: env
