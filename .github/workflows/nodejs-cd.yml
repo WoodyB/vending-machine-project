@@ -32,7 +32,6 @@ jobs:
         echo "Latest Release Candidate is $latestRC"
         echo "LATEST_RC=$latestRC" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
 
-
   fetch_release_candidate:
     needs: determine_latest_rc
     concurrency:
@@ -43,22 +42,18 @@ jobs:
     - name: Fetch The Binaries For The RC    
       id: fetch-binaries
       run: |
-        #run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].id')
         run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].workflow_run.id')
         echo "run_id is $run_id"
         echo "run_id=$run_id" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
-    #
-    # Ha! I know what's wrong. run-id needs to be set to artifacts[0].workflow_run.id NOT artifacts[0].id
+    
     - name: Download Binaries Artifact
       uses: actions/download-artifact@v4
       with:
         name: ${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries
-        #name: rc-178-binaries
         github-token: ${{ secrets.USER_TOKEN }}
         merge-multiple: false
         repository: WoodyB/vending-machine-project
         run-id: ${{ env.run_id }}
-        #run-id: 7840080236
       
     - name: Display downloaded files
       run: ls
