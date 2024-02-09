@@ -41,13 +41,15 @@ jobs:
 
     steps:
     - name: Fetch The Binaries For The RC    
-      id: fetch-binaries
       run: echo "Latest RC found in in determine_latest_rc => ${{ needs.determine_latest_rc.outputs.LATEST_RC }}"
-  #    #run: |
-      #  latest_rc=$GITHUB_ENV
-      #  latest_rc=${latest_rc#*=}
-      #  run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${latest_rc}-binaries" | jq -r '.artifacts[0].run_id')
-      #  echo "Run ID: $run_id"
+  
+    - name: Fetch The Binaries For The RC    
+      id: fetch-binaries
+      run: |
+        latest_rc = ${{ needs.determine_latest_rc.outputs.LATEST_RC }}
+        run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${latest_rc}-binaries" | jq -r '.artifacts[0].run_id')
+        echo "Run ID: $run_id"
+        
       #  echo "::set-output name=run_id::$run_id"
       
     #- name: Download Binaries Artifact
