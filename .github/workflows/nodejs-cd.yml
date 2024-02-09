@@ -43,25 +43,26 @@ jobs:
     - name: Fetch The Binaries For The RC    
       id: fetch-binaries
       run: |
-        # curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].id'
         run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].id')
-        echo "run_id is $run_id"      
-    #- name: Download Binaries Artifact
-    #  uses: actions/download-artifact@v4
-    #  with:
-    #    name: ${{ steps.latest-rc.outputs.latest_rc }}-binaries
-    #    github-token: ${{ secrets.USER_TOKEN }}
-    #    merge-multiple: false
-    #    repository: WoodyB/vending-machine-project
-    #    run-id: ${{ steps.fetch-binaries.outputs.run_id }}
+        echo "run_id is $run_id"
+        echo "run_id=$run_id" >> $GITHUB_ENV
+        
+    - name: Download Binaries Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries
+        github-token: ${{ secrets.USER_TOKEN }}
+        merge-multiple: false
+        repository: WoodyB/vending-machine-project
+        run-id: $run_id
       
-    #- name: Display downloaded files
-    #  run: ls
+    - name: Display downloaded files
+      run: ls
 
-    #- name: Print app-data.js
-    #  run: cat ./bin/app-data.js
+    - name: Print app-data.js
+      run: cat ./bin/app-data.js
 
-    #- name: Run Acceptance Tests
-    #  run: |
-    #    chmod a+x node_modules/.bin/jest
-    #    npm run test:acceptance
+    - name: Run Acceptance Tests
+      run: |
+        chmod a+x node_modules/.bin/jest
+        npm run test:acceptance
