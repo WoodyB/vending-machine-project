@@ -91,14 +91,20 @@ jobs:
           ./node_modules
 
     # Delete artifact rc-<latest rc>-binaries
-    - name: Remove Artifact
+    #- name: Remove Artifact
+    #  if: steps.acceptance_tests.outcome == 'success'
+    #  uses: remagpie/gha-remove-artifact@v1
+    #  with:
+    #    only-name: ${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries
+    #    max-count: 1
+    - name: Delete Artifact by Name
       if: steps.acceptance_tests.outcome == 'success'
-      uses: remagpie/gha-remove-artifact@v1
+      uses: jimschubert/delete-artifacts-action@v1
       with:
-        only-name: ${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries
-        max-count: 1
+        log_level: 'debug'
+        artifact_name: '${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries'
+        min_bytes: '0'
                 
-
     - name: Take Action On Acceptance Tests Failed
       if: steps.acceptance_tests.outcome != 'success'
       run: |
