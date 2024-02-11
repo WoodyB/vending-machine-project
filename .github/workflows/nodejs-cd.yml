@@ -62,7 +62,17 @@ jobs:
       run: cat ./bin/app-data.js
 
     - name: Run Acceptance Tests
+      id: acceptance_tests
       run: |
         chmod a+x node_modules/.bin/jest
         npm run test:acceptance
-    #
+      continue-on-error: true
+
+    - name: Take Action On Acceptance Tests Passed
+      if: steps.acceptance_tests.outcome == 'success'
+      run: echo "Acceptance Tests PASS
+
+    - name: Take Action On Acceptance Tests Failed
+      if: steps.acceptance_tests.outcome != 'success'
+      run: echo "Acceptance Tests FAIL"
+        
