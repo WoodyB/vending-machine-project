@@ -81,7 +81,7 @@ jobs:
         cat ./bin/app-data.js
 
     # Upload the proper files ./bin ./node_modules as new artifact rc-<latest rc>-binaries-accepted
-    - name: Upload Artifact As Accepted Tests
+    - name: Upload Artifact As Accepted
       if: steps.acceptance_tests.outcome == 'success'
       uses: actions/upload-artifact@v4
       with:
@@ -91,7 +91,7 @@ jobs:
           ./node_modules
 
     # Delete artifact rc-<latest rc>-binaries
-    - name: Find Old Artifact
+    - name: Find Old Artifact And Delete It
       if: steps.acceptance_tests.outcome == 'success'
       run: |
         artifact_id=$(curl -s -X GET \
@@ -100,12 +100,9 @@ jobs:
           jq -r '.artifacts[] | select(.name == "${{ github.event.inputs.artifact_name }}") | .id')
         echo "ARTIFACT_ID=$artifact_id" >> $GITHUB_ENV
       
-    - name: Delete Old Artifact
-      if: steps.acceptance_tests.outcome == 'success'    
-      run: |
         curl -X DELETE \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ env.ARTIFACT_ID }}"                
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ artifact_id }}"                
     
     - name: Take Action On Acceptance Tests Failed
       if: steps.acceptance_tests.outcome != 'success'
