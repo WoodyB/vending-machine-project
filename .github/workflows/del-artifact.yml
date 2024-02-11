@@ -1,10 +1,10 @@
-name: Delete Artifact
+name: Delete Artifact by Name
 
 on:
   workflow_dispatch:
     inputs:
-      artifact_id:
-        description: 'Artifact ID to delete'
+      artifact_name:
+        description: 'Artifact name to delete'
         required: true
 
 jobs:
@@ -12,8 +12,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Get Artifact ID
+      id: get_artifact_id
+      run: |
+        artifact_id=$(curl -s -X GET \
+          -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | \
+          jq -r '.artifacts[] | select(.name == "${{ github.event.inputs.artifact_name }}") | .id')
+        echo "ARTIFACT_ID=$artifact_id" >> $GITHUB_ENV
+
     - name: Delete Artifact
       run: |
         curl -X DELETE \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ github.event.inputs.artifact_id }}"
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ env.ARTIFACT_ID }}"
