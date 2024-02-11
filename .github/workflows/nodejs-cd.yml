@@ -80,16 +80,18 @@ jobs:
         sed -i "s/version: \"\([0-9]\+\.[0-9]\+\.[0-9]\+\)-RC\"/version: \"\1\"/g" ./bin/app-data.js
         cat ./bin/app-data.js
 
-        # Upload the proper files ./bin ./node_modules as new artifact rc-<latest rc>-binaries-accepted
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries-accepted
-          path: |
-            ./bin
-            ./node_modules
+    # Upload the proper files ./bin ./node_modules as new artifact rc-<latest rc>-binaries-accepted
+    - name: Upload Artifact A Accepted Tests
+      if: steps.acceptance_tests.outcome == 'success'
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries-accepted
+        path: |
+          ./bin
+          ./node_modules
 
         
-        # Delete artifact rc-<latest rc>-binaries
+    # Delete artifact rc-<latest rc>-binaries
 
     - name: Take Action On Acceptance Tests Failed
       if: steps.acceptance_tests.outcome != 'success'
