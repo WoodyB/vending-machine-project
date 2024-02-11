@@ -74,5 +74,7 @@ jobs:
 
     - name: Take Action On Acceptance Tests Failed
       if: steps.acceptance_tests.outcome != 'success'
-      run: echo "Acceptance Tests FAIL"
+      run: |
+        echo "Acceptance Tests FAIL"
+        exit 1
         
