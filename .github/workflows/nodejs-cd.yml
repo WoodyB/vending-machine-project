@@ -96,6 +96,7 @@ jobs:
       uses: remagpie/gha-remove-artifact@v1
       with:
         only-name: ${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries
+        max-count: 1
                 
 
     - name: Take Action On Acceptance Tests Failed
