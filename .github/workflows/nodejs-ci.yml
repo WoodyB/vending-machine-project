@@ -7,9 +7,6 @@ permissions:
   contents: write
 
 jobs:
-  #
-  # Job
-  #
   build_and_test:
 
     concurrency:
@@ -88,9 +85,7 @@ jobs:
       run: git push origin --tags
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
-  #
-  # Job
-  #      
+  
   merge_to_main:
     needs: build_and_test
     concurrency:
@@ -111,8 +106,3 @@ jobs:
         DELETE_BRANCH_API_URL="https://api.github.com/repos/${{ github.repository }}/git/refs/heads/${{ github.head_ref }}"
         curl -X DELETE -H "Authorization: Bearer $GITHUB_TOKEN" "$DELETE_BRANCH_API_URL"
         
-    #- name: Fetch The Binaries For The RC Debugging
-    #  uses: actions/download-artifact@v4
-    #  with:
-    #    name: rc-${{ github.run_number }}-binaries
-    #    github-token: ${{ secrets.USER_TOKEN }}
