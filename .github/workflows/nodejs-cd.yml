@@ -70,7 +70,7 @@ jobs:
 
     - name: Take Action On Acceptance Tests Passed
       if: steps.acceptance_tests.outcome == 'success'
-      run: echo "Acceptance Tests PASS
+      run: echo "Acceptance Tests PASS"
 
     - name: Take Action On Acceptance Tests Failed
       if: steps.acceptance_tests.outcome != 'success'
