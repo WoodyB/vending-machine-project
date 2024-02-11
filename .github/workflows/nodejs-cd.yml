@@ -31,6 +31,10 @@ jobs:
         latestRC=$(echo $tags | awk '{print $NF}')
         echo "Latest Release Candidate is $latestRC"
         echo "LATEST_RC=$latestRC" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
+        exit 0
+
+    # Check to see artifact rc-<latest rc>-binaries exists. If it doesn't then
+    # that means we've already process it. Maybe we can just exit 0 and go back to sleep
 
   fetch_release_candidate:
     needs: determine_latest_rc
@@ -71,10 +75,15 @@ jobs:
     - name: Take Action On Acceptance Tests Passed
       if: steps.acceptance_tests.outcome == 'success'
       run: echo "Acceptance Tests PASS"
+           # Update the version in app-data.js by dropping the -RC
+           # Upload the proper files ./bin ./node_modules as new artifact rc-<latest rc>-binaries-accepted
+           # Delete artifact rc-<latest rc>-binaries
 
     - name: Take Action On Acceptance Tests Failed
       if: steps.acceptance_tests.outcome != 'success'
       run: |
         echo "Acceptance Tests FAIL"
+        # Upload the proper files ./bin ./node_modules as new artifact rc-<latest rc>-binaries-rejected
+        # Delete artifact rc-<latest rc>-binaries
         exit 1
         
