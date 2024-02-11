@@ -91,16 +91,22 @@ jobs:
           ./node_modules
 
     # Delete artifact rc-<latest rc>-binaries
-    - name: Find Old Artifact And Delete It
-      if: steps.acceptance_tests.outcome == 'success'
+    - name: Get Artifact ID
+      if: steps.acceptance_tests.outcome == 'success'    
+      id: get_artifact_id
       run: |
         artifact_id=$(curl -s -X GET \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | \
-          jq -r '.artifacts[] | select(.name == "${{ github.event.inputs.artifact_name }}") | .id')
+          jq -r '.artifacts[] | select(.name == "${{ ${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries }}") | .id')
+        echo "ARTIFACT_ID=$artifact_id" >> $GITHUB_ENV
+
+    - name: Delete Artifact
+      if: steps.acceptance_tests.outcome == 'success'    
+      run: |
         curl -X DELETE \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id"                
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ env.ARTIFACT_ID }}"    
     
     - name: Take Action On Acceptance Tests Failed
       if: steps.acceptance_tests.outcome != 'success'
