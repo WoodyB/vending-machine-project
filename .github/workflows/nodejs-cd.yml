@@ -65,3 +65,5 @@ jobs:
       run: |
         chmod a+x node_modules/.bin/jest
         npm run test:acceptance
+
+    # Next steps see notes    
