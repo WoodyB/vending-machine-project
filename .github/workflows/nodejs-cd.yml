@@ -90,8 +90,13 @@ jobs:
           ./bin
           ./node_modules
 
-        
     # Delete artifact rc-<latest rc>-binaries
+    - name: Remove Artifact
+      if: steps.acceptance_tests.outcome == 'success'
+      uses: remagpie/gha-remove-artifact@v1
+      with:
+        only-name: ${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries
+                
 
     - name: Take Action On Acceptance Tests Failed
       if: steps.acceptance_tests.outcome != 'success'
