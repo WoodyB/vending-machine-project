@@ -15,5 +15,5 @@ jobs:
     - name: Delete Artifact
       run: |
         curl -X DELETE \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ github.event.inputs.artifact_id }}"
