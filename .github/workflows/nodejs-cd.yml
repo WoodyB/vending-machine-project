@@ -81,7 +81,7 @@ jobs:
         cat ./bin/app-data.js
 
     # Upload the proper files ./bin ./node_modules as new artifact rc-<latest rc>-binaries-accepted
-    - name: Upload Artifact A Accepted Tests
+    - name: Upload Artifact As Accepted Tests
       if: steps.acceptance_tests.outcome == 'success'
       uses: actions/upload-artifact@v4
       with:
@@ -91,20 +91,22 @@ jobs:
           ./node_modules
 
     # Delete artifact rc-<latest rc>-binaries
-    #- name: Remove Artifact
-    #  if: steps.acceptance_tests.outcome == 'success'
-    #  uses: remagpie/gha-remove-artifact@v1
-    #  with:
-    #    only-name: ${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries
-    #    max-count: 1
-    - name: Delete Artifact by Name
+    - name: Find Old Artifact
       if: steps.acceptance_tests.outcome == 'success'
-      uses: jimschubert/delete-artifacts-action@v1
-      with:
-        log_level: 'debug'
-        artifact_name: '${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries'
-        min_bytes: '0'
-                
+      run: |
+        artifact_id=$(curl -s -X GET \
+          -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | \
+          jq -r '.artifacts[] | select(.name == "${{ github.event.inputs.artifact_name }}") | .id')
+        echo "ARTIFACT_ID=$artifact_id" >> $GITHUB_ENV
+      
+    - name: Delete Old Artifact
+      if: steps.acceptance_tests.outcome == 'success'    
+      run: |
+        curl -X DELETE \
+          -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ env.ARTIFACT_ID }}"                
+    
     - name: Take Action On Acceptance Tests Failed
       if: steps.acceptance_tests.outcome != 'success'
       run: |
