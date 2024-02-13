@@ -33,7 +33,20 @@ jobs:
         echo "LATEST_RC=$latestRC" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
 
     # Check to see artifact rc-<latest rc>-binaries exists. If it doesn't then
-    # that means we've already process it. Maybe we can just exit 0 and go back to sleep
+    # that means we've already process it.
+    - name: Check if artifact exists
+      id: check-condition
+      run: |
+        ARTIFACT_NAME="$latestRC-binary"
+        ARTIFACT_EXISTS=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts" | jq -r --arg ARTIFACT_NAME "$ARTIFACT_NAME" '.artifacts[] | select(.name == $ARTIFACT_NAME) | .id')
+        if [ -n "$ARTIFACT_EXISTS" ]; then
+          #echo "CONDITION_MET=true" >> $GITHUB_ENV
+          echo "Condition has been met"
+        else
+          #echo "CONDITION_MET=false" >> $GITHUB_ENV
+          echo "Condition has NOT been met"          
+        fi
+    
 
   fetch_release_candidate:
     needs: determine_latest_rc
