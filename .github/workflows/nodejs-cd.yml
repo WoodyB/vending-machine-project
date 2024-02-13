@@ -109,11 +109,6 @@ jobs:
           ./bin
           ./node_modules
   
-    - name: Fail Workflow To Alert User
-      if: steps.acceptance_tests.outcome != 'success'
-      run: |
-        echo "Acceptance Tests Failed"
-         exit 1
     #
     # Clean up artifacts by deleting original "rc-<latest rc>-binaries" artifact
     # now that we have replaced the artifact as either "rc-<latest rc>-binaries-accepted OR
@@ -137,5 +132,10 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ env.ARTIFACT_ID }}"    
       
+    - name: Fail Workflow To Alert User IF Acceptance Tests Failed
+      if: steps.acceptance_tests.outcome != 'success'
+      run: |
+        echo "Acceptance Tests Failed"
+         exit 1
        
         
