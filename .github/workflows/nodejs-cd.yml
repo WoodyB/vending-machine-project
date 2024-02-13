@@ -30,14 +30,16 @@ jobs:
         tags=$(git tag -l "rc-*" | grep "rc-*" | sort -V)
         latestRC=$(echo $tags | awk '{print $NF}')
         echo "Latest Release Candidate is $latestRC"
-        echo "LATEST_RC=$latestRC" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
+        echo "LATEST_RC=$latestRC" >> $GITHUB_ENV
 
     # Check to see artifact rc-<latest rc>-binaries exists. If it doesn't then
     # that means we've already processed it.
     - name: Check if artifact exists
       id: check-condition
       run: |
-        ARTIFACT_NAME="${LATEST_RC}-binaries"
+        echo "Latest RC is $LATEST_RC"
+        echo ">>Latest RC is ${{env.LATEST_RC}}"
+        ARTIFACT_NAME="${{env.LATEST_RC}}-binaries"
         ARTIFACT_EXISTS=$(curl -s -H "Authorization: Bearer $USER_TOKEN" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts" | jq -r --arg ARTIFACT_NAME "$ARTIFACT_NAME" '.artifacts[] | select(.name == $ARTIFACT_NAME) | .id')
         if [ -n "$ARTIFACT_EXISTS" ]; then
           #echo "CONDITION_MET=true" >> $GITHUB_ENV
