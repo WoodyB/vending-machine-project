@@ -47,7 +47,7 @@ jobs:
             echo "CONDITION_MET=true" >> $GITHUB_ENV
           else
             #echo "Condition has NOT been met"
-            echo "CONDITION_MET=true" >> $GITHUB_ENV            
+            echo "CONDITION_MET=false" >> $GITHUB_ENV            
           fi
           
   fetch_release_candidate:
