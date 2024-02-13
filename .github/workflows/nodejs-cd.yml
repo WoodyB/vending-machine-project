@@ -30,7 +30,7 @@ jobs:
         tags=$(git tag -l "rc-*" | grep "rc-*" | sort -V)
         latestRC=$(echo $tags | awk '{print $NF}')
         echo "Latest Release Candidate is $latestRC"
-        echo "LATEST_RC=$latestRC" >> $GITHUB_ENV
+        echo "LATEST_RC=$latestRC" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
 
     # Check to see artifact rc-<latest rc>-binaries exists. If it doesn't then
     # that means we've already processed it.
