@@ -41,14 +41,15 @@ jobs:
         echo ">>Latest RC is ${{env.LATEST_RC}}"
         ARTIFACT_NAME="${{env.LATEST_RC}}-binaries"
         ARTIFACT_RESPONSE=$(curl -s -H "Authorization: Bearer $USER_TOKEN" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts")
-        ARTIFACT_EXISTS=$(echo "$ARTIFACT_RESPONSE" | jq -r --arg ARTIFACT_NAME "$ARTIFACT_NAME" '.artifacts[] | select(.name == $ARTIFACT_NAME) | .id')
-        if [ -n "$ARTIFACT_EXISTS" ]; then
-          #echo "CONDITION_MET=true" >> $GITHUB_ENV
-          echo "Condition has been met"
-        else
-          #echo "CONDITION_MET=false" >> $GITHUB_ENV
-          echo "Condition has NOT been met"          
-        fi    
+        echo "$ARTIFACT_RESPONSE"
+        #ARTIFACT_EXISTS=$(echo "$ARTIFACT_RESPONSE" | jq -r --arg ARTIFACT_NAME "$ARTIFACT_NAME" '.artifacts[] | select(.name == $ARTIFACT_NAME) | .id')
+        #if [ -n "$ARTIFACT_EXISTS" ]; then
+        #  #echo "CONDITION_MET=true" >> $GITHUB_ENV
+        #  echo "Condition has been met"
+        #else
+        #  #echo "CONDITION_MET=false" >> $GITHUB_ENV
+        #  echo "Condition has NOT been met"          
+        #fi    
 
   fetch_release_candidate:
     needs: determine_latest_rc
