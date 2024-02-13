@@ -38,8 +38,6 @@ jobs:
     - name: Check if artifact exists
       id: check-condition
       run: |
-          echo "Latest RC is $LATEST_RC"
-          echo ">>Latest RC is ${{env.LATEST_RC}}"
           ARTIFACT_NAME="${{env.LATEST_RC}}-binaries"
           ARTIFACT_EXISTS=$(curl -s -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts?name=${ARTIFACT_NAME}" | jq -r '.artifacts[0].id')
           echo "ARTIFACT_EXISTS = $ARTIFACT_EXISTS"
@@ -61,9 +59,8 @@ jobs:
     - name: Fetch The Binaries For The RC    
       id: fetch-binaries
       run: |
-        echo "Condition -> ${{ needs.determine_latest_rc.outputs.CONDITION_MET }}"
         run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].workflow_run.id')
-        echo "run_id is $run_id"
+        echo "run_id of workflow that produced the artifact is $run_id"
         echo "run_id=$run_id" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
     
     - name: Download Binaries Artifact
@@ -75,9 +72,6 @@ jobs:
         repository: WoodyB/vending-machine-project
         run-id: ${{ env.run_id }}
         
-    - name: Display downloaded files
-      run: ls
-
     - name: Print app-data.js
       run: cat ./bin/app-data.js
 
@@ -95,9 +89,10 @@ jobs:
       if: steps.acceptance_tests.outcome == 'success'
       run: |
         echo "Acceptance Tests PASS"
-        # Update the version in app-data.js by dropping the -RC
+        echo "Update the version in app-data.js by dropping the -RC"
         sed -i "s/version: \"\([0-9]\+\.[0-9]\+\.[0-9]\+\)-RC\"/version: \"\1\"/g" ./bin/app-data.js
         cat ./bin/app-data.js
+        echo "Now that acceptance tests have passed we will rename the artifact by addding -accepted to its name"
 
     # Upload the proper files ./bin ./node_modules as new artifact rc-<latest rc>-binaries-accepted
     - name: Upload Artifact As Accepted
@@ -115,7 +110,8 @@ jobs:
       if: steps.acceptance_tests.outcome != 'success'
       run: |
         echo "Acceptance Tests FAIL"
-        
+        echo "Now that acceptance tests have failed we will rename the artifact by addding -rejected to its name"
+
     # Upload the proper files ./bin ./node_modules as new artifact rc-<latest rc>-binaries-rejected
     - name: Upload Artifact As Rejected
       if: steps.acceptance_tests.outcome != 'success'
@@ -127,8 +123,9 @@ jobs:
           ./node_modules
   
     #
-    # Clean up artifacts by deleting original "rc-<latest rc>-binaries" artifact
-    # now that we have replaced the artifact as either "rc-<latest rc>-binaries-accepted OR
+    # Since we can't really rename an artifact we can only create a new one and delete the old one
+    # we must delete the original "rc-<latest rc>-binaries" artifact now that we have replaced 
+    # the artifact as either "rc-<latest rc>-binaries-accepted OR
     # "rc-<latest rc>-binaries-rejected"
     #
     - name: Get latest RC Artifact ID  
@@ -138,8 +135,6 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | \
           jq -r '.artifacts[] | select(.name == "${{needs.determine_latest_rc.outputs.LATEST_RC}}-binaries") | .id')
-        #echo "<<<<<< ${{needs.determine_latest_rc.outputs.LATEST_RC}}-binaries >>>>>>>"                               
-        #echo ">>>>> $artifact_id <<<<<"  
         echo "ARTIFACT_ID=$artifact_id" >> $GITHUB_ENV
         
     # Delete artifact rc-<latest rc>-binaries
