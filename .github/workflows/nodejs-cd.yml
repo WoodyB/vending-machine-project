@@ -43,7 +43,7 @@ jobs:
           ARTIFACT_NAME="${{env.LATEST_RC}}-binaries"
           ARTIFACT_EXISTS=$(curl -s -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts?name=${ARTIFACT_NAME}" | jq -r '.artifacts[0].id')
           echo "ARTIFACT_EXISTS = $ARTIFACT_EXISTS"
-          if [ -z "$ARTIFACT_EXISTS" ]; then
+          if [ "$ARTIFACT_EXISTS" = "null" ]; then
             echo "Condition has NOT been met"
             echo "CONDITION_MET=false" | tee -a $GITHUB_ENV $GITHUB_OUTPUT            
           else
