@@ -43,8 +43,10 @@ jobs:
           ARTIFACT_EXISTS=$(curl -s -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts?name=${ARTIFACT_NAME}" | jq -r '.artifacts[0].id')
           if [ -n "$ARTIFACT_EXISTS" ]; then
             echo "Condition has been met"
+            echo "CONDITION_MED=true" >> $GITHUB_ENV
           else
-            echo "Condition has NOT been met"          
+            echo "Condition has NOT been met"
+            echo "CONDITION_MED=true" >> $GITHUB_ENV            
           fi
           
   fetch_release_candidate:
@@ -52,7 +54,7 @@ jobs:
     concurrency:
       group: acceptance_stage
     runs-on: ubuntu-latest
-
+    if: ${{ env.CONDITION_MET == 'true' }}
     steps:
     - name: Fetch The Binaries For The RC    
       id: fetch-binaries
