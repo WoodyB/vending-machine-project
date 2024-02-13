@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       LATEST_RC: ${{ steps.get-latest-rc.outputs.LATEST_RC }}
+      CONDITION_MET: ${{ steps.check-condition.outputs.CONDITION_MET }}
     steps:
     - name: Setup node
       uses: actions/setup-node@v4
@@ -42,11 +43,11 @@ jobs:
           ARTIFACT_NAME="${{env.LATEST_RC}}-binaries"
           ARTIFACT_EXISTS=$(curl -s -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts?name=${ARTIFACT_NAME}" | jq -r '.artifacts[0].id')
           if [ -n "$ARTIFACT_EXISTS" ]; then
-            echo "Condition has been met"
-            echo "CONDITION_MED=true" >> $GITHUB_ENV
+            #echo "Condition has been met"
+            echo "CONDITION_MET=true" >> $GITHUB_ENV
           else
-            echo "Condition has NOT been met"
-            echo "CONDITION_MED=true" >> $GITHUB_ENV            
+            #echo "Condition has NOT been met"
+            echo "CONDITION_MET=true" >> $GITHUB_ENV            
           fi
           
   fetch_release_candidate:
@@ -54,7 +55,8 @@ jobs:
     concurrency:
       group: acceptance_stage
     runs-on: ubuntu-latest
-    if: ${{ env.CONDITION_MET == 'true' }}
+    # ${{ needs.determine_latest_rc.outputs.LATEST_RC }}
+    if: ${{ needs.determine_latest_rc.outputs.CONDITION_MET }} == 'true'
     steps:
     - name: Fetch The Binaries For The RC    
       id: fetch-binaries
