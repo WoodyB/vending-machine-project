@@ -2,7 +2,9 @@ name: NodeJS Continuous Integration
 on:
   pull_request:
     branches: [ "main" ]
-
+env:
+  GIT_USER: "${{ github.actor }}"
+  
 permissions:
   contents: write
 
