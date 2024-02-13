@@ -58,7 +58,7 @@ jobs:
     concurrency:
       group: acceptance_stage
     runs-on: ubuntu-latest
-    if: steps.check-condition.outputs.CONDITION_MET == 'true'
+    if: ${{ steps.check-condition.outputs.CONDITION_MET == 'true' }}
     steps:
     - name: Fetch The Binaries For The RC    
       id: fetch-binaries
