@@ -1,6 +1,6 @@
 {
   "name": "vending-machine-project",
-  "version": "0.1.x",
+  "version": "0.2.x",
   "description": "See project README.md",
   "main": "bin/index.js",
   "scripts": {
