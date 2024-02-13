@@ -31,7 +31,6 @@ jobs:
         latestRC=$(echo $tags | awk '{print $NF}')
         echo "Latest Release Candidate is $latestRC"
         echo "LATEST_RC=$latestRC" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
-        exit 0
 
     # Check to see artifact rc-<latest rc>-binaries exists. If it doesn't then
     # that means we've already process it. Maybe we can just exit 0 and go back to sleep
@@ -72,6 +71,9 @@ jobs:
         npm run test:acceptance
       continue-on-error: true
 
+    #
+    # Acceptance Tests Passed
+    #
     - name: Take Action On Acceptance Tests Passed
       if: steps.acceptance_tests.outcome == 'success'
       run: |
@@ -89,10 +91,35 @@ jobs:
         path: |
           ./bin
           ./node_modules
-
-    # Delete artifact rc-<latest rc>-binaries
-    - name: Get Artifact ID
-      if: steps.acceptance_tests.outcome == 'success'    
+    #
+    # Acceptance Tests Failed
+    #
+    - name: Take Action On Acceptance Tests Failed
+      if: steps.acceptance_tests.outcome != 'success'
+      run: |
+        echo "Acceptance Tests FAIL"
+        
+    # Upload the proper files ./bin ./node_modules as new artifact rc-<latest rc>-binaries-rejected
+    - name: Upload Artifact As Rejected
+      if: steps.acceptance_tests.outcome != 'success'
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries-rejected
+        path: |
+          ./bin
+          ./node_modules
+  
+    - name: Fail Workflow To Alert User
+      if: steps.acceptance_tests.outcome != 'success'
+      run: |
+        echo "Acceptance Tests Failed"
+         exit 1
+    #
+    # Clean up artifacts by deleting original "rc-<latest rc>-binaries" artifact
+    # now that we have replaced the artifact as either "rc-<latest rc>-binaries-accepted OR
+    # "rc-<latest rc>-binaries-rejected"
+    #
+    - name: Get latest RC Artifact ID  
       id: get_artifact_id
       run: |
         artifact_id=$(curl -s -X GET \
@@ -103,19 +130,12 @@ jobs:
         #echo ">>>>> $artifact_id <<<<<"  
         echo "ARTIFACT_ID=$artifact_id" >> $GITHUB_ENV
         
-
-    - name: Delete Artifact
-      if: steps.acceptance_tests.outcome == 'success'    
+    # Delete artifact rc-<latest rc>-binaries
+    - name: Delete Artifact   
       run: |
         curl -X DELETE \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ env.ARTIFACT_ID }}"    
-    
-    - name: Take Action On Acceptance Tests Failed
-      if: steps.acceptance_tests.outcome != 'success'
-      run: |
-        echo "Acceptance Tests FAIL"
-        # Upload the proper files ./bin ./node_modules as new artifact rc-<latest rc>-binaries-rejected
-        # Delete artifact rc-<latest rc>-binaries
-        exit 1
+      
+       
         
