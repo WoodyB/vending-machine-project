@@ -38,7 +38,7 @@ jobs:
       id: check-condition
       run: |
         ARTIFACT_NAME="$latestRC-binary"
-        ARTIFACT_EXISTS=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts" | jq -r --arg ARTIFACT_NAME "$ARTIFACT_NAME" '.artifacts[] | select(.name == $ARTIFACT_NAME) | .id')
+        ARTIFACT_EXISTS=$(curl -s -H "Authorization: Bearer $USER_TOKEN" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts" | jq -r --arg ARTIFACT_NAME "$ARTIFACT_NAME" '.artifacts[] | select(.name == $ARTIFACT_NAME) | .id')
         if [ -n "$ARTIFACT_EXISTS" ]; then
           #echo "CONDITION_MET=true" >> $GITHUB_ENV
           echo "Condition has been met"
