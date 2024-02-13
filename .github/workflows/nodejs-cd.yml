@@ -40,7 +40,7 @@ jobs:
         echo "Latest RC is $LATEST_RC"
         echo ">>Latest RC is ${{env.LATEST_RC}}"
         ARTIFACT_NAME="${{env.LATEST_RC}}-binaries"
-        ARTIFACT_RESPONSE=$(curl -s -H "Authorization: Bearer $USER_TOKEN" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts")
+        ARTIFACT_RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts")
         echo "$ARTIFACT_RESPONSE"
         #ARTIFACT_EXISTS=$(echo "$ARTIFACT_RESPONSE" | jq -r --arg ARTIFACT_NAME "$ARTIFACT_NAME" '.artifacts[] | select(.name == $ARTIFACT_NAME) | .id')
         #if [ -n "$ARTIFACT_EXISTS" ]; then
