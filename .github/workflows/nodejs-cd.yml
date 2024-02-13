@@ -45,13 +45,11 @@ jobs:
           echo "ARTIFACT_EXISTS = $ARTIFACT_EXISTS"
           if [ -z "$ARTIFACT_EXISTS" ]; then
             echo "Condition has NOT been met"
-            #echo "CONDITION_MET=false" | tee -a $GITHUB_ENV $GITHUB_OUTPUT            
+            echo "CONDITION_MET=false" | tee -a $GITHUB_ENV $GITHUB_OUTPUT            
           else
             echo "Condition has been met"
-            #echo "CONDITION_MET=true" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
+            echo "CONDITION_MET=true" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
           fi
-          echo "CONDITION_MET=false" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
-          echo ">>>> $CONDITION_MET"
           
   fetch_release_candidate:
     needs: determine_latest_rc
