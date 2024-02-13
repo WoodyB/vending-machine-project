@@ -42,6 +42,7 @@ jobs:
           echo ">>Latest RC is ${{env.LATEST_RC}}"
           ARTIFACT_NAME="${{env.LATEST_RC}}-binaries"
           ARTIFACT_EXISTS=$(curl -s -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts?name=${ARTIFACT_NAME}" | jq -r '.artifacts[0].id')
+          echo "ARTIFACT_EXISTS = $ARTIFACT_EXISTS"
           if [ -n "$ARTIFACT_EXISTS" ]; then
             echo "Condition has been met"
             #echo "CONDITION_MET=true" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
@@ -50,7 +51,7 @@ jobs:
             #echo "CONDITION_MET=false" | tee -a $GITHUB_ENV $GITHUB_OUTPUT            
           fi
           echo "CONDITION_MET=false" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
-          echo ">>>> $CONDITION_MET"
+          echo ">>>> ${{env.CONDITION_MET}}"
           
   fetch_release_candidate:
     needs: determine_latest_rc
@@ -62,6 +63,7 @@ jobs:
     - name: Fetch The Binaries For The RC    
       id: fetch-binaries
       run: |
+        echo "Condition -> ${{ needs.determine_latest_rc.outputs.CONDITION_MET }}"
         run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries" | jq -r '.artifacts[0].workflow_run.id')
         echo "run_id is $run_id"
         echo "run_id=$run_id" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
