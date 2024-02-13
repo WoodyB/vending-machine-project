@@ -37,20 +37,16 @@ jobs:
     - name: Check if artifact exists
       id: check-condition
       run: |
-        echo "Latest RC is $LATEST_RC"
-        echo ">>Latest RC is ${{env.LATEST_RC}}"
-        ARTIFACT_NAME="${{env.LATEST_RC}}-binaries"
-        ARTIFACT_RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts")
-        echo "$ARTIFACT_RESPONSE"
-        #ARTIFACT_EXISTS=$(echo "$ARTIFACT_RESPONSE" | jq -r --arg ARTIFACT_NAME "$ARTIFACT_NAME" '.artifacts[] | select(.name == $ARTIFACT_NAME) | .id')
-        #if [ -n "$ARTIFACT_EXISTS" ]; then
-        #  #echo "CONDITION_MET=true" >> $GITHUB_ENV
-        #  echo "Condition has been met"
-        #else
-        #  #echo "CONDITION_MET=false" >> $GITHUB_ENV
-        #  echo "Condition has NOT been met"          
-        #fi    
-
+          echo "Latest RC is $LATEST_RC"
+          echo ">>Latest RC is ${{env.LATEST_RC}}"
+          ARTIFACT_NAME="${{env.LATEST_RC}}-binaries"
+          ARTIFACT_EXISTS=$(curl -s -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts?name=${ARTIFACT_NAME}" | jq -r '.artifacts[0].id')
+          if [ -n "$ARTIFACT_EXISTS" ]; then
+            echo "Condition has been met"
+          else
+            echo "Condition has NOT been met"          
+          fi
+          
   fetch_release_candidate:
     needs: determine_latest_rc
     concurrency:
