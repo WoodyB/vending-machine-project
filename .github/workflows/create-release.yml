@@ -11,17 +11,14 @@ jobs:
   create_release:
     runs-on: ubuntu-latest
     steps:
-    #- name: Checkout code
-    #  uses: actions/checkout@v2
-
-    - name: Download RC Artifact  
+    - name: Get Run ID Of Workflow That Created The RC Artifact  
       id: fetch-binaries
       run: |
         run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=${{ inputs.artifact_name }}" | jq -r '.artifacts[0].workflow_run.id')
         echo "run_id of workflow that produced the artifact is $run_id"
         echo "run_id=$run_id" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
     
-    - name: Download Binaries Artifact
+    - name: Download RC Artifact
       uses: actions/download-artifact@v4
       with:
         name: ${{ inputs.artifact_name }}
@@ -30,8 +27,11 @@ jobs:
         repository: WoodyB/vending-machine-project
         run-id: ${{ env.run_id }}
         
-    - name: Print app-data.js
-      run: cat ./bin/app-data.js
+    - name: Extract Version From Artifact
+      run: |
+        version=$(cat ./bin/app-data.js | grep -oP '(?<="version": ")[^"]*')
+        echo "Preparing version $version"
+        echo "VERSION=$version" >> $GITHUB_ENV
 
     #- name: Create Release
     #  id: create_release
