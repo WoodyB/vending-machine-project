@@ -29,9 +29,10 @@ jobs:
         
     - name: Extract Version From Artifact
       run: |
-        version=$(cat ./bin/app-data.js | grep -oP '(?<="version": ")[^"]*')
-        echo "Preparing version $version"
-        echo "VERSION=$version" >> $GITHUB_ENV
+        cat ./bin/app-data.js
+        #version=$(cat ./bin/app-data.js | grep -oP '(?<="version": ")[^"]*')
+        #echo "Preparing version $version"
+        #echo "VERSION=$version" >> $GITHUB_ENV
 
     #- name: Create Release
     #  id: create_release
