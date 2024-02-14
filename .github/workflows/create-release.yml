@@ -24,7 +24,7 @@ jobs:
     - name: Download Binaries Artifact
       uses: actions/download-artifact@v4
       with:
-        name: ${{ needs.determine_latest_rc.outputs.LATEST_RC }}-binaries
+        name: ${{ inputs.artifact_name }}
         github-token: ${{ secrets.USER_TOKEN }}
         merge-multiple: false
         repository: WoodyB/vending-machine-project
