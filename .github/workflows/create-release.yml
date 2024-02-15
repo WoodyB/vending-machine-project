@@ -1,4 +1,4 @@
-name: Create Release Package
+name: Create Release
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
         required: true
 
 jobs:
-  create_release_package:
+  create_release:
     runs-on: ubuntu-latest
     steps:
     - name: Get Run ID Of Workflow That Created The RC Artifact  
@@ -33,34 +33,36 @@ jobs:
         echo "Preparing version $version"
         echo "VERSION=$version" >> $GITHUB_ENV
 
-    - name: Create Compressed Package
+    - name: Create Compressed Release
       run: |
         tar -czvf VMP-Release-${{ env.VERSION }}.tar.gz ./bin ./node_modules
 
-    - name: See what we got
+    - name: Debug See what we got
       run: ls -lh *.gz
 
-    - name: Setup Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-        
-    - name: Create Dynamic package.json
-      #run: echo '{"name": "vending-machine-project", "version": "${{ env.VERSION }}"}' > package.json
-      run: |
-        cat <<EOF | jq . > package.json
-        {
-          "name": "vending-machine-project",
-          "version": "${{ env.VERSION }}"
-        }
-        EOF
-      shell: bash
-      
-    - name: See what our package.json file looks like
-      run: cat package.json
+    # New Plan. Instead of using GitHub Packages to store our Releases we will use
+    # Box.Com to store our downloadable releases.
 
-    - name: Publish Compressed Package to GitHub Packages
-      run: |
-        npm publish VMP-Release-${{ env.VERSION }}.tar.gz --access public --tag Rel-${{ env.VERSION }} --package VMP-Release-${{ env.VERSION }}
-      env:
-        NODE_AUTH_TOKEN: ${{secrets.USER_TOKEN}}
+    #- name: Setup Node
+    #  uses: actions/setup-node@v4
+    #  with:
+    #    node-version: 20
+        
+    #- name: Create Dynamic package.json
+      #run: |
+      #  cat <<EOF | jq . > package.json
+      #  {
+      #    "name": "vending-machine-project",
+      #    "version": "${{ env.VERSION }}"
+      #  }
+      #  EOF
+      #shell: bash
+      
+    #- name: See what our package.json file looks like
+    #  run: cat package.json
+
+    #- name: Publish Compressed Package to GitHub Packages
+    #  run: |
+    #    npm publish VMP-Release-${{ env.VERSION }}.tar.gz --access public --tag Rel-${{ env.VERSION }} --package VMP-Release-${{ env.VERSION }}
+    #  env:
+    #    NODE_AUTH_TOKEN: ${{secrets.USER_TOKEN}}
