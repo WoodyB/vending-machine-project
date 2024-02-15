@@ -44,6 +44,17 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: 20
+        
+    - name: Create Dynamic package.json
+      #run: echo '{"name": "vending-machine-project", "version": "${{ env.VERSION }}"}' > package.json
+      run: |
+        cat <<EOF | jq . > package.json
+        {
+          "name": "vending-machine-project",
+          "version": "${{ env.VERSION }}"
+        }
+        EOF
+      shell: bash
 
     - name: Publish Compressed Package to GitHub Packages
       run: |
