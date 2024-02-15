@@ -47,6 +47,6 @@ jobs:
 
     - name: Publish Compressed Package to GitHub Packages
       run: |
-        npm publish VMP-Release-${{ env.VERSION }}.tar.gz --access public --tag ${{ env.VERSION }} --package VMP-Release-${{ env.VERSION }}
+        npm publish VMP-Release-${{ env.VERSION }}.tar.gz --access public --tag Rel-${{ env.VERSION }} --package VMP-Release-${{ env.VERSION }}
       env:
         NODE_AUTH_TOKEN: ${{secrets.USER_TOKEN}}
