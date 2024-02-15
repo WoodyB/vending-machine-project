@@ -8,7 +8,7 @@ on:
         required: true
 
 jobs:
-  create_release:
+  create_release_package:
     runs-on: ubuntu-latest
     steps:
     - name: Get Run ID Of Workflow That Created The RC Artifact  
@@ -32,6 +32,12 @@ jobs:
         version=$(cat ./bin/app-data.js | grep 'version:' | sed -E 's/.*"([^"]+)".*/\1/')
         echo "Preparing version $version"
         echo "VERSION=$version" >> $GITHUB_ENV
+
+    - name: Create Compressed Package
+      run: |
+        echo "tar -czvf Release-${{ env.VERSION }}.tar.gz ./bin ./node_modules"
+
+
 
     #- name: Create Release
     #  id: create_release
