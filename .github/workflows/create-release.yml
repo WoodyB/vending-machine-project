@@ -35,31 +35,18 @@ jobs:
 
     - name: Create Compressed Package
       run: |
-        tar -czvf Release-${{ env.VERSION }}.tar.gz ./bin ./node_modules
+        tar -czvf VMP-Release-${{ env.VERSION }}.tar.gz ./bin ./node_modules
 
     - name: See what we got
-      run: ls *.gz
+      run: ls -lh *.gz
 
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
 
-
-
-    #- name: Create Release
-    #  id: create_release
-    #  uses: actions/create-release@v1
-    #  env:
-    #    GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
-    #  with:
-    #    tag_name: ${{ env.VERSION }}
-    #    release_name: Release ${{ env.VERSION }}
-    #    body: |
-    #      Release ${{ env.VERSION }}
-    #    draft: false
-    #    prerelease: false
-
-    #- name: Upload Artifact
-    #  uses: actions/upload-artifact@v2
-    #  with:
-    #    name: ${{ inputs.artifact_name }}-release
-    #    path: |
-    #      ./bin
-    #      ./node_modules
+    - name: Publish Compressed Package to GitHub Packages
+      run: |
+        npm publish VMP-Release-${{ env.VERSION }}.tar.gz --access public --tag ${{ env.VERSION }} --package VMP-Release-${{ env.VERSION }}
+      env:
+        NODE_AUTH_TOKEN: ${{secrets.USER_TOKEN}}
