@@ -36,7 +36,10 @@ jobs:
     - name: Create Compressed Package
       run: |
         tar -czvf Release-${{ env.VERSION }}.tar.gz ./bin ./node_modules
-        ls
+
+    - name: See what we got
+      run: ls *.gz
+
 
 
 
