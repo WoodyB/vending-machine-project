@@ -55,6 +55,9 @@ jobs:
         }
         EOF
       shell: bash
+      
+    - name: See what our package.json file looks like
+      run: cat package.json
 
     - name: Publish Compressed Package to GitHub Packages
       run: |
