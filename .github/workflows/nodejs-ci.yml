@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Setup node
+    - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version: 20
@@ -34,19 +34,19 @@ jobs:
     - name: Build
       run: npm run build
 
-    - name: Read Version from package.json
+    - name: Read Version From package.json
       id: read-version
       run: |
         version=$(node -pe "require('./package.json').version.match(/^\d+\.\d+/)[0]")        
         echo "version=$version" >> $GITHUB_OUTPUT
     
-    - name: Find and Replace version in app-data.js
+    - name: Find And Replace Version In app-data.js
       run: |
         version=$(echo "${{ steps.read-version.outputs.version }}")
         run_number=${{ github.run_number }}
         sed -i "s/version: \"x.x.x\"/version: \"$version.$run_number-RC\"/g" ./bin/app-data.js
 
-    - name: Read New Version from app-data.js
+    - name: Read New Version From app-data.js
       run: |
         new_version=$(node -e "console.log(require('./bin/app-data.js').appData.version)")
         echo "new_version=$new_version" >> $GITHUB_ENV
@@ -61,20 +61,40 @@ jobs:
     - name: Commit Stage Tests (unit tests)
       run: npm run test:commit
             
-    - name: Show GitHub context   
-      env: 
-        GITHUB_CONTEXT: ${{ toJson(github) }}   
-      run: echo "$GITHUB_CONTEXT"
-      shell: bash
+    #- name: Show GitHub context   
+    #  env: 
+    #    GITHUB_CONTEXT: ${{ toJson(github) }}   
+    #  run: echo "$GITHUB_CONTEXT"
+    #  shell: bash
             
-    - name: Upload Binaries as Artifact
+    - name: Upload Binaries As Artifact
       uses: actions/upload-artifact@v4
       with:
         name: rc-${{ github.run_number }}-binaries
         path: ./
         
-    - name: Tag Source Files for Release Candidate
+    - name: Tag Source Files For Release Candidate
       run: git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+      continue-on-error: true
+
+    - name: Delay 30 Secounds And Retry Tag Source Files For Release Candidate
+      if: failure()
+      run: |
+        git config user.name "${{ github.actor }}"
+        sleep 30
+        git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+      continue-on-error: true
+
+    - name: Delay 60 Secounds And Retry Tag Source Files For Release Candidate
+      if: failure()
+      run: |
+        git config user.name "${{ github.actor }}"
+        sleep 60
+        git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
         
