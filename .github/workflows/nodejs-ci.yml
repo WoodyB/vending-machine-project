@@ -84,9 +84,7 @@ jobs:
       run: |
         git config user.name "${{ github.actor }}"
         sleep 30
-
-    - name: Tag Source Files For Release Candidate 2nd Attempt
-      run: git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
+        git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
       continue-on-error: true
@@ -96,9 +94,7 @@ jobs:
       run: |
         git config user.name "${{ github.actor }}"
         sleep 60
-
-    - name: Tag Source Files For Release Candidate 3rd Attempt
-      run: git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
+        git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
         
