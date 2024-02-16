@@ -1,0 +1,15 @@
+name: List Accepted Release Candidates
+
+on:
+  workflow_dispatch:
+jobs:
+  determine_latest_rc:
+    runs-on: ubuntu-latest
+    #outputs:
+      #ACCEPTED_RC_LIST: ${{ steps.step_id.outputs.ACCEPTED_RC_LIST }}
+    steps:
+    - name: List Artifacts
+      run: |
+        ARTIFACTS=$(curl -s -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts)
+        echo "$ARTIFACTS"
+
