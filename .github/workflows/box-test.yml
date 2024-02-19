@@ -15,10 +15,12 @@ jobs:
                           -u "$CLIENT_ID:$CLIENT_SECRET" \
                           -d "grant_type=client_credentials" \
                           https://api.box.com/oauth2/token | jq -r '.access_token')
+          echo ">> $ACCESS_TOKEN"
 
       - name: Access Box API
         run: |
           FOLDER_ID="249208271065"
-          curl -X GET \
+          RESULT=$(curl -X GET \
                "https://api.box.com/2.0/folders/$FOLDER_ID" \
-               -H "Authorization: Bearer $ACCESS_TOKEN"
+               -H "Authorization: Bearer $ACCESS_TOKEN")
+          echo "Result = $RESULT"
