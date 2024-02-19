@@ -14,8 +14,8 @@ jobs:
                -d "client_id=${{ secrets.BOX_CLIENT_ID }}" \
                -d "client_secret=${{ secrets.BOX_CLIENT_ID }}" \
                -d "grant_type=client_credentials" \
-               -d "box_subject_type=enterprise"  \
-               -d "box_subject_id=[ENTERPRISE_ID]")
+               -d "box_subject_type=user"  \
+               -d "box_subject_id=31957235790")
           echo "Response is $RESP"
           
           #RESP=$(curl -i -X POST "https://api.box.com/oauth2/token" \
