@@ -10,7 +10,7 @@ jobs:
       - name: Authenticate with Box API
         run: |
           CLIENT_ID=${{ secrets.BOX_CLIENT_ID }}
-          CLIENT_SECRET=${{ secrets.BOX_CLIENT_SECRET
+          CLIENT_SECRET=${{ secrets.BOX_CLIENT_SECRET }}
           ACCESS_TOKEN=$(curl -X POST \
                           -u "$CLIENT_ID:$CLIENT_SECRET" \
                           -d "grant_type=client_credentials" \
