@@ -77,26 +77,26 @@ jobs:
       run: git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
-      continue-on-error: true
+      #continue-on-error: true
 
-    - name: Delay 30 Secounds And Retry Tag Source Files For Release Candidate
-      if: failure()
-      run: |
-        git config user.name "${{ github.actor }}"
-        sleep 30
-        git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
-      env:
-        GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
-      continue-on-error: true
+    #- name: Delay 30 Secounds And Retry Tag Source Files For Release Candidate
+    #  if: failure()
+    #  run: |
+    #    git config user.name "${{ github.actor }}"
+    #    sleep 30
+    #    git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
+    #  env:
+    #    GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+    #  continue-on-error: true
 
-    - name: Delay 60 Secounds And Retry Tag Source Files For Release Candidate
-      if: failure()
-      run: |
-        git config user.name "${{ github.actor }}"
-        sleep 60
-        git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
-      env:
-        GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+    #- name: Delay 60 Secounds And Retry Tag Source Files For Release Candidate
+    #  if: failure()
+    #  run: |
+    #    git config user.name "${{ github.actor }}"
+    #    sleep 60
+    #    git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
+    #  env:
+    #    GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
         
     - name: Push Tags
       run: git push origin --tags
