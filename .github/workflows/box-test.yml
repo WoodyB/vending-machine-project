@@ -1,0 +1,24 @@
+name: Box API Workflow
+
+on:
+  workflow_dispatch
+
+jobs:
+  authenticate_and_access_box:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate with Box API
+        run: |
+          CLIENT_ID=${{ secrets.BOX_CLIENT_ID }}
+          CLIENT_SECRET=${{ secrets.BOX_CLIENT_SECRET
+          ACCESS_TOKEN=$(curl -X POST \
+                          -u "$CLIENT_ID:$CLIENT_SECRET" \
+                          -d "grant_type=client_credentials" \
+                          https://api.box.com/oauth2/token | jq -r '.access_token')
+
+      - name: Access Box API
+        run: |
+          FOLDER_ID="249208271065"
+          curl -X GET \
+               "https://api.box.com/2.0/folders/$FOLDER_ID" \
+               -H "Authorization: Bearer $ACCESS_TOKEN"
