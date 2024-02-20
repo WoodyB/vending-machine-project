@@ -56,38 +56,39 @@ jobs:
         release_artifacts=$(curl -s -X GET \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts")
-        echo "RELEASE_ARTIFACTS=$release_artifacts" >> $GITHUB_ENV
+        echo "release_artifacts = $release_artifacts"  
+    #    echo "RELEASE_ARTIFACTS=$release_artifacts" >> $GITHUB_ENV
 
-    - name: Checkout Branch For GitHub Pages
-      uses: actions/checkout@v4
-      with:
-        ref: gh-pages
+    #- name: Checkout Branch For GitHub Pages
+    #  uses: actions/checkout@v4
+    #  with:
+    #    ref: gh-pages
 
-    - name: Process Artifacts
-      run: |
-        json_response= ${{ env.RELEASE_ARTIFACTS }}
-        echo "$json_response"
+    #- name: Process Artifacts
+    #  run: |
+    #    json_response= ${{ env.RELEASE_ARTIFACTS }}
+    #    echo "$json_response"
 
         # Parse JSON response and extract artifacts matching the pattern
-        filtered_artifacts=$(echo "$json_response" | jq -r '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))')
-        echo "$filtered_artifacts"
+    #    filtered_artifacts=$(echo "$json_response" | jq -r '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))')
+    #    echo "$filtered_artifacts"
 
         # Sort artifacts by name (semantic versioning)
-        sorted_artifacts=$(echo "${filtered_artifacts[@]}" | jq -s 'sort_by(.name)')
-        echo "$sorted_artifacts"
+    #    sorted_artifacts=$(echo "${filtered_artifacts[@]}" | jq -s 'sort_by(.name)')
+    #    echo "$sorted_artifacts"
 
         # Generate index.html content
-        index_content="<h1>Vending Machine Project Releases</h1><div>"
-        for artifact in $sorted_artifacts; do
-          artifact_name=$(echo "$artifact" | jq -r '.name')
-          artifact_url=$(echo "$artifact" | jq -r '.archive_download_url')
-          index_content+="<p><a href=\"$artifact_url\">$artifact_name</a></p>"
-        done
-        index_content+="</div>"
+    #    index_content="<h1>Vending Machine Project Releases</h1><div>"
+    #    for artifact in $sorted_artifacts; do
+    #      artifact_name=$(echo "$artifact" | jq -r '.name')
+    #      artifact_url=$(echo "$artifact" | jq -r '.archive_download_url')
+    #      index_content+="<p><a href=\"$artifact_url\">$artifact_name</a></p>"
+    #    done
+    #    index_content+="</div>"
 
         # Replace index.html content
-        echo "<!DOCTYPE html><html><head><title>Vending Machine Project Releases</title></head><body>$index_content</body></html>" > index.html
-        cat index.html
+    #    echo "<!DOCTYPE html><html><head><title>Vending Machine Project Releases</title></head><body>$index_content</body></html>" > index.html
+    #    cat index.html
 
     #- name: Commit and push changes
     #  run: |
