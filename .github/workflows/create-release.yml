@@ -9,6 +9,8 @@ on:
 
 jobs:
   create_release:
+    concurrency:
+      group: create_release
     runs-on: ubuntu-latest
     steps:
     - name: Get Run ID Of Workflow That Created The RC Artifact  
@@ -33,36 +35,21 @@ jobs:
         echo "Preparing version $version"
         echo "VERSION=$version" >> $GITHUB_ENV
 
-    - name: Create Compressed Release
-      run: |
-        tar -czvf VMP-Release-${{ env.VERSION }}.tar.gz ./bin ./node_modules
-
-    - name: Debug See what we got
-      run: ls -lh *.gz
-
-    # New Plan. Instead of using GitHub Packages to store our Releases we will use
-    # Box.Com to store our downloadable releases.
-
-    #- name: Setup Node
-    #  uses: actions/setup-node@v4
-    #  with:
-    #    node-version: 20
-        
-    #- name: Create Dynamic package.json
-      #run: |
-      #  cat <<EOF | jq . > package.json
-      #  {
-      #    "name": "vending-machine-project",
-      #    "version": "${{ env.VERSION }}"
-      #  }
-      #  EOF
-      #shell: bash
-      
-    #- name: See what our package.json file looks like
-    #  run: cat package.json
-
-    #- name: Publish Compressed Package to GitHub Packages
+    #- name: Create Compressed Release
     #  run: |
-    #    npm publish VMP-Release-${{ env.VERSION }}.tar.gz --access public --tag Rel-${{ env.VERSION }} --package VMP-Release-${{ env.VERSION }}
-    #  env:
-    #    NODE_AUTH_TOKEN: ${{secrets.USER_TOKEN}}
+    #    tar -czvf VMP-Release-${{ env.VERSION }}.tar.gz ./bin ./node_modules
+
+    #- name: Debug See what we got
+    #  run: ls -lh *.gz
+
+    - name: Upload Release Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: VMP-Release-${{ env.VERSION }}
+        path: |
+          ./bin
+          ./node_modules
+
+      
+    - name: Update Release Web Page
+      run: echo 'TBD'
