@@ -56,8 +56,8 @@ jobs:
         release_artifacts=$(curl -s -X GET \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts")
-        echo "release_artifacts = $release_artifacts"  
-        echo "RELEASE_ARTIFACTS=$release_artifacts" >> $GITHUB_ENV
+        #echo "release_artifacts = $release_artifacts"  
+        echo "release_artifacts=$release_artifacts" >> $GITHUB_ENV
 
     #- name: Checkout Branch For GitHub Pages
     #  uses: actions/checkout@v4
