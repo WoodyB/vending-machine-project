@@ -6,6 +6,8 @@ on:
       artifact_name:
         description: 'Artifact name'
         required: true
+permissions:
+  contents: write
 
 jobs:
   create_release:
