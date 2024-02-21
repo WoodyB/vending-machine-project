@@ -35,13 +35,6 @@ jobs:
         echo "Preparing version $version"
         echo "VERSION=$version" >> $GITHUB_ENV
 
-    #- name: Create Compressed Release
-    #  run: |
-    #    tar -czvf VMP-Release-${{ env.VERSION }}.tar.gz ./bin ./node_modules
-
-    #- name: Debug See what we got
-    #  run: ls -lh *.gz
-
     - name: Upload Release Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -50,46 +43,39 @@ jobs:
           ./bin
           ./node_modules
 
-      
     - name: Get List Of Release Artifacts To Build List Of Releases
       run: |
         release_artifacts=$(curl -s -X GET \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | jq -c .)
-        # echo "release_artifacts = $release_artifacts"  
         echo "release_artifacts=$release_artifacts" >> $GITHUB_ENV
 
     - name: Process Artifacts
       run: |
-        # Parse JSON response and extract artifacts matching the pattern
-        filtered_artifacts=$(echo "${{ env.release_artifacts }} | jq -r '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))')
-
-        # Sort artifacts by name (semantic versioning)
-        sorted_artifacts=$(echo "${filtered_artifacts[@]}" | jq -s 'sort_by(.name)')
+        filtered_artifacts=$(echo "${{ env.release_artifacts }}" | jq -r '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))')
+        sorted_artifacts=$(echo "${filtered_artifacts}" | jq -s 'sort_by(.name)')
+        echo "sorted_artifacts=$sorted_artifacts" >> $GITHUB_ENV
 
     #- name: Checkout Branch For GitHub Pages
     #  uses: actions/checkout@v4
     #  with:
     #    ref: gh-pages
 
-        # Generate index.html content
+    #- name: Generate and Update Index HTML
+    #  run: |
     #    index_content="<h1>Vending Machine Project Releases</h1><div>"
-    #    for artifact in $sorted_artifacts; do
+    #    while read -r artifact; do
     #      artifact_name=$(echo "$artifact" | jq -r '.name')
     #      artifact_url=$(echo "$artifact" | jq -r '.archive_download_url')
     #      index_content+="<p><a href=\"$artifact_url\">$artifact_name</a></p>"
-    #    done
+    #    done <<< "${{ env.sorted_artifacts }}"
     #    index_content+="</div>"
-
-        # Replace index.html content
-    #    echo "<!DOCTYPE html><html><head><title>Vending Machine Project Releases</title></head><body>$index_content</body></html>" > index.html
-    #    cat index.html
+    #    echo "$index_content" > index.html
 
     #- name: Commit and push changes
     #  run: |
     #    git config --global user.email "actions@github.com"
     #    git config --global user.name "GitHub Actions"
-
     #    git add index.html
     #    git commit -m "Update index.html with latest Vending Machine Project releases"
-    #    git push origin gh-pages    
+    #    git push origin gh-pages
