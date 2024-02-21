@@ -45,15 +45,15 @@ jobs:
           ./bin
           ./node_modules
 
-    - name: Set User Name For Git
-      run: git config user.name "${{ github.actor }}"
-
     - name: Checkout Branch For GitHub Pages
       uses: actions/checkout@v4
       with:
         ref: gh-pages
 
-    - name: Build List Of Release Artifacts
+    - name: Set User Name For Git
+      run: git config user.name "${{ github.actor }}"
+
+    - name: Build JSON File release_artifacts.json Containing All Release Artifacts
       run: |
         echo "Get List Of All Artifacts"
         all_artifacts=$(curl -s -X GET \
@@ -63,34 +63,12 @@ jobs:
         echo "Filter List Of Artifacts For Release Artifacts Only" 
         release_artifacts=$(echo "$all_artifacts" | jq -r '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))')
         
-        #sorted_artifacts=$(echo "$filtered_artifacts" | jq -s 'sort_by(.name)')
-        #echo "$sorted_artifacts"
-
-        #echo "$sorted_artifacts" | jq empty
-        #echo "$sorted_artifacts" > sorted_artifacts.json
-        #cat sorted_artifacts.json
-
         echo "Create release_artifacts.json"
         echo "$release_artifacts" > release_artifacts.json
         cat release_artifacts.json
 
-        
-        #echo "Build The New HTML Releases Page"    
-        #index_content="<!DOCTYPE html><html><head><title>Vending Machine Project Releases</title></head><body><h1>Vending Machine Project Releases</h1><div>"
-                
-        #index_content+="<h2>Coming Soon .... I hope.</h2>"
-
-        #while IFS= read -r artifact; do
-        #    artifact_name=$(echo "$artifact" | jq -r '.name')
-        #    echo "$artifact_name"
-        #    #artifact_url=$(echo "$artifact" | jq -r '.archive_download_url')
-        #    #index_content+="<p><a href=\"$artifact_url\">$artifact_name</a></p>"
-        #done < sorted_artifacts.json        
-        
-        #index_content+="</div></body></html>"
-        #echo "$index_content" > index.html
-        
-        #cat index.html
+    - name: Create New index.html From release_artifacts.json
+      run: echo "TBD call create-release-html.js"
 
     - name: Delete Temp File release_artifacts.json Before Git Commit
       run: rm release_artifacts.json
@@ -98,7 +76,7 @@ jobs:
     #- name: Set User Name For Git
     #  run: git config user.name "${{ github.actor }}"
                 
-    #- name: Commit and push changes
+    #- name: Commit And Push Changes To Publish Release on GitHub Pages
     #  run: |
     #    git add index.html
     #    git commit -m "Update index.html with latest Vending Machine Project releases"
