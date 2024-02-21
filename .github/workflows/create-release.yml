@@ -53,15 +53,15 @@ jobs:
         echo "Filter Artifacts For Release Artifacts" 
         filtered_artifacts=$(echo "$release_artifacts" | jq -r '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))')
         sorted_artifacts=$(echo "$filtered_artifacts" | jq -s 'sort_by(.name)')
-        #echo "$sorted_artifacts"
+        echo "$sorted_artifacts"
 
         echo "Build The New HTML Releases Page"
         index_content="<h1>Vending Machine Project Releases</h1><div>"
-        while read -r artifact; do
-          artifact_name=$(echo "$artifact" | jq -r '.name')
-          artifact_url=$(echo "$artifact" | jq -r '.archive_download_url')
-          index_content+="<p><a href=\"$artifact_url\">$artifact_name</a></p>"
-        done <<< $sorted_artifacts
+        #while read -r artifact; do
+        #  artifact_name=$(echo "$artifact" | jq -r '.name')
+        #  artifact_url=$(echo "$artifact" | jq -r '.archive_download_url')
+        #  index_content+="<p><a href=\"$artifact_url\">$artifact_name</a></p>"
+        #done <<< $sorted_artifacts
         index_content+="</div>"
         echo "$index_content" > index.html
         cat index.html
