@@ -59,6 +59,7 @@ jobs:
         all_artifacts=$(curl -s -X GET \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | jq -c .)
+        echo "$all_artifacts"  
         
         echo "Filter List Of Artifacts For Release Artifacts Only" 
         release_artifacts=$(echo "$all_artifacts" | jq -r '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))')
