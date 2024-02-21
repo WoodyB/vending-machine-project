@@ -61,16 +61,11 @@ jobs:
 
     - name: Process Artifacts
       run: |
-        #json_response= ${{ env.release_artifacts }}
-        #echo "$json_response"
-
         # Parse JSON response and extract artifacts matching the pattern
         filtered_artifacts=$(echo "${{ env.release_artifacts }} | jq -r '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))')
-        #echo "$filtered_artifacts"
 
         # Sort artifacts by name (semantic versioning)
         sorted_artifacts=$(echo "${filtered_artifacts[@]}" | jq -s 'sort_by(.name)')
-        #echo "$sorted_artifacts"
 
     #- name: Checkout Branch For GitHub Pages
     #  uses: actions/checkout@v4
