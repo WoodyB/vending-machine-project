@@ -48,13 +48,9 @@ jobs:
         release_artifacts=$(curl -s -X GET \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | jq -c .)
-        echo "release_artifacts=$release_artifacts" >> $GITHUB_ENV
-
-    - name: Process Artifacts
-      run: |
-        filtered_artifacts=$(echo "${{ env.release_artifacts }}" | jq -r '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))')
-        sorted_artifacts=$(echo "${filtered_artifacts}" | jq -s 'sort_by(.name)')
-        echo "sorted_artifacts=$sorted_artifacts" >> $GITHUB_ENV
+        
+        filtered_artifacts=$(echo "$release_artifacts" | jq -r '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))')
+        sorted_artifacts=$(echo "$filtered_artifacts" | jq -s 'sort_by(.name)')
 
     #- name: Checkout Branch For GitHub Pages
     #  uses: actions/checkout@v4
