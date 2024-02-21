@@ -43,6 +43,11 @@ jobs:
           ./bin
           ./node_modules
 
+    - name: Checkout Branch For GitHub Pages
+      uses: actions/checkout@v4
+      with:
+        ref: gh-pages
+
     - name: Build List Of Releases
       run: |
         echo "Get List Of Artifacts To Build List Of Releases"
@@ -55,38 +60,25 @@ jobs:
         sorted_artifacts=$(echo "$filtered_artifacts" | jq -s 'sort_by(.name)')
         echo "$sorted_artifacts"
 
-        echo "Build The New HTML Releases Page"
-        index_content="<h1>Vending Machine Project Releases</h1><div>"
+        echo "Build The New HTML Releases Page"    
+        index_content="<!DOCTYPE html><html><head><title>Vending Machine Project Releases</title></head><body><h1>Vending Machine Project Releases</h1><div>"
+        
         #while read -r artifact; do
         #  artifact_name=$(echo "$artifact" | jq -r '.name')
         #  artifact_url=$(echo "$artifact" | jq -r '.archive_download_url')
         #  index_content+="<p><a href=\"$artifact_url\">$artifact_name</a></p>"
         #done <<< $sorted_artifacts
-        index_content+="</div>"
+        
+        index_content+="<p><h2>Coming Soon .... I hope.</h2></p>"
+        
+        index_content+="</div></body></html>"
         echo "$index_content" > index.html
+        
         cat index.html
         
-
-    #- name: Checkout Branch For GitHub Pages
-    #  uses: actions/checkout@v4
-    #  with:
-    #    ref: gh-pages
-
-    #- name: Generate and Update Index HTML
-    #  run: |
-    #    index_content="<h1>Vending Machine Project Releases</h1><div>"
-    #    while read -r artifact; do
-    #      artifact_name=$(echo "$artifact" | jq -r '.name')
-    #      artifact_url=$(echo "$artifact" | jq -r '.archive_download_url')
-    #      index_content+="<p><a href=\"$artifact_url\">$artifact_name</a></p>"
-    #    done <<< "${{ env.sorted_artifacts }}"
-    #    index_content+="</div>"
-    #    echo "$index_content" > index.html
-
-    #- name: Commit and push changes
-    #  run: |
-    #    git config --global user.email "actions@github.com"
-    #    git config --global user.name "GitHub Actions"
-    #    git add index.html
-    #    git commit -m "Update index.html with latest Vending Machine Project releases"
-    #    git push origin gh-pages
+    - name: Commit and push changes
+      run: |
+        git config --global user.name "${{ github.actor }}"
+        git add index.html
+        git commit -m "Update index.html with latest Vending Machine Project releases"
+        git push origin gh-pages
