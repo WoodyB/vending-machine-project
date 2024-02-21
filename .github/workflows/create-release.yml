@@ -72,6 +72,12 @@ jobs:
         #done <<< $sorted_artifacts
         
         index_content+="<h2>Coming Soon .... I hope.</h2>"
+
+        while IFS= read -r artifact; do
+            artifact_name=$(echo "$artifact" | jq -r '.name')
+            artifact_url=$(echo "$artifact" | jq -r '.archive_download_url')
+            index_content+="<p><a href=\"$artifact_url\">$artifact_name</a></p>"
+        done <<< "$sorted_artifacts"        
         
         index_content+="</div></body></html>"
         echo "$index_content" > index.html
