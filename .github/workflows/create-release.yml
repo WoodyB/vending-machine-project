@@ -56,26 +56,26 @@ jobs:
         release_artifacts=$(curl -s -X GET \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | jq -c .)
-        echo "release_artifacts = $release_artifacts"  
+        # echo "release_artifacts = $release_artifacts"  
         echo "release_artifacts=$release_artifacts" >> $GITHUB_ENV
+
+    - name: Process Artifacts
+      run: |
+        json_response= ${{ env.release_artifacts }}
+        echo "$json_response"
+
+        # Parse JSON response and extract artifacts matching the pattern
+        filtered_artifacts=$(echo "$json_response" | jq -r '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))')
+        echo "$filtered_artifacts"
+
+        # Sort artifacts by name (semantic versioning)
+        sorted_artifacts=$(echo "${filtered_artifacts[@]}" | jq -s 'sort_by(.name)')
+        echo "$sorted_artifacts"
 
     #- name: Checkout Branch For GitHub Pages
     #  uses: actions/checkout@v4
     #  with:
     #    ref: gh-pages
-
-    #- name: Process Artifacts
-    #  run: |
-    #    json_response= ${{ env.RELEASE_ARTIFACTS }}
-    #    echo "$json_response"
-
-        # Parse JSON response and extract artifacts matching the pattern
-    #    filtered_artifacts=$(echo "$json_response" | jq -r '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))')
-    #    echo "$filtered_artifacts"
-
-        # Sort artifacts by name (semantic versioning)
-    #    sorted_artifacts=$(echo "${filtered_artifacts[@]}" | jq -s 'sort_by(.name)')
-    #    echo "$sorted_artifacts"
 
         # Generate index.html content
     #    index_content="<h1>Vending Machine Project Releases</h1><div>"
