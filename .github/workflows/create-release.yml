@@ -45,20 +45,23 @@ jobs:
           ./bin
           ./node_modules
 
+    - name: Set User Name For Git
+      run: git config user.name "${{ github.actor }}"
+
     - name: Checkout Branch For GitHub Pages
       uses: actions/checkout@v4
       with:
         ref: gh-pages
 
-    - name: Build List Of Releases
+    - name: Build List Of Release Artifacts
       run: |
-        echo "Get List Of Artifacts To Build List Of Releases"
-        release_artifacts=$(curl -s -X GET \
+        echo "Get List Of All Artifacts"
+        all_artifacts=$(curl -s -X GET \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | jq -c .)
         
-        echo "Filter Artifacts For Release Artifacts" 
-        release_artifacts=$(echo "$release_artifacts" | jq -r '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))')
+        echo "Filter List Of Artifacts For Release Artifacts Only" 
+        release_artifacts=$(echo "$all_artifacts" | jq -r '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))')
         
         #sorted_artifacts=$(echo "$filtered_artifacts" | jq -s 'sort_by(.name)')
         #echo "$sorted_artifacts"
@@ -67,7 +70,8 @@ jobs:
         #echo "$sorted_artifacts" > sorted_artifacts.json
         #cat sorted_artifacts.json
 
-        echo "release_artifacts" > release_artifacts.json
+        echo "Create release_artifacts.json"
+        echo "$release_artifacts" > release_artifacts.json
         cat release_artifacts.json
 
         
@@ -87,6 +91,9 @@ jobs:
         #echo "$index_content" > index.html
         
         #cat index.html
+
+    - name: Delete Temp File release_artifacts.json Before Git Commit
+      run: rm release_artifacts.json
 
     #- name: Set User Name For Git
     #  run: git config user.name "${{ github.actor }}"
