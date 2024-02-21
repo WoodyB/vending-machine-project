@@ -60,7 +60,7 @@ jobs:
         echo "Filter Artifacts For Release Artifacts" 
         filtered_artifacts=$(echo "$release_artifacts" | jq -r '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))')
         sorted_artifacts=$(echo "$filtered_artifacts" | jq -s 'sort_by(.name)')
-        echo "$sorted_artifacts"
+        #echo "$sorted_artifacts"
 
         echo "Build The New HTML Releases Page"    
         index_content="<!DOCTYPE html><html><head><title>Vending Machine Project Releases</title></head><body><h1>Vending Machine Project Releases</h1><div>"
@@ -77,10 +77,12 @@ jobs:
         echo "$index_content" > index.html
         
         cat index.html
-        
+
+    - name: Set User Name For Git
+      run: git config user.name "${{ github.actor }}"
+                
     - name: Commit and push changes
       run: |
-        git config user.name "${{ github.actor }}"
         git add index.html
         git commit -m "Update index.html with latest Vending Machine Project releases"
         git push origin gh-pages
