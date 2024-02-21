@@ -69,7 +69,7 @@ jobs:
         #  index_content+="<p><a href=\"$artifact_url\">$artifact_name</a></p>"
         #done <<< $sorted_artifacts
         
-        index_content+="<p><h2>Coming Soon .... I hope.</h2></p>"
+        index_content+="<h2>Coming Soon .... I hope.</h2>"
         
         index_content+="</div></body></html>"
         echo "$index_content" > index.html
@@ -78,7 +78,7 @@ jobs:
         
     - name: Commit and push changes
       run: |
-        git config --global user.name "${{ github.actor }}"
+        git config user.name "${{ github.actor }}"
         git add index.html
         git commit -m "Update index.html with latest Vending Machine Project releases"
         git push origin gh-pages
