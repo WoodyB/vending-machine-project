@@ -64,6 +64,7 @@ jobs:
 
         echo "$sorted_artifacts" | jq empty
         echo "$sorted_artifacts" > sorted_artifacts.json
+        cat sorted_artifacts.json
 
         
         echo "Build The New HTML Releases Page"    
@@ -71,12 +72,12 @@ jobs:
                 
         index_content+="<h2>Coming Soon .... I hope.</h2>"
 
-        while IFS= read -r artifact; do
-            artifact_name=$(echo "$artifact" | jq -r '.name')
-            echo "$artifact_name"
-            #artifact_url=$(echo "$artifact" | jq -r '.archive_download_url')
-            #index_content+="<p><a href=\"$artifact_url\">$artifact_name</a></p>"
-        done < sorted_artifacts.json        
+        #while IFS= read -r artifact; do
+        #    artifact_name=$(echo "$artifact" | jq -r '.name')
+        #    echo "$artifact_name"
+        #    #artifact_url=$(echo "$artifact" | jq -r '.archive_download_url')
+        #    #index_content+="<p><a href=\"$artifact_url\">$artifact_name</a></p>"
+        #done < sorted_artifacts.json        
         
         index_content+="</div></body></html>"
         echo "$index_content" > index.html
