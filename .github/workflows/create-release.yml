@@ -21,7 +21,7 @@ jobs:
     - name: TBD Verify Release Doesn't Already Exist
       run:  | 
         echo "TBD Get List of Releases From DropBox"
-        echo "TBD If Release Already Exists Then Exit With Error
+        echo "TBD If Release Already Exists Then Exit With Error"
     
     - name: Get Run ID Of Workflow That Created The RC Artifact  
       id: fetch-binaries
