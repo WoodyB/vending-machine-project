@@ -55,53 +55,27 @@ jobs:
       run: |
         echo "The new version is $new_version"
         
-    - name: Commit Stage Tests (linter)
+    - name: Run Commit Stage Tests (linter)
       run: npm run lint
 
-    - name: Commit Stage Tests (unit tests)
+    - name: Run Commit Stage Tests (unit tests)
       run: npm run test:commit
-            
-    #- name: Show GitHub context   
-    #  env: 
-    #    GITHUB_CONTEXT: ${{ toJson(github) }}   
-    #  run: echo "$GITHUB_CONTEXT"
-    #  shell: bash
-            
-    - name: Upload Binaries As Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: rc-${{ github.run_number }}-binaries
-        path: ./
-        
+                                
     - name: Tag Source Files For Release Candidate
       run: git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
-      #continue-on-error: true
-
-    #- name: Delay 30 Secounds And Retry Tag Source Files For Release Candidate
-    #  if: failure()
-    #  run: |
-    #    git config user.name "${{ github.actor }}"
-    #    sleep 30
-    #    git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
-    #  env:
-    #    GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
-    #  continue-on-error: true
-
-    #- name: Delay 60 Secounds And Retry Tag Source Files For Release Candidate
-    #  if: failure()
-    #  run: |
-    #    git config user.name "${{ github.actor }}"
-    #    sleep 60
-    #    git tag -a "rc-${{ github.run_number }}" -m "Build tag for rc-${{ github.run_number }}"
-    #  env:
-    #    GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
         
     - name: Push Tags
       run: git push origin --tags
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+
+    - name: Upload Binaries As Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: rc-${{ github.run_number }}-binaries
+        path: ./
   
   merge_to_main:
     needs: build_and_test
