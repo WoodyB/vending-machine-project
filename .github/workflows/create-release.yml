@@ -45,9 +45,11 @@ jobs:
         echo "Preparing version $version"
         echo "VERSION=$version" >> $GITHUB_ENV
     
-    - name: TBD Create Release Zip File For DropBox Upload
+    - name: Create Release Zip File For DropBox Upload
       run:  | 
-        echo "TBD Tarball ./bin and ./node_modules into VMP-Release-${{ env.VERSION }}.zip"
+        echo "Tarball ./bin and ./node_modules into VMP-Release-${{ env.VERSION }}.zip"
+        tar -czvf VMP-Release-${{ env.VERSION }}.tar.gz ./bin ./node_modules
+        ls -lh *.gz
 
     - name: TBD Upload VMP-Release-${{ env.VERSION }} To DropBox
       run: echo "TBD Use DropBox API to Upload Tarball to DropBox"
