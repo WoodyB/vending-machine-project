@@ -48,8 +48,10 @@ jobs:
     - name: Create Release Zip File For DropBox Upload
       run:  | 
         echo "Tarball ./bin and ./node_modules into VMP-Release-${{ env.VERSION }}.zip"
-        tar -czvf VMP-Release-${{ env.VERSION }}.tar.gz ./bin ./node_modules
-        ls -lh *.gz
+        tar -cvf VMP-Release-${{ env.VERSION }}.zip ./bin ./node_modules
+
+    - name: Show VMP-Release-${{ env.VERSION }}.zip
+      run:  ls -lh *.zip
 
     - name: TBD Upload VMP-Release-${{ env.VERSION }} To DropBox
       run: echo "TBD Use DropBox API to Upload Tarball to DropBox"
