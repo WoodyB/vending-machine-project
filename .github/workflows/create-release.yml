@@ -15,6 +15,14 @@ jobs:
       group: create_release
     runs-on: ubuntu-latest
     steps:
+    - name: TBD Get Access Token For DropBox
+      run: echo "TBD Use DropBox API to get a fresh access token"
+    
+    - name: TBD Verify Release Doesn't Already Exist
+      run:  | 
+        echo "TBD Get List of Releases From DropBox"
+        echo "TBD If Release Already Exists Then Exit With Error
+    
     - name: Get Run ID Of Workflow That Created The RC Artifact  
       id: fetch-binaries
       run: |
@@ -36,52 +44,11 @@ jobs:
         version=$(cat ./bin/app-data.js | grep 'version:' | sed -E 's/.*"([^"]+)".*/\1/')
         echo "Preparing version $version"
         echo "VERSION=$version" >> $GITHUB_ENV
+    
+    - name: TBD Create Release Zip File For DropBox Upload
+      run:  | 
+        echo "TBD Tarball ./bin and ./node_modules into VMP-Release-${{ env.VERSION }}.zip"
 
-    - name: Upload Release Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: VMP-Release-${{ env.VERSION }}
-        path: |
-          ./bin
-          ./node_modules
-
-    - name: Checkout Branch For GitHub Pages
-      uses: actions/checkout@v4
-      with:
-        ref: gh-pages
-
-    - name: Set User Name For Git
-      run: git config user.name "${{ github.actor }}"
-
-    - name: Build JSON File release_artifacts.json Containing All Release Artifacts
-      run: |
-        echo "Get List Of All Artifacts"
-        all_artifacts=$(curl -s -X GET \
-          -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | jq -c .)
-        #echo "$all_artifacts"  
-        
-        echo "Filter List Of Artifacts For Release Artifacts Only" 
-        # release_artifacts=$(echo "$all_artifacts" | jq -r '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))')
-        release_artifacts="["
-        release_artifacts+=$(echo "$all_artifacts" | jq -c '.artifacts[] | select(.name | test("VMP-Release-[0-9]+\\.[0-9]+\\.[0-9]+"))' | paste -sd "," -)
-        release_artifacts+="]"        
-        
-        echo "Create release_artifacts.json"
-        echo "$release_artifacts" > release_artifacts.json
-        cat release_artifacts.json
-
-    - name: Create New index.html From release_artifacts.json
-      run: node ./create-release-html.js
-
-    - name: Delete Temp File release_artifacts.json Before Git Commit
-      run: rm release_artifacts.json
-
-    - name: Set User Name For Git
-      run: git config user.name "${{ github.actor }}"
-                
-    - name: Commit And Push Changes To Publish Release on GitHub Pages
-      run: |
-        git add index.html
-        git commit -m "Update index.html with latest Vending Machine Project releases"
-        git push origin gh-pages
+    - name: TBD Upload VMP-Release-${{ env.VERSION }} To DropBox
+      run: echo "TBD Use DropBox API to Upload Tarball to DropBox"
+      
