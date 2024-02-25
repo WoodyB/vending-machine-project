@@ -34,7 +34,7 @@ jobs:
     - name: TBD Get Access Token For Box
       run: |
         echo "TBD Use Box API to get a fresh access token"
-        cat fester-honker
+        cat fester-honker.txt
        
     - name: TBD Verify Release Doesn't Already Exist
       run:  | 
