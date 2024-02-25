@@ -37,17 +37,22 @@ jobs:
         cat fester-honker.txt
         echo $(date +%s) > fester-honker.txt
         
+    - name: Delete Old fester-honker Artifact   
+      run: |
+        artifact_id=$(curl -s -X GET \
+          -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | \
+          jq -r '.artifacts[] | select(.name == "fester-honker") | .id')
+      
+        curl -X DELETE \
+          -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ env.artifact_id }}"    
+
     - name: Upload new fester-honker As Artifact
       uses: actions/upload-artifact@v4
       with:
         name: fester-honker
         path: fester-honker.txt
-
-    - name: Delete Old fester-honker Artifact   
-      run: |
-        curl -X DELETE \
-          -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ env.run_id }}"    
                
     - name: TBD Verify Release Doesn't Already Exist On Box
       run:  | 
