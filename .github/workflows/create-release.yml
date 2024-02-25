@@ -15,8 +15,17 @@ jobs:
       group: create_release
     runs-on: ubuntu-latest
     steps:
-    - name: TBD Get Access Token For DropBox
-      run: echo "TBD Use DropBox API to get a fresh access token"
+    - name: Debug Temp Step 1
+      run: echo "1234568910" > fester-honker.txt
+    
+    - name: Debug Temp Step 2
+      uses: actions/upload-artifact@v4
+      with:
+        name: fester-honker
+        path: fester-honker.txt
+    
+    - name: TBD Get Access Token For Box
+      run: echo "TBD Use Box API to get a fresh access token"
     
     - name: TBD Verify Release Doesn't Already Exist
       run:  | 
