@@ -35,10 +35,23 @@ jobs:
       run: |
         echo "TBD Use Box API to get a fresh access token"
         cat fester-honker.txt
-       
-    - name: TBD Verify Release Doesn't Already Exist
+        echo $(date +%s) > fester-honker.txt
+        
+    - name: Upload new fester-honker As Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: fester-honker
+        path: fester-honker.txt
+
+    - name: Delete Old fester-honker Artifact   
+      run: |
+        curl -X DELETE \
+          -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ env.run_id }}"    
+               
+    - name: TBD Verify Release Doesn't Already Exist On Box
       run:  | 
-        echo "TBD Get List of Releases From DropBox"
+        echo "TBD Get List of Releases From Box"
         echo "TBD If Release Already Exists Then Exit With Error"
     
     - name: Get Run ID Of Workflow That Created The RC Artifact  
@@ -57,13 +70,13 @@ jobs:
         repository: WoodyB/vending-machine-project
         run-id: ${{ env.run_id }}
         
-    - name: Extract Version From Artifact
+    - name: Extract Version From RC Artifact
       run: |
         version=$(cat ./bin/app-data.js | grep 'version:' | sed -E 's/.*"([^"]+)".*/\1/')
         echo "Preparing version $version"
         echo "VERSION=$version" >> $GITHUB_ENV
     
-    - name: Create Release Zip File For DropBox Upload
+    - name: Create Release Zip File For Box Upload
       run:  | 
         echo "Tarball ./bin and ./node_modules into VMP-Release-${{ env.VERSION }}.zip"
         tar -cvzf VMP-Release-${{ env.VERSION }}.zip ./bin ./node_modules
@@ -71,6 +84,6 @@ jobs:
     - name: Show VMP-Release-${{ env.VERSION }}.zip
       run:  ls -lh *.zip
 
-    - name: TBD Upload VMP-Release-${{ env.VERSION }} To DropBox
-      run: echo "TBD Use DropBox API to Upload Tarball to DropBox"
+    - name: TBD Upload VMP-Release-${{ env.VERSION }} To Box
+      run: echo "TBD Use DropBox API to Upload Tarball to Box"
       
