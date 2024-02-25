@@ -35,7 +35,7 @@ jobs:
       run: |
         echo "TBD Use Box API to get a fresh access token"
         cat fester-honker.txt
-        echo $(date +%s) > fester-honker.txt
+        echo "${{ secrets.BOX_START }}" > fester-honker.txt
         
     - name: Delete Old fester-honker Artifact   
       run: |
