@@ -46,7 +46,7 @@ jobs:
       
         curl -X DELETE \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ env.artifact_id }}"    
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id"    
 
     - name: Upload new fester-honker As Artifact
       uses: actions/upload-artifact@v4
