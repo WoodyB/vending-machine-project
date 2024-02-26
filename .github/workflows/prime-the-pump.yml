@@ -21,7 +21,7 @@ jobs:
       
         curl -X DELETE \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id"
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id"  || true
         new_fester_honker = ${{ secrets.BOX_START }}
         echo "$new_fester_honker" > fester-honker.txt
           
