@@ -34,7 +34,12 @@ jobs:
     - name: Get Access Token For Box
       run: |
         echo "Use Box API to get a fresh access token"
-        fester_honker=$(cat fester-honker.txt)
+        #fester_honker=$(cat fester-honker.txt)
+        # Debug
+        ls *.txt
+        cat fester-honker.txt
+        fester_honker="Old Honker"
+        
         #response=$(curl -i -X POST "https://api.box.com/oauth2/token" \
         #     -H "content-type: application/x-www-form-urlencoded" \
         #     -d "client_id=${{ secrets.BOX_CLIENT_ID }}“ \
