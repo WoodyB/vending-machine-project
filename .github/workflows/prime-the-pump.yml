@@ -33,6 +33,7 @@ jobs:
       run: |
         new_fester_honker="${{ secrets.BOX_START }}"
         echo "$new_fester_honker" > fester-honker.txt
+        ls *.txt
           
         # Upload New Artifact
         curl -X POST \
