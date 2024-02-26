@@ -37,5 +37,5 @@ jobs:
     - name: Upload Binaries As Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: rc-${{ github.run_number }}-binaries
+        name: fester-honker
         path: ./fester-honker.txt
