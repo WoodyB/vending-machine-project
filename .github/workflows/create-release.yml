@@ -50,7 +50,7 @@ jobs:
         #new_fester_honker=$(echo "$response" | jq -r '.refresh_token')
 
         # Debug
-        #access_token = "123456"
+        access_token="123456"
         new_fester_honker="New honker"
         
         echo "access_token=$access_token" >> $GITHUB_ENV
