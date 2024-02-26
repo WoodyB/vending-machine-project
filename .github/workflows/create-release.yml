@@ -31,13 +31,22 @@ jobs:
         repository: WoodyB/vending-machine-project
         run-id: ${{ env.run_id }}
     
-    - name: TBD Get Access Token For Box
+    - name: Get Access Token For Box
       run: |
-        echo "TBD Use Box API to get a fresh access token"
-        cat fester-honker.txt
-        echo "${{ secrets.BOX_START }}" > fester-honker.txt
-        
-    - name: Delete Old fester-honker Artifact   
+        echo "Use Box API to get a fresh access token"
+        fester_honker=$(cat fester-honker.txt)
+        response=$(curl -i -X POST "https://api.box.com/oauth2/token" \
+             -H "content-type: application/x-www-form-urlencoded" \
+             -d "client_id=${{ secrets.BOX_CLIENT_ID }}“ \
+             -d "client_secret=${{ secrets.BOX_CLIENT_SECRET }}" \
+             -d "refresh_token=$fester_honker“ \
+             -d "grant_type=refresh_token")
+        access_token=$(echo "$response" | jq -r '.access_token')
+        new_fester_honker=$(echo "$response" | jq -r '.refresh_token')
+        echo "access_token=$access_token" >> $GITHUB_ENV
+        echo "$new_fester_honker" > fester-honker.txt
+                        
+    - name: Delete Old Artifact   
       run: |
         artifact_id=$(curl -s -X GET \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
@@ -48,15 +57,19 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id"    
 
-    - name: Upload new fester-honker As Artifact
+    - name: Upload New Artifact
       uses: actions/upload-artifact@v4
       with:
         name: fester-honker
         path: fester-honker.txt
                
     - name: TBD Verify Release Doesn't Already Exist On Box
-      run:  | 
-        echo "TBD Get List of Releases From Box"
+      run:  |
+        release_list=$(curl -i -X GET "https://api.box.com/2.0/folders/250524193403/items" \
+             -H "authorization: Bearer ${{ env.access_token }}")
+      
+        echo "Get List of Releases From Box"
+        echo "$release_list"
         echo "TBD If Release Already Exists Then Exit With Error"
     
     - name: Get Run ID Of Workflow That Created The RC Artifact  
@@ -91,4 +104,7 @@ jobs:
 
     - name: TBD Upload VMP-Release-${{ env.VERSION }} To Box
       run: echo "TBD Use DropBox API to Upload Tarball to Box"
+
+    - name: TBD Revoke Access Token
+      run: echo "Even though access token is short lived we will revoke it anyhow"
       
