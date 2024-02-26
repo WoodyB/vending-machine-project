@@ -12,32 +12,30 @@ jobs:
       group: prime_the_pump
     runs-on: ubuntu-latest
     steps:
-    #- name: Delete Old Artifact  
-    #  continue-on-error: true
-    #  run: |
-    #    artifact_id=$(curl -s -X GET \
-    #      -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
-    #      "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | \
-    #      jq -r '.artifacts[] | select(.name == "fester-honker") | .id')
+    - name: Delete Old Artifact  
+      continue-on-error: true
+      run: |
+        artifact_id=$(curl -s -X GET \
+          -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | \
+          jq -r '.artifacts[] | select(.name == "fester-honker") | .id')
         
-    #    if [ -n "$artifact_id" ]; then
-    #      echo "Artifact found with ID: $artifact_id. Deleting old artifact."
-    #      curl -X DELETE \
-    #        -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
-    #        "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id"
-    #    else
-    #      echo "Artifact not found. Proceeding without deletion."
-    #    fi
+        if [ -n "$artifact_id" ]; then
+          echo "Artifact found with ID: $artifact_id. Deleting old artifact."
+          curl -X DELETE \
+            -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id"
+        else
+          echo "Artifact not found. Proceeding without deletion."
+        fi
       
-    - name: Create and Upload New Artifact
+    - name: Create New Artifact
       run: |
         new_fester_honker="${{ secrets.BOX_START }}"
         echo "$new_fester_honker" > fester-honker.txt
-        ls *.txt
-          
-        # Upload New Artifact
-        curl -X POST \
-          -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
-          -H "Content-Type: application/zip" \
-          --data-binary @fester-honker.txt \
-          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts"
+
+    - name: Upload Binaries As Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: rc-${{ github.run_number }}-binaries
+        path: ./fester-honker.txt
