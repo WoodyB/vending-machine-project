@@ -12,17 +12,27 @@ jobs:
       group: prime_the_pump
     runs-on: ubuntu-latest
     steps:
-    - name: Delete Old Artifact   
+    - name: Check Artifact Existence   
       run: |
         artifact_id=$(curl -s -X GET \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | \
           jq -r '.artifacts[] | select(.name == "fester-honker") | .id')
+        
+        if [ -n "$artifact_id" ]; then
+          echo "Artifact found with ID: $artifact_id"
+        else
+          echo "Artifact not found. Skipping deletion step."
+          exit 0
+        fi
       
+    - name: Delete Old Artifact   
+      run: |
         curl -X DELETE \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id"  || true
-        new_fester_honker = ${{ secrets.BOX_START }}
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id"
+        
+        new_fester_honker="${{ secrets.BOX_START }}"
         echo "$new_fester_honker" > fester-honker.txt
           
     - name: Upload New Artifact
@@ -30,4 +40,3 @@ jobs:
       with:
         name: fester-honker
         path: fester-honker.txt
-       
