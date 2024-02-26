@@ -1,0 +1,33 @@
+name: Prime The Pump
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prime_the_pump:
+    concurrency:
+      group: prime_the_pump
+    runs-on: ubuntu-latest
+    steps:
+    - name: Delete Old Artifact   
+      run: |
+        artifact_id=$(curl -s -X GET \
+          -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | \
+          jq -r '.artifacts[] | select(.name == "fester-honker") | .id')
+      
+        curl -X DELETE \
+          -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id"
+        new_fester_honker = ${{ secrets.BOX_START }}
+        echo "$new_fester_honker" > fester-honker.txt
+          
+    - name: Upload New Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: fester-honker
+        path: fester-honker.txt
+       
