@@ -111,16 +111,14 @@ jobs:
     - name: TBD Upload VMP-Release-${{ env.VERSION }} To Box
       run: |
           # Forming the attributes JSON
-          #attributes="{\"name\":\"VMP-Release-New.zip\", \"parent\":{\"id\":\"250524193403\"}}"
-
-          echo "{\"name":\"PLACEHOLDER_NAME\",\"parent\":{\"id\":\"250\"}}" > attributes_template.json
+          echo "{\"name\":\"VMP-Release-${{env.VERSION}}.zip\",\"parent\":{\"id\":\"250524193403\"}}" > attributes.json
           ls *.json
-          cat attributes_template.json 
+          cat attributes.json 
 
           #curl -i -X POST "https://upload.box.com/api/2.0/files/content" \
           #     -H "authorization: Bearer ${{ env.access_token }}” \
           #     -H "\"content-type\": multipart/form-data" \
-          #     -F attributes="$attributes" \               
+          #     -F attributes=@attributes.json \               
           #     -F file=@VMP-Release-${{ env.VERSION }}.zip
         
     - name: Revoke Access Token
