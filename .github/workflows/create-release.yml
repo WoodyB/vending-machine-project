@@ -70,7 +70,7 @@ jobs:
         name: fester-honker
         path: fester-honker.txt
                
-    - name: TBD Verify Release Doesn't Already Exist On Box
+    - name: TBD Verify Release Does Not Already Exist On Box
       run:  |
         release_list=$(curl -i -X GET "https://api.box.com/2.0/folders/250524193403/items" \
              -H "authorization: Bearer ${{ env.access_token }}")
@@ -108,9 +108,14 @@ jobs:
     - name: Show VMP-Release-${{ env.VERSION }}.zip
       run:  ls -lh *.zip
 
-    - name: TBD Upload VMP-Release-${{ env.VERSION }} To Box
-      run: echo "TBD Use DropBox API to Upload Tarball to Box"
-
+    - name: Upload VMP-Release-${{ env.VERSION }} To Box
+      run: |
+        curl -i -X POST "https://upload.box.com/api/2.0/files/content" \
+             -H "authorization: Bearer ${{ env.access_token }}” \
+             -H "content-type: multipart/form-data" \
+             -F attributes='{"name”:”VMP-Release-${{ env.VERSION }}.zip", "parent":{"id":"250524193403"}}' \
+             -F file=@VMP-Release-${{ env.VERSION }}.zip
+        
     - name: TBD Revoke Access Token
       run: echo "Even though access token is short lived we will revoke it anyhow"
       
