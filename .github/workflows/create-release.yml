@@ -56,6 +56,12 @@ jobs:
                  -d "grant_type=refresh_token" 2>&1)
 
         echo "$response"
+        access_token=$(echo "$response" | jq -r '.access_token')
+        new_fester_honker=$(echo "$response" | jq -r '.refresh_token')
+
+        echo "access_token=$access_token"
+        echo "new=$new_fester_honker"
+        
         exit 1
         
         # Extract HTTP status code from the response
