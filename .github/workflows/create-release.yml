@@ -56,13 +56,12 @@ jobs:
                  -d "grant_type=refresh_token" 2>&1)
 
         echo "$response"
-        @echo "Using -v"
-        cat -v <<< "$response"
-        access_token=$(echo "$response" | jq -r '.access_token')
-        #new_fester_honker=$(echo "$response" | jq -r '.refresh_token')
-
+        
+        access_token=$(echo "$response" | grep -o '"access_token":"[^"]*' | sed 's/"access_token":"//')
+        refresh_token=$(echo "$response" | grep -o '"refresh_token":"[^"]*' | sed 's/"refresh_token":"//')
+        
         echo "access_token=$access_token"
-        echo "new=$new_fester_honker"
+        echo "new=$refresh_token"
         
         exit 1
         
