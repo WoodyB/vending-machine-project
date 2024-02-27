@@ -45,20 +45,11 @@ jobs:
              -d "client_secret=${{ secrets.BOX_CLIENT_SECRET }}" \
              -d "refresh_token=$fester_honker“ \
              -d "grant_type=refresh_token")
-        #access_token=$(echo "$response" | jq -r '.access_token')
-        #new_fester_honker=$(echo "$response" | jq -r '.refresh_token')
-
-        # Debug
-        access_token="$response"
-        new_fester_honker="New honker"
+        access_token=$(echo "$response" | jq -r '.access_token')
+        new_fester_honker=$(echo "$response" | jq -r '.refresh_token')
         
         echo "access_token=$access_token" >> $GITHUB_ENV
         echo "$new_fester_honker" > fester-honker.txt
-
-        # Debug
-        echo "access_token=$access_token"
-        echo "new_fester_honker=$new_fester_honker"
-        echo "fester_honker=$fester_honker"
                         
     - name: Delete Old Artifact   
       run: |
@@ -79,11 +70,11 @@ jobs:
                
     - name: TBD Verify Release Doesn't Already Exist On Box
       run:  |
-        #release_list=$(curl -i -X GET "https://api.box.com/2.0/folders/250524193403/items" \
-        #     -H "authorization: Bearer ${{ env.access_token }}")
+        release_list=$(curl -i -X GET "https://api.box.com/2.0/folders/250524193403/items" \
+             -H "authorization: Bearer ${{ env.access_token }}")
       
         echo "Get List of Releases From Box"
-        #echo "$release_list"
+        echo "$release_list"
         echo "TBD If Release Already Exists Then Exit With Error"
     
     - name: Get Run ID Of Workflow That Created The RC Artifact  
