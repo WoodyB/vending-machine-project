@@ -113,7 +113,7 @@ jobs:
           # Forming the attributes JSON
           #attributes="{\"name\":\"VMP-Release-New.zip\", \"parent\":{\"id\":\"250524193403\"}}"
 
-          cat <<EOF > attributes_template.json {"name": "PLACEHOLDER_NAME","parent":{"id":"250"}}EOF
+          echo "{\"name":\"PLACEHOLDER_NAME\",\"parent\":{\"id\":\"250\"}}" > attributes_template.json
           ls *.json
           cat attributes_template.json 
 
