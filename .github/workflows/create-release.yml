@@ -111,7 +111,11 @@ jobs:
     - name: TBD Upload VMP-Release-${{ env.VERSION }} To Box
       run: |
           # Forming the attributes JSON
-          #attributes="{\"name\":\"VMP-Release-New.zip\", \"parent\":{\"id\":\"250524193403\"}}"          
+          #attributes="{\"name\":\"VMP-Release-New.zip\", \"parent\":{\"id\":\"250524193403\"}}"
+
+          cat <<EOF > attributes_template.json {"name": "PLACEHOLDER_NAME","parent":{"id":"250"}}EOF
+          ls *.json
+          cat attributes_template.json 
 
           #curl -i -X POST "https://upload.box.com/api/2.0/files/content" \
           #     -H "authorization: Bearer ${{ env.access_token }}” \
