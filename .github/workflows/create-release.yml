@@ -113,7 +113,7 @@ jobs:
         curl -i -X POST "https://upload.box.com/api/2.0/files/content" \
              -H "authorization: Bearer ${{ env.access_token }}” \
              -H "content-type: multipart/form-data" \
-             -F attributes='{"name”:”VMP-Release-${{ env.VERSION }}.zip", "parent":{"id":"250524193403"}}' \
+             -F attributes='{"name":"VMP-Release-0.2.375.zip", "parent":{"id":"250524193403"}}' \
              -F file=@VMP-Release-${{ env.VERSION }}.zip
         
     - name: TBD Revoke Access Token
