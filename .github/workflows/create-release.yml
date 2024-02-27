@@ -108,17 +108,23 @@ jobs:
     - name: Show VMP-Release-${{ env.VERSION }}.zip
       run:  ls -lh *.zip
 
-    - name: Upload VMP-Release-${{ env.VERSION }} To Box
+    - name: TBD Upload VMP-Release-${{ env.VERSION }} To Box
       run: |
           # Forming the attributes JSON
-          attributes="{\"name\":\"VMP-Release-New.zip\", \"parent\":{\"id\":\"250524193403\"}}"          
+          #attributes="{\"name\":\"VMP-Release-New.zip\", \"parent\":{\"id\":\"250524193403\"}}"          
 
-          curl -i -X POST "https://upload.box.com/api/2.0/files/content" \
-               -H "authorization: Bearer ${{ env.access_token }}” \
-               -H "\"content-type\": multipart/form-data" \
-               -F attributes="$attributes" \               
-               -F file=@VMP-Release-${{ env.VERSION }}.zip
+          #curl -i -X POST "https://upload.box.com/api/2.0/files/content" \
+          #     -H "authorization: Bearer ${{ env.access_token }}” \
+          #     -H "\"content-type\": multipart/form-data" \
+          #     -F attributes="$attributes" \               
+          #     -F file=@VMP-Release-${{ env.VERSION }}.zip
         
-    - name: TBD Revoke Access Token
-      run: echo "Even though access token is short lived we will revoke it anyhow"
+    - name: Revoke Access Token
+      run: |
+        curl -i -X POST "https://api.box.com/oauth2/revoke" \
+             -H "content-type: application/x-www-form-urlencoded" \
+             -d "client_id=${{ secrets.BOX_CLIENT_ID }}" \
+             -d "client_secret=${{ secrets.BOX_CLIENT_SECRET }}" \
+             -d "token=${{ env.access_token }}"
+        
       
