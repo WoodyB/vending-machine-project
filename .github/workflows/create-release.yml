@@ -110,11 +110,14 @@ jobs:
 
     - name: Upload VMP-Release-${{ env.VERSION }} To Box
       run: |
-        curl -i -X POST "https://upload.box.com/api/2.0/files/content" \
-             -H "authorization: Bearer ${{ env.access_token }}” \
-             -H "content-type: multipart/form-data" \
-             -F attributes='{"name":"VMP-Release-0.2.375.zip", "parent":{"id":"250524193403"}}' \
-             -F file=@VMP-Release-${{ env.VERSION }}.zip
+          # Forming the attributes JSON
+          attributes='{"name":"VMP-Release-New.zip", "parent":{"id":"250524193403"}}'
+
+          curl -i -X POST "https://upload.box.com/api/2.0/files/content" \
+               -H "authorization: Bearer ${{ env.access_token }}” \
+               -H "content-type: multipart/form-data" \
+               -F attributes="$attributes" \               
+               -F file=@VMP-Release-${{ env.VERSION }}.zip
         
     - name: TBD Revoke Access Token
       run: echo "Even though access token is short lived we will revoke it anyhow"
