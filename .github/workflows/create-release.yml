@@ -116,7 +116,7 @@ jobs:
           cat attributes.json 
 
           curl -i -X POST "https://upload.box.com/api/2.0/files/content" \
-               -H "Authorization: Bearer ${{env.access_token}}" \
+               -H "authorization: Bearer ${{ env.access_token }}" \
                -H "content-type: multipart/form-data" \
                -F attributes=@attributes.json \               
                -F file=@VMP-Release-${{env.VERSION}}.zip
