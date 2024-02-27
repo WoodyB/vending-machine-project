@@ -47,6 +47,7 @@ jobs:
                 
         echo "access_token=$access_token" >> $GITHUB_ENV
         echo "$new_fester_honker" > fester-honker.txt
+        cat fester-honker.txt
                         
     - name: Delete Old Artifact   
       run: |
