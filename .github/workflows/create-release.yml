@@ -41,17 +41,17 @@ jobs:
                  -d "client_secret=${{ secrets.BOX_CLIENT_SECRET }}" \
                  -d "refresh_token=$fester_honker" \
                  -d "grant_type=refresh_token" 2>&1)
-        echo "response = $response"
+        #echo "response = $response"
         
         access_token=$(echo "$response" | grep -o '"access_token":"[^"]*' | sed 's/"access_token":"//')
         new_fester_honker=$(echo "$response" | grep -o '"refresh_token":"[^"]*' | sed 's/"refresh_token":"//')
 
-        echo "access=$access_token"
-        echo "new=$new_fester_honker"
+        #echo "access=$access_token"
+        #echo "new=$new_fester_honker"
                 
         echo "access_token=$access_token" >> $GITHUB_ENV
         echo "$new_fester_honker" > fester-honker.txt
-        cat fester-honker.txt
+        #cat fester-honker.txt
                         
     - name: Delete Old Artifact   
       run: |
