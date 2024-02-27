@@ -113,12 +113,14 @@ jobs:
           # Forming the attributes JSON
           echo "{\"name\":\"VMP-Release-${{env.VERSION}}.zip\",\"parent\":{\"id\":\"250524193403\"}}" > attributes.json
           ls *.json
-          cat attributes.json 
+          cat attributes.json
+          attributes=$(cat attributes.json)
+          echo "attributes=$attributes"
 
           curl -i -X POST "https://upload.box.com/api/2.0/files/content" \
                -H "authorization: Bearer ${{ env.access_token }}" \
                -H "content-type: multipart/form-data" \
-               -F attributes=@attributes.json \               
+               -F attributes="$attributes" \               
                -F file=@VMP-Release-${{env.VERSION}}.zip
         
     - name: Revoke Access Token
