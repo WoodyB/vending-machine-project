@@ -121,7 +121,7 @@ jobs:
                -H "authorization: Bearer ${{ env.access_token }}" \
                -H "content-type: multipart/form-data" \
                -F attributes="$attributes" \               
-               -F file=@VMP-Release-${{env.VERSION}}.zip
+               -F file=@./VMP-Release-${{env.VERSION}}.zip
         
     - name: Revoke Access Token
       run: |
