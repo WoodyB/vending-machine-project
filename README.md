@@ -1,5 +1,8 @@
 # vending-machine-project
 
+## Releases
+Releases can be found on Box.com in the [vending-machine-project-releases](https://app.box.com/s/rdff61foy8s2y3uoo4j0qbhijkt1er17/folder/250524193403) folder. 
+
 ## Purpose
 
 ## Disclaimer
