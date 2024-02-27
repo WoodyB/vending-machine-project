@@ -111,7 +111,7 @@ jobs:
     - name: Upload VMP-Release-${{ env.VERSION }} To Box
       run: |
           # Forming the attributes JSON
-          attributes='{"name":"VMP-Release-New.zip", "parent":{"id":"250524193403"}}'
+          attributes="{\"name\":\"VMP-Release-New.zip\", \"parent\":{\"id\":\"250524193403\"}}"          
 
           curl -i -X POST "https://upload.box.com/api/2.0/files/content" \
                -H "authorization: Bearer ${{ env.access_token }}” \
