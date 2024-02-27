@@ -54,6 +54,9 @@ jobs:
                  -d "client_secret=${{ secrets.BOX_CLIENT_SECRET }}" \
                  -d "refresh_token=$fester_honker" \
                  -d "grant_type=refresh_token" 2>&1)
+
+        echo "$response"
+        exit 1
         
         # Extract HTTP status code from the response
         status_code=$(echo "$response" | awk '/HTTP\/1.1/ {print $2}')
