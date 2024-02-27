@@ -116,12 +116,16 @@ jobs:
           cat attributes.json
           attributes=$(cat attributes.json)
           echo "attributes=$attributes"
-
+          echo "ls by wildcard"
+          ls -lh *.zip
+          echo "ls by name"
+          ls VMP-Release-${{env.VERSION}}.zip
+          
           curl -i -X POST "https://upload.box.com/api/2.0/files/content" \
                -H "authorization: Bearer ${{ env.access_token }}" \
                -H "content-type: multipart/form-data" \
                -F attributes="$attributes" \               
-               -F file="@VMP-Release-${{env.VERSION}}.zip"
+               -F file=@VMP-Release-${{env.VERSION}}.zip
         
     - name: Revoke Access Token
       run: |
