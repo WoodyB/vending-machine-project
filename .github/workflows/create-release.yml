@@ -43,7 +43,7 @@ jobs:
           exit 1
         fi
         
-        response=$(curl -i -X POST "https://api.box.com/oauth2/token" \
+        response=$(curl -s -i -X POST "https://api.box.com/oauth2/token" \
            -H "content-type: application/x-www-form-urlencoded" \
            -d "client_id=${{ secrets.BOX_CLIENT_ID }}" \
            -d "client_secret=${{ secrets.BOX_CLIENT_SECRET }}" \
@@ -95,7 +95,7 @@ jobs:
                
     - name: TBD Verify Release Does Not Already Exist On Box
       run:  |
-        release_list=$(curl -i -X GET "https://api.box.com/2.0/folders/250524193403/items" \
+        release_list=$(curl -s -i -X GET "https://api.box.com/2.0/folders/250524193403/items" \
              -H "authorization: Bearer ${{ env.access_token }}")
       
         echo "Get List of Releases From Box"
@@ -144,14 +144,14 @@ jobs:
         echo "ls by name"
         ls VMP-Release-${{env.VERSION}}.zip
         
-        curl -i -X POST "https://upload.box.com/api/2.0/files/content" \
+        curl -s -i -X POST "https://upload.box.com/api/2.0/files/content" \
           -H "authorization: Bearer ${{ env.access_token }}" \
           -H "content-type: multipart/form-data" \
           -F attributes="$attributes" -F file=@VMP-Release-${{env.VERSION}}.zip
         
     - name: Revoke Access Token
       run: |
-        curl -i -X POST "https://api.box.com/oauth2/revoke" \
+        curl -s -i -X POST "https://api.box.com/oauth2/revoke" \
           -H "content-type: application/x-www-form-urlencoded" \
           -d "client_id=${{ secrets.BOX_CLIENT_ID }}" \
           -d "client_secret=${{ secrets.BOX_CLIENT_SECRET }}" \
