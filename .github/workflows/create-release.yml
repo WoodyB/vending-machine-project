@@ -48,6 +48,9 @@ jobs:
            -d "grant_type=refresh_token" 2>&1)
            
         http_status=$(echo "$response" | head -n 1 | awk '{print $2}')
+        
+        echo "http status from POST https://api.box.com/oauth2/token => $http_status"
+        
         if [ "$http_status" -ge 400 ]; then
             echo "HTTP request failed with status code $http_status"
             exit 1
