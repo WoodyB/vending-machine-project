@@ -34,14 +34,17 @@ jobs:
     - name: Get Access Token For Box
       run: |
         echo "Use Box API to get a fresh access token"
-        fester_honker=$(cat fester-honker.txt)
-        echo "::add-mask::$fester_honker"
+        encryped_fester_honker=$(cat fester-honker.txt)
                 
         if [ -z "$fester_honker" ]; then
           echo "Error: fester-honker.txt is empty. Exiting."
           exit 1
         fi
-        
+
+        fester_honker=$(echo "$encryped_fester_honker" | openssl enc -d -base64 -pbkdf2 -nopad -nosalt -k ${{secrets.ENCRYPTION_KEY}})
+        #echo "::add-mask::$fester_honker"        
+        echo "DEBUG: decryped_fester_honker=$fester_honker"
+
         response=$(curl -s -i -X POST "https://api.box.com/oauth2/token" \
            -H "content-type: application/x-www-form-urlencoded" \
            -d "client_id=${{ secrets.BOX_CLIENT_ID }}" \
@@ -64,24 +67,25 @@ jobs:
         new_fester_honker=$(echo "$response" | grep -o '"refresh_token":"[^"]*' | sed 's/"refresh_token":"//')
         echo "DEBUG: new_fester_honker=$new_fester_honker"
         
-        encryped_fester_honker=$(echo "$new_fester_honker" | openssl enc -e -base64 -pbkdf2 -nopad -nosalt -k ${{secrets.ENCRYPTION_KEY}})
-        echo "encryped_fester_honker=$encryped_fester_honker"
+        new_encryped_fester_honker=$(echo "$new_fester_honker" | openssl enc -e -base64 -pbkdf2 -nopad -nosalt -k ${{secrets.ENCRYPTION_KEY}})
+        echo "new_encryped_fester_honker=$new_encryped_fester_honker"
         
-        decryped_fester_honker=$(echo "$encryped_fester_honker" | openssl enc -d -base64 -pbkdf2 -nopad -nosalt -k ${{secrets.ENCRYPTION_KEY}})
-        echo "decryped_fester_honker=$decryped_fester_honker"
+        new_decryped_fester_honker=$(echo "$new_encryped_fester_honker" | openssl enc -d -base64 -pbkdf2 -nopad -nosalt -k ${{secrets.ENCRYPTION_KEY}})
+        echo "new_decryped_fester_honker=$new_decryped_fester_honker"
         
         #echo "::add-mask::$new_fester_honker"        
         
         echo "access_token=$access_token" >> $GITHUB_ENV
-        echo "$new_fester_honker" > fester-honker.txt
+        echo "$new_encryped_fester_honker" > fester-honker.txt
+        #echo "$new_fester_honker" > fester-honker.txt
 
         if [ -z "$access_token" ]; then
           echo "Error: access_token is empty. Exiting."
           exit 1
         fi
         
-        if [ -z "$new_fester_honker" ]; then
-          echo "Error: new_fester_honker is empty. Exiting."
+        if [ -z "$new_encryped_fester_honker" ]; then
+          echo "Error: new_encryped_fester_honker is empty. Exiting."
           exit 1
         fi
                                 
