@@ -36,14 +36,14 @@ jobs:
         echo "Use Box API to get a fresh access token"
         encryped_fester_honker=$(cat fester-honker.txt)
                 
-        if [ -z "$fester_honker" ]; then
+        if [ -z "$encryped_fester_honker" ]; then
           echo "Error: fester-honker.txt is empty. Exiting."
           exit 1
         fi
 
         fester_honker=$(echo "$encryped_fester_honker" | openssl enc -d -base64 -pbkdf2 -nopad -nosalt -k ${{secrets.ENCRYPTION_KEY}})
         #echo "::add-mask::$fester_honker"        
-        echo "DEBUG: decryped_fester_honker=$fester_honker"
+        echo "DEBUG: decryped fester honker=$fester_honker"
 
         response=$(curl -s -i -X POST "https://api.box.com/oauth2/token" \
            -H "content-type: application/x-www-form-urlencoded" \
