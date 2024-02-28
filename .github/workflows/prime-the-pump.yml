@@ -32,7 +32,11 @@ jobs:
     - name: Create New Artifact
       run: |
         new_fester_honker="${{ secrets.BOX_START }}"
+        echo "DEBUG: new_fester_honker=$new_fester_honker"
+          
         new_encryped_fester_honker=$(echo "$new_fester_honker" | openssl enc -e -base64 -pbkdf2 -nopad -nosalt -k ${{secrets.ENCRYPTION_KEY}})
+        echo "DEBUG: new_encryped_fester_honker=$new_encryped_fester_honker"
+        
         echo "$new_encrypted_fester_honker" > fester-honker.txt
          
     - name: Upload Encrypted Artifact
