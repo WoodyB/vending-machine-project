@@ -38,6 +38,12 @@ jobs:
         echo "DEBUG: new_encryped_fester_honker=$new_encryped_fester_honker"
         
         echo "$new_encrypted_fester_honker" > fester-honker.txt
+    
+        echo "DEBUG: Show fester-honer.txt"
+        ls *.txt
+        
+        echo "DEBUG: Contents of fester-honker.txt"
+        cat fester-honker.txt
          
     - name: Upload Encrypted Artifact
       uses: actions/upload-artifact@v4
