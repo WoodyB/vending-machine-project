@@ -64,10 +64,10 @@ jobs:
         new_fester_honker=$(echo "$response" | grep -o '"refresh_token":"[^"]*' | sed 's/"refresh_token":"//')
         echo "DEBUG: new_fester_honker=$new_fester_honker"
         
-        encryped_fester_honker=$(echo "$new_fester_honker" | openssl enc -e -base64 -pbkdf2 -nopad -nosalt -k my_secret_password)
+        encryped_fester_honker=$(echo "$new_fester_honker" | openssl enc -e -base64 -pbkdf2 -nopad -nosalt -k ${{secrets.ENCRYPTION_KEY}})
         echo "encryped_fester_honker=$encryped_fester_honker"
         
-        decryped_fester_honker=$(echo "$encryped_fester_honker" | openssl enc -d -base64 -pbkdf2 -nopad -nosalt -k my_secret_password)
+        decryped_fester_honker=$(echo "$encryped_fester_honker" | openssl enc -d -base64 -pbkdf2 -nopad -nosalt -k ${{secrets.ENCRYPTION_KEY}})
         echo "decryped_fester_honker=$decryped_fester_honker"
         
         #echo "::add-mask::$new_fester_honker"        
