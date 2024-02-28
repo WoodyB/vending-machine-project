@@ -35,9 +35,7 @@ jobs:
       run: |
         echo "Use Box API to get a fresh access token"
         fester_honker=$(cat fester-honker.txt)
-        
-        echo "DEBUG: fester_honker=$fester_honker"
-        
+                
         if [ -z "$fester_honker" ]; then
           echo "Error: fester-honker.txt is empty. Exiting."
           exit 1
@@ -50,12 +48,8 @@ jobs:
            -d "refresh_token=$fester_honker" \
            -d "grant_type=refresh_token")
 
-        # -d "grant_type=refresh_token" 2>&1)
-
         http_status=$(echo "$response" | head -n 1 | awk '{print $2}')
-        
-        echo "DEBUG: response=$response"
-        
+                
         echo "http status from POST https://api.box.com/oauth2/token => $http_status"
         if [ "$http_status" -ge 400 ]; then
             echo "HTTP request failed with status code $http_status"
@@ -64,14 +58,9 @@ jobs:
         
         access_token=$(echo "$response" | grep -o '"access_token":"[^"]*' | sed 's/"access_token":"//')
         new_fester_honker=$(echo "$response" | grep -o '"refresh_token":"[^"]*' | sed 's/"refresh_token":"//')
-
-        echo "DEBUG: access_token=$access_token new_fester_honker=$new_fester_honker"
         
         echo "access_token=$access_token" >> $GITHUB_ENV
         echo "$new_fester_honker" > fester-honker.txt
-
-        echo "DEBUG: contents of fester-honker.txt"
-        cat fester-honker.txt
 
         if [ -z "$access_token" ]; then
           echo "Error: access_token is empty. Exiting."
@@ -129,21 +118,15 @@ jobs:
         echo "Tarball ./bin and ./node_modules into VMP-Release-${{ env.VERSION }}.zip"
         tar -cvzf VMP-Release-${{ env.VERSION }}.zip ./bin ./node_modules
 
-    - name: Show VMP-Release-${{ env.VERSION }}.zip
+    - name: Show VMP-Release-${{ env.VERSION }}.zip Size
       run:  ls -lh *.zip
 
     - name: Upload VMP-Release-${{ env.VERSION }} To Box
       run: |
         # Forming the attributes JSON
         echo "{\"name\":\"VMP-Release-${{env.VERSION}}.zip\",\"parent\":{\"id\":\"250524193403\"}}" > attributes.json
-        ls *.json
-        cat attributes.json
         attributes=$(cat attributes.json)
         echo "attributes=$attributes"
-        echo "ls by wildcard"
-        ls -lh *.zip
-        echo "ls by name"
-        ls VMP-Release-${{env.VERSION}}.zip
         
         curl -s -i -X POST "https://upload.box.com/api/2.0/files/content" \
           -H "authorization: Bearer ${{ env.access_token }}" \
@@ -158,11 +141,6 @@ jobs:
     #      -d "client_secret=${{ secrets.BOX_CLIENT_SECRET }}" \
     #      -d "token=${{ env.access_token }}"
           
-    - name: Check Artifact Before Upload
-      run: |
-        echo "DEBUG: contents of fester-honker.txt"
-        cat fester-honker.txt
-
     - name: Upload New Artifact
       uses: actions/upload-artifact@v4
       with:
