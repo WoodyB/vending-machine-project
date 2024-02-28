@@ -34,6 +34,7 @@ jobs:
     - name: Get Access Token For Box
       run: |
         echo "Use Box API to get a fresh access token"
+        echo "::add-mask::$fester_honker"
         fester_honker=$(cat fester-honker.txt)
                 
         if [ -z "$fester_honker" ]; then
@@ -55,8 +56,10 @@ jobs:
             echo "HTTP request failed with status code $http_status"
             exit 1
         fi
-        
+
+        echo "::add-mask::$access_token"
         access_token=$(echo "$response" | grep -o '"access_token":"[^"]*' | sed 's/"access_token":"//')
+        echo "::add-mask::$new_fester_honker"        
         new_fester_honker=$(echo "$response" | grep -o '"refresh_token":"[^"]*' | sed 's/"refresh_token":"//')
         
         echo "access_token=$access_token" >> $GITHUB_ENV
@@ -132,15 +135,7 @@ jobs:
           -H "authorization: Bearer ${{ env.access_token }}" \
           -H "content-type: multipart/form-data" \
           -F attributes="$attributes" -F file=@VMP-Release-${{env.VERSION}}.zip
-        
-    #- name: Revoke Access Token
-    #  run: |
-    #    curl -s -i -X POST "https://api.box.com/oauth2/revoke" \
-    #      -H "content-type: application/x-www-form-urlencoded" \
-    #      -d "client_id=${{ secrets.BOX_CLIENT_ID }}" \
-    #      -d "client_secret=${{ secrets.BOX_CLIENT_SECRET }}" \
-    #      -d "token=${{ env.access_token }}"
-          
+                  
     - name: Upload New Artifact
       uses: actions/upload-artifact@v4
       with:
