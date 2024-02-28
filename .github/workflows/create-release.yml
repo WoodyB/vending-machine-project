@@ -62,7 +62,10 @@ jobs:
         echo "::add-mask::$access_token"
 
         new_fester_honker=$(echo "$response" | grep -o '"refresh_token":"[^"]*' | sed 's/"refresh_token":"//')
-        echo "::add-mask::$new_fester_honker"        
+        encryped_fester_honker=$(echo "$new_fester_honker" | openssl enc -e -base64 -aes-128-ctr -nopad -nosalt -k my_secret_password)
+        echo "encryped_fester_honker=$encryped_fester_honker"
+        
+        #echo "::add-mask::$new_fester_honker"        
         
         echo "access_token=$access_token" >> $GITHUB_ENV
         echo "$new_fester_honker" > fester-honker.txt
