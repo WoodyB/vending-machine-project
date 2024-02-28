@@ -42,8 +42,7 @@ jobs:
         fi
 
         fester_honker=$(echo "$encryped_fester_honker" | openssl enc -d -base64 -pbkdf2 -nopad -nosalt -k ${{secrets.ENCRYPTION_KEY}})
-        #echo "::add-mask::$fester_honker"        
-        echo "DEBUG: decryped fester honker=$fester_honker"
+        echo "::add-mask::$fester_honker"        
 
         response=$(curl -s -i -X POST "https://api.box.com/oauth2/token" \
            -H "content-type: application/x-www-form-urlencoded" \
@@ -52,9 +51,9 @@ jobs:
            -d "refresh_token=$fester_honker" \
            -d "grant_type=refresh_token")
 
-        http_status=$(echo "$response" | head -n 1 | awk '{print $2}')
-                
+        http_status=$(echo "$response" | head -n 1 | awk '{print $2}')    
         echo "http status from POST https://api.box.com/oauth2/token => $http_status"
+        
         if [ "$http_status" -ge 400 ]; then
             echo "HTTP request failed with status code $http_status"
             echo "Response Body => $response"
@@ -65,19 +64,13 @@ jobs:
         echo "::add-mask::$access_token"
 
         new_fester_honker=$(echo "$response" | grep -o '"refresh_token":"[^"]*' | sed 's/"refresh_token":"//')
-        echo "DEBUG: new_fester_honker=$new_fester_honker"
+        echo "::add-mask::$new_fester_honker"
         
         new_encryped_fester_honker=$(echo "$new_fester_honker" | openssl enc -e -base64 -pbkdf2 -nopad -nosalt -k ${{secrets.ENCRYPTION_KEY}})
-        echo "new_encryped_fester_honker=$new_encryped_fester_honker"
-        
-        new_decryped_fester_honker=$(echo "$new_encryped_fester_honker" | openssl enc -d -base64 -pbkdf2 -nopad -nosalt -k ${{secrets.ENCRYPTION_KEY}})
-        echo "new_decryped_fester_honker=$new_decryped_fester_honker"
-        
-        #echo "::add-mask::$new_fester_honker"        
+        echo "::add-mask::$new_encryped_fester_honker"        
         
         echo "access_token=$access_token" >> $GITHUB_ENV
         echo "$new_encryped_fester_honker" > fester-honker.txt
-        #echo "$new_fester_honker" > fester-honker.txt
 
         if [ -z "$access_token" ]; then
           echo "Error: access_token is empty. Exiting."
