@@ -48,9 +48,10 @@ jobs:
            -d "client_id=${{ secrets.BOX_CLIENT_ID }}" \
            -d "client_secret=${{ secrets.BOX_CLIENT_SECRET }}" \
            -d "refresh_token=$fester_honker" \
-           #-d "grant_type=refresh_token" 2>&1)
            -d "grant_type=refresh_token")
-           
+
+        # -d "grant_type=refresh_token" 2>&1)
+
         http_status=$(echo "$response" | head -n 1 | awk '{print $2}')
         
         echo "DEBUG: response=$response"
