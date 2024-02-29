@@ -1,11 +1,26 @@
 # vending-machine-project
 
-## Releases
-Releases can be found on Box.com in the [vending-machine-project-releases](https://app.box.com/s/rdff61foy8s2y3uoo4j0qbhijkt1er17/folder/250524193403) folder. 
-
 ## Purpose
 
+This main purpose of this project is learning and sharing. I'm learning and I'm hoping by sharing my adventure it may help you learn. If nothing else, maybe it will at least entertain you. Watching me make bonehead mistakes and hopefully discover them and fix them may be slightly entertaining. I have enabled [Discussions](https://github.com/WoodyB/vending-machine-project/discussions) in this project if you would like to drop a line or ask a question.
+
+## Goals
+
+[See Continuous Delivery Pipelines: Dave Farley Style](https://github.com/WoodyB/vending-machine-project/blob/main/design/CD-Deployment-Pipelines.pdf) in this project.
+
+* Create a working example of [Minimum CD](https://minimumcd.org/minimumcd/)
+* Demonstrate a [TDD](https://www.youtube.com/watch?v=fSvQNG7Rz-8) *test driven design* approach to developing a small project
+* Demonstrate an [ATDD](https://www.youtube.com/watch?v=JDD5EEJgpHU) *acceptance test driven design* approach.
+
+## Releases
+
+Releases can be found on Box.com in the [vending-machine-project-releases](https://app.box.com/s/rdff61foy8s2y3uoo4j0qbhijkt1er17/folder/250524193403) folder.
+
 ## Disclaimer
+
+ISC License
+
+THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ## Why The Vending Machine Code Kata
 
@@ -13,7 +28,7 @@ I think the the vending machine code kata is particularly interesting to me for 
 
 ## Design Notes
 
-See the [design directory](https://github.com/WoodyB/vending-machine-project/tree/main/design/developers-log) in this project for a developer's log along with supporting documents
+See the [design directory](https://github.com/WoodyB/vending-machine-project/tree/main/design/developers-log) in this project for a developer's log along with supporting documents. Here's where I'm posting status updates as I go along. Often I will put in links so you can see how the code was at the time of writing the status. My hope is this will help show how the code evolves or maybe (I hope not) devolves over time.s
 
 ## Instructions as presented at <https://cyber-dojo.org>
 
