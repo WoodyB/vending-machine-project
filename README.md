@@ -6,7 +6,7 @@ This main purpose of this project is learning and sharing. I'm learning and I'm 
 
 ## Goals
 
-[See Continuous Delivery Pipelines: Dave Farley Style](https://github.com/WoodyB/vending-machine-project/blob/main/design/CD-Deployment-Pipelines.pdf) in this project.
+[See Continuous Delivery Pipelines: Dave Farley Style](https://woodyb.github.io/vending-machine-project/design/CD-Deployment-Pipelines.pdf) in this project.
 
 * Create a working example of [Minimum CD](https://minimumcd.org/minimumcd/)
 * Demonstrate a [TDD](https://www.youtube.com/watch?v=fSvQNG7Rz-8) *test driven design* approach to developing a small project
