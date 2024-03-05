@@ -14,7 +14,11 @@ This main purpose of this project is learning and sharing. I'm learning and I'm 
 
 ## Releases
 
-Releases can be found on Box.com in the [vending-machine-project-releases](https://app.box.com/s/rdff61foy8s2y3uoo4j0qbhijkt1er17/folder/250524193403) folder. The application is a NodeJS console app that runs in your terminal. You will need to install NodeJS in order to run it. Install Node version20.x or greater from [NodeJS Org](https://nodejs.org/en/download).
+Releases can be found on Box.com in the [vending-machine-project-releases](https://app.box.com/s/rdff61foy8s2y3uoo4j0qbhijkt1er17/folder/250524193403) folder. The application is a NodeJS console app that runs in your terminal. You will need to install NodeJS in order to run it. Install Node version20.x or greater from [NodeJS Org](https://nodejs.org/en/download). The app doesn't do much right now but if you want to execute it simply unzip the release then in the root directory
+
+``` bash
+node bin/index
+```
 
 ## Disclaimer
 
