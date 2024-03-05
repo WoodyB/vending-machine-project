@@ -85,6 +85,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Check if main branch is ahead
+      id: check_main_ahead
+      run: |
+        GITHUB_TOKEN="${{ secrets.USER_TOKEN }}"
+        MAIN_BRANCH=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/${{ github.repository }}/branches/main | jq '.commit.sha')
+        FEATURE_BRANCH=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/${{ github.repository }}/branches/${{ github.head_ref }} | jq '.commit.sha')
+        if [ $MAIN_BRANCH != $FEATURE_BRANCH ]; then echo "Main branch is ahead of the feature branch and cannot be merged";
+        exit 1; fi
+    
     - name: Merge to main trunk 
       run: |
         GITHUB_TOKEN="${{ secrets.USER_TOKEN }}"
