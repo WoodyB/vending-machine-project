@@ -21,12 +21,12 @@ class MockCoinMechanism extends CoinMechanism {
 }
 
 describe('Vending Machine Power up', () => {
-    let coinMechanism: MockCoinMechanism;
+    let mockCoinMechanism: MockCoinMechanism;
     let vendingMachine: VendingMachine;
 
     beforeEach(() => {
-        coinMechanism = new MockCoinMechanism();
-        vendingMachine = new VendingMachine(myDisplay, coinMechanism);
+      mockCoinMechanism = new MockCoinMechanism();
+        vendingMachine = new VendingMachine(myDisplay, mockCoinMechanism);
     });
 
     it('Should display Vending Machine Project Version followed by Insert Coin', () => {
@@ -36,7 +36,7 @@ describe('Vending Machine Power up', () => {
     });
 
     it('Should display 0.25 after a quarter is inserted', async () => {
-      coinMechanism.updatePendingTransactionTotal(.25);
+      mockCoinMechanism.updatePendingTransactionTotal(.25);
       vendingMachine.start();
       expect(StringsDisplayed[StringsDisplayed.length - 1]).toBe('0.25');
     });
