@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This main purpose of this project is learning and sharing. I'm learning and I'm hoping by sharing my adventure it may help you learn. If nothing else, maybe it will at least entertain you. Watching me make bonehead mistakes and hopefully discover them and fix them may be slightly entertaining. I have enabled [Discussions](https://github.com/WoodyB/vending-machine-project/discussions) in this project if you would like to drop a line or ask a question.
+The main purpose of this project is learning and sharing. I'm learning and I'm hoping by sharing my adventure it may help you learn. If nothing else, maybe it will at least entertain you. Watching me make bonehead mistakes and hopefully discover them and fix them may be slightly entertaining. I have enabled [Discussions](https://github.com/WoodyB/vending-machine-project/discussions) in this project if you would like to drop a line or ask a question.
 
 ## Goals
 
