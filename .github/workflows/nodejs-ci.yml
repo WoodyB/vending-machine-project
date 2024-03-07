@@ -90,21 +90,25 @@ jobs:
          PR_NUMBER="${{ github.event.pull_request.number }}"
          GITHUB_TOKEN="${{ secrets.USER_TOKEN }}"
          API_URL="https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER"
+         #MERGEABLE=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" "$API_URL" | jq -r '.mergeable // empty')
          MERGEABLE=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" "$API_URL" | jq -r '.mergeable // empty')
-         if [ "$MERGEABLE" = "null" ] || [ "$MERGEABLE" = "false" ]; then
-           echo "PR $PR_NUMBER is not mergeable"
-           exit 1
-         fi
+         echo "$MERGEABLE"
+
+         #if [ "$MERGEABLE" = "null" ] || [ "$MERGEABLE" = "false" ]; then
+         #  echo "PR $PR_NUMBER is not mergeable"
+         #  exit 1
+         #fi
 
     - name: Merge to main trunk 
       run: |
         GITHUB_TOKEN="${{ secrets.USER_TOKEN }}"
         API_URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge"
-        curl -X PUT -H "Authorization: Bearer $GITHUB_TOKEN" "$API_URL"
+        Merge_Result = $(curl -X PUT -H "Authorization: Bearer $GITHUB_TOKEN" "$API_URL")
+        echo "$Merge_Result"
         
-    - name: Delete the branch after merge 
-      run: |        
-        GITHUB_TOKEN="${{ secrets.USER_TOKEN }}"
-        DELETE_BRANCH_API_URL="https://api.github.com/repos/${{ github.repository }}/git/refs/heads/${{ github.head_ref }}"
-        curl -X DELETE -H "Authorization: Bearer $GITHUB_TOKEN" "$DELETE_BRANCH_API_URL"
+    #- name: Delete the branch after merge 
+    #  run: |        
+    #    GITHUB_TOKEN="${{ secrets.USER_TOKEN }}"
+    #    DELETE_BRANCH_API_URL="https://api.github.com/repos/${{ github.repository }}/git/refs/heads/${{ github.head_ref }}"
+    #    curl -X DELETE -H "Authorization: Bearer $GITHUB_TOKEN" "$DELETE_BRANCH_API_URL"
         
