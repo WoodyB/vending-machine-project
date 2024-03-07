@@ -103,7 +103,7 @@ jobs:
         GITHUB_TOKEN="${{ secrets.USER_TOKEN }}"
         API_URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge"
         Merge_Result=$(curl -s -X PUT -H "Authorization: Bearer $GITHUB_TOKEN" "$API_URL" | jq -r '.merged')
-        echo "$Merge_Result"
+        echo "Merge result=$Merge_Result"
 
         if [ "$Merge_Result" = "true" ]; then
           echo "Merge to main successful!"
