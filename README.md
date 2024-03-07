@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This main purpose of this project is learning and sharing. I'm learning and I'm hoping by sharing my adventure it may help you learn. If nothing else, maybe it will at least entertain you. Watching me make bonehead mistakes and hopefully discover them and fix them may be slightly entertaining. I have enabled [Discussions](https://github.com/WoodyB/vending-machine-project/discussions) in this project if you would like to drop a line or ask a question.
+The main purpose of this project is learning and sharing. I'm learning and I'm hoping by sharing my adventure it may help you learn. If nothing else, maybe it will at least entertain you. Watching me make bonehead mistakes and hopefully discover them and fix them may be slightly entertaining. I have enabled [Discussions](https://github.com/WoodyB/vending-machine-project/discussions) in this project if you would like to drop a line or ask a question.
 
 ## Goals
 
@@ -106,5 +106,5 @@ it will display the amount of money remaining in the machine or INSERT COIN if t
 *I want to be told when exact change is required*
 *So that I can determine if I can buy something with the money I have before inserting it*
 
-If the machine is not able to make change with the money in the machine for any of the items that it sells, it will
+When the machine is not able to make change with the money in the machine for any of the items that it sells, it will
 display EXACT CHANGE ONLY instead of INSERT COIN.
