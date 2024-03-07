@@ -110,6 +110,7 @@ jobs:
           echo "Merge to main failed: $Merge_Result"
           echo "Please make sure your branch is not out of sync and behind main"
           exit 1
+        fi
         
     #- name: Delete the branch after merge 
     #  run: |        
