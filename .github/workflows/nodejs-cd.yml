@@ -2,8 +2,8 @@ name: NodeJS Continuous Delivery
 
 on:
   workflow_dispatch:
-  #schedule:
-  #  - cron: '*/6 * * * *'
+  schedule:
+    - cron: '*/15 * * * *'
 
 jobs:
   determine_latest_rc:
