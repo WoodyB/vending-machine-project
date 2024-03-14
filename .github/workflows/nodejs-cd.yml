@@ -138,7 +138,7 @@ jobs:
         echo "ARTIFACT_ID=$artifact_id" >> $GITHUB_ENV
         
     # Delete artifact rc-<latest rc>-binaries
-    - name: Delete Artifact   
+    - name: Delete Original Artifact   
       run: |
         curl -X DELETE \
           -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
