@@ -30,7 +30,7 @@ I think the the vending machine code kata is particularly interesting to me for 
 
 ## Design Notes
 
-See the [design directory](https://github.com/WoodyB/vending-machine-project/tree/main/design/developers-log) in this project for a developer's log along with supporting documents. Here's where I'm posting status updates as I go along. Often I will put in links so you can see how the code was at the time of writing the status. My hope is this will help show how the code evolves or maybe (I hope not) devolves over time.s
+See the [design directory](https://github.com/WoodyB/vending-machine-project/tree/main/design/developers-log) in this project for a developer's log along with supporting documents. Here's where I'm posting status updates as I go along. Often I will put in links so you can see how the code was at the time of writing the status. My hope is this will help show how the code evolves or maybe (I hope not) devolves over time.
 
 ## Instructions as presented at <https://cyber-dojo.org>
 
