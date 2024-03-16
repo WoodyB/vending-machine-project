@@ -1,4 +1,4 @@
-import { CoinType } from './types';
+import { CoinType, systemEvents } from './types';
 
 export interface CoinMechanismInsertedCoinsInterface {
     readCoin(): CoinType; 
@@ -7,4 +7,8 @@ export interface CoinMechanismInsertedCoinsInterface {
 
 export interface DisplayInterface {
     output(str: string): void;
+}
+
+export interface SystemInterface {
+    readSystemEvent(): systemEvents;
 }

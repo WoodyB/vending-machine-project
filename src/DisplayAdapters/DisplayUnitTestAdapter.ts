@@ -4,14 +4,19 @@
 import { DisplayInterface } from '../interfaces'
 
 export class DisplayUnitTestAdapter implements DisplayInterface{
-    private stringsDisplayed: string[] = [];
+    private stringsDisplayed: string[];
+    private previousOutputString: string;
   
     constructor() {
       this.stringsDisplayed = [];
+      this.previousOutputString = '';
     }
 
     public output(str: string): void {
-        this.stringsDisplayed.push(str);
+        if (str !== this.previousOutputString) {
+            this.previousOutputString = str;
+            this.stringsDisplayed.push(str);
+        }
     }
     
     public getStringsDisplayed(): string[] {
