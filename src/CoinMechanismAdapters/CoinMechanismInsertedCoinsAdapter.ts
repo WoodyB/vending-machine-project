@@ -5,10 +5,10 @@ import { CoinMechanismInsertedCoinsInterface } from '../interfaces'
 import { CoinType } from '../types';
 
 export class CoinMechanismInsertedCoinsAdapter implements CoinMechanismInsertedCoinsInterface{
-  readCoin(): CoinType {
+  public readCoin(): CoinType {
     throw new Error('Method not implemented.');
   }
-  readPendingTransactionTotal(): number {
+  public readPendingTransactionTotal(): number {
     throw new Error('Method not implemented.');
   }
 }    
