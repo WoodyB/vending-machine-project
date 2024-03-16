@@ -4,7 +4,7 @@
   "description": "See project README.md",
   "main": "bin/index.js",
   "scripts": {
-    "build": "tsc src/* --outDir 'bin'",
+    "build": "tsc --project .",
     "test:commit": "jest test/commit/",
     "test:acceptance": "jest test/acceptance/",
     "lint": "eslint ./src --ext .ts",
