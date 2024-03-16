@@ -1,4 +1,4 @@
-import { delay } from '../../src/delay';
+import { delay } from '../../src/utils/delay';
 
 describe('Test delay', () => {
     it('Should delay at least 100ms parameter time_ms is 100', async () => {
