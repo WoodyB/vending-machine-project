@@ -5,3 +5,6 @@ export interface CoinMechanismInsertedCoinsInterface {
     readPendingTransactionTotal(): number;
 }
 
+export interface DisplayInterface {
+    output(str: string): void;
+}
