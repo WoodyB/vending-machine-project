@@ -1,11 +1,9 @@
-import { appData } from "./app-data";
-import { CoinMechanism } from './CoinMechanism';
+import { appData } from './app-data';
+import { states } from './types'
+import { CoinMechanismInsertedCoinsAdapter } from './CoinMechanismAdapters/CoinMechanismInsertedCoinsAdapter';
+import { delay } from './utils/delay';
 
-enum states {
-    POWER_UP = 0,
-    IDLE = 1,
-    POWER_DOWN = 2
-}
+
 
 export class VendingMachine {
     private machineOn: boolean;
@@ -13,13 +11,13 @@ export class VendingMachine {
     private pendingTransactionTotal: number;
 
     constructor(
-        private display: (str: string) => void, private coinMechanism: CoinMechanism) {
-        this.coinMechanism = coinMechanism;    
+        private display: (str: string) => void, private coinMechanismInsertedCoinsAdapter: CoinMechanismInsertedCoinsAdapter) {
+        this.coinMechanismInsertedCoinsAdapter = coinMechanismInsertedCoinsAdapter;    
         this.machineOn = false;
         this.pendingTransactionTotal = 0;
     }
 
-    public start() {
+    public async start() {
         this.machineOn = true;
         this.state = states.POWER_UP;
         this.display(`Vending Machine Project Version ${appData.version}`);
@@ -32,7 +30,7 @@ export class VendingMachine {
                 break;
                 
                 case states.IDLE:
-                    this.pendingTransactionTotal = this.coinMechanism.getPendingTransactionTotal();
+                    this.pendingTransactionTotal = this.coinMechanismInsertedCoinsAdapter.readPendingTransactionTotal();
                     if (this.pendingTransactionTotal > 0) {
                         this.display(this.pendingTransactionTotal.toFixed(2));
                     }
@@ -46,6 +44,7 @@ export class VendingMachine {
                     this.machineOn = false;
                 break;                    
             }
+            await delay(10);
         }
     }
 }
