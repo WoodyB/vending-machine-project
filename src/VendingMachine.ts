@@ -1,7 +1,8 @@
 import { appData } from './app-data';
-import { states } from './types'
+import { states,systemEvents } from './types'
 import { CoinMechanismInsertedCoinsAdapter } from './CoinMechanismAdapters/CoinMechanismInsertedCoinsAdapter';
 import { DisplayAdapter } from './DisplayAdapters/DisplayAdapter';
+import { SystemAdapter } from './SystemAdapters/SystemAdapter';
 import { delay } from './utils/delay';
 
 
@@ -13,9 +14,11 @@ export class VendingMachine {
 
     constructor(
         private displayAdapter: DisplayAdapter,
-        private coinMechanismInsertedCoinsAdapter: CoinMechanismInsertedCoinsAdapter) {
+        private coinMechanismInsertedCoinsAdapter: CoinMechanismInsertedCoinsAdapter,
+        private systemAdapter: SystemAdapter) {
             this.coinMechanismInsertedCoinsAdapter = coinMechanismInsertedCoinsAdapter;
-            this.displayAdapter = displayAdapter;    
+            this.displayAdapter = displayAdapter;
+            this.systemAdapter = systemAdapter;    
             this.machineOn = false;
             this.pendingTransactionTotal = 0;
     }
@@ -23,12 +26,16 @@ export class VendingMachine {
     public async start() {
         this.machineOn = true;
         this.state = states.POWER_UP;
-        this.displayAdapter.output(`Vending Machine Project Version ${appData.version}`);
 
         while (this.machineOn) {
+            if (this.systemAdapter.readSystemEvent() === systemEvents.POWER_DOWN) {
+                this.state = states.POWER_DOWN;
+            }
+
             switch (this.state) {
 
                 case states.POWER_UP:
+                    this.displayAdapter.output(`Vending Machine Project Version ${appData.version}`);
                     this.state = states.IDLE;
                 break;
                 
@@ -40,10 +47,10 @@ export class VendingMachine {
                     else {
                         this.displayAdapter.output('Insert Coin');
                     }
-                    this.state = states.POWER_DOWN;
                 break;
                 
                 case states.POWER_DOWN:
+                    this.displayAdapter.output('Vending Machine Powering Down');
                     this.machineOn = false;
                 break;                    
             }
