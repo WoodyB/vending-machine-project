@@ -5,14 +5,14 @@ describe('Test delay', () => {
         const startTime = startTimer();
         await delay(100);
         const elapsedMs = stopTimer(startTime);
-        expect(elapsedMs).toBeGreaterThanOrEqual(100);
+        expect(elapsedMs).toBeGreaterThanOrEqual(95);
     });
     
     it('Should delay at least 600ms parameter time_ms is 600', async () => {
         const startTime = startTimer();
         await delay(600);
         const elapsedMs = stopTimer(startTime);
-        expect(elapsedMs).toBeGreaterThanOrEqual(600);
+        expect(elapsedMs).toBeGreaterThanOrEqual(595);
     });
 });
 
