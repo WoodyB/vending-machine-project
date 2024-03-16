@@ -5,8 +5,10 @@
 */
 import { VendingMachine } from './VendingMachine';
 import { CoinMechanismInsertedCoinsSimulatorAdapter } from './CoinMechanismAdapters/CoinMechanismInsertedCoinsSimulatorAdapter';
+import { DisplaySimulatorAdapter } from './DisplayAdapters/DisplaySimulatorAdapter';
 
 const coinMechanismInsertedCoinsAdapter = new CoinMechanismInsertedCoinsSimulatorAdapter();
-const vendingMachine = new VendingMachine(console.log, coinMechanismInsertedCoinsAdapter);
+const displaySimulatorAdapter = new DisplaySimulatorAdapter();
+const vendingMachine = new VendingMachine(displaySimulatorAdapter, coinMechanismInsertedCoinsAdapter);
 
 vendingMachine.start();
