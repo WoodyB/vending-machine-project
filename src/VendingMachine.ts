@@ -1,8 +1,8 @@
 import { appData } from './app-data';
 import { states,systemEvents } from './types'
-import { CoinMechanismInsertedCoinsAdapter } from './CoinMechanismAdapters/CoinMechanismInsertedCoinsAdapter';
-import { DisplayAdapter } from './DisplayAdapters/DisplayAdapter';
-import { SystemAdapter } from './SystemAdapters/SystemAdapter';
+import { CoinMechanismInsertedCoinsInterface } from './interfaces'
+import { DisplayInterface } from './interfaces';
+import { SystemInterface } from './interfaces';
 import { delay } from './utils/delay';
 
 
@@ -13,9 +13,9 @@ export class VendingMachine {
     private pendingTransactionTotal: number;
 
     constructor(
-        private displayAdapter: DisplayAdapter,
-        private coinMechanismInsertedCoinsAdapter: CoinMechanismInsertedCoinsAdapter,
-        private systemAdapter: SystemAdapter) {
+        private displayAdapter: DisplayInterface,
+        private coinMechanismInsertedCoinsAdapter: CoinMechanismInsertedCoinsInterface,
+        private systemAdapter: SystemInterface) {
             this.coinMechanismInsertedCoinsAdapter = coinMechanismInsertedCoinsAdapter;
             this.displayAdapter = displayAdapter;
             this.systemAdapter = systemAdapter;    
