@@ -1,5 +1,5 @@
 /* 
-** Place Holder: For a real Coin Mechanism Adapter
+** Coin Mechanism Adapter for our simulator
 */
 import { CoinMechanismInsertedCoinsInterface } from '../interfaces'
 import { CoinType, coins } from '../types';

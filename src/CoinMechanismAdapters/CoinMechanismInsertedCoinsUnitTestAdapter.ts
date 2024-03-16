@@ -1,5 +1,5 @@
 /* 
-** Used for unit testing
+** Coin Mechanism Adapter for unit testing
 */
 import { CoinMechanismInsertedCoinsInterface } from '../interfaces'
 import { CoinType, coins } from '../types';
