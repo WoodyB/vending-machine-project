@@ -1,9 +1,9 @@
 import { fork } from 'child_process';
 
 describe('Smoke Test Vending Machine', () => {
-    it('Should display Insert Coin', async () => {
+    it('Should display Vending Machine Powering Down', async () => {
       const result = await runVendingMachine('./bin/index.js'); 
-      expect(result).toBe('Insert Coin\n');
+      expect(result).toBe('Vending Machine Powering Down\n');
     });
 });
 

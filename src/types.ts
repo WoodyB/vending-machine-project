@@ -17,3 +17,9 @@ export enum states {
     POWER_DOWN = 2
 }
 
+export enum systemEvents {
+    POWER_DOWN = 0,
+    POWER_ON = 1,
+    NO_EVENT = 2
+}
+
