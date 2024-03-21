@@ -3,7 +3,7 @@ import { DisplayUnitTestAdapter } from '../../src/DisplayAdapters/DisplayUnitTes
 import { SystemUnitTestAdapter } from '../../src/SystemAdapters/SystemUnitTestAdapter'
 import { VendingMachine } from '../../src/VendingMachine';
 import { delay } from '../../src/utils/delay';
-import { systemEvents} from '../../src/types';
+import { SystemEvents} from '../../src/types';
 
 
 describe('Vending Machine FSM', () => {
@@ -22,7 +22,7 @@ describe('Vending Machine FSM', () => {
     it('Should shut down when it receives a POWER_DOWN', async () => {
       vendingMachine.start();
       await delay(300);
-      mockSystem.setSystemEvent(systemEvents.POWER_DOWN);
+      mockSystem.setSystemEvent(SystemEvents.POWER_DOWN);
       await delay(100);
       const stringsDisplayed = mockDisplay.getStringsDisplayed();
       expect(stringsDisplayed[2]).toBe('Vending Machine Powering Down');
@@ -32,7 +32,7 @@ describe('Vending Machine FSM', () => {
     it('Should display Vending Machine Project Version followed by Insert Coin', async () => {
       vendingMachine.start();
       await delay(300);
-      mockSystem.setSystemEvent(systemEvents.POWER_DOWN);
+      mockSystem.setSystemEvent(SystemEvents.POWER_DOWN);
       const stringsDisplayed = mockDisplay.getStringsDisplayed();
       expect(stringsDisplayed[0]).toContain('Vending Machine Project Version');
       expect(stringsDisplayed[1]).toBe('Insert Coin');
@@ -42,7 +42,7 @@ describe('Vending Machine FSM', () => {
       mockCoinMechanismInsertedCoins.updatePendingTransactionTotal(.25);
       vendingMachine.start();
       await delay(300);
-      mockSystem.setSystemEvent(systemEvents.POWER_DOWN);
+      mockSystem.setSystemEvent(SystemEvents.POWER_DOWN);
       const stringsDisplayed = mockDisplay.getStringsDisplayed();
       expect(stringsDisplayed[1]).toBe('0.25');
     });

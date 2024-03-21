@@ -2,7 +2,7 @@
 ** Coin Mechanism Adapter for unit testing
 */
 import { CoinMechanismInsertedCoinsInterface } from '../interfaces'
-import { CoinType, coins } from '../types';
+import { Coins } from '../types';
 
 export class CoinMechanismInsertedCoinsUnitTestAdapter implements CoinMechanismInsertedCoinsInterface{
     private pendingTransactionTotal: number;
@@ -11,11 +11,11 @@ export class CoinMechanismInsertedCoinsUnitTestAdapter implements CoinMechanismI
       this.pendingTransactionTotal = 0;
     }
 
-    public readCoin(): CoinType {
-        const coin = { name: coins.NO_COIN, value: 0 };
-        return coin;
-    }
-
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public insertCoin(coin: Coins): void {
+        /* Not used in unit testing but must exist to fulfill Interface */
+      }
+    
     public readPendingTransactionTotal(): number {
         return this.pendingTransactionTotal;
     }

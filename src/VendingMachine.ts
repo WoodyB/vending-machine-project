@@ -1,5 +1,5 @@
 import { appData } from './app-data';
-import { states,systemEvents } from './types'
+import { States, SystemEvents } from './types'
 import { CoinMechanismInsertedCoinsInterface } from './interfaces'
 import { DisplayInterface } from './interfaces';
 import { SystemInterface } from './interfaces';
@@ -9,7 +9,7 @@ import { delay } from './utils/delay';
 
 export class VendingMachine {
     private machineOn: boolean;
-    private state = states.POWER_UP;
+    private state = States.POWER_UP;
     private pendingTransactionTotal: number;
 
     constructor(
@@ -25,21 +25,21 @@ export class VendingMachine {
 
     public async start() {
         this.machineOn = true;
-        this.state = states.POWER_UP;
+        this.state = States.POWER_UP;
 
         while (this.machineOn) {
-            if (this.systemAdapter.readSystemEvent() === systemEvents.POWER_DOWN) {
-                this.state = states.POWER_DOWN;
+            if (this.systemAdapter.readSystemEvent() === SystemEvents.POWER_DOWN) {
+                this.state = States.POWER_DOWN;
             }
 
             switch (this.state) {
 
-                case states.POWER_UP:
+                case States.POWER_UP:
                     this.displayAdapter.output(`Vending Machine Project Version ${appData.version}`);
-                    this.state = states.IDLE;
+                    this.state = States.IDLE;
                 break;
                 
-                case states.IDLE:
+                case States.IDLE:
                     this.pendingTransactionTotal = this.coinMechanismInsertedCoinsAdapter.readPendingTransactionTotal();
                     if (this.pendingTransactionTotal > 0) {
                         this.displayAdapter.output(this.pendingTransactionTotal.toFixed(2));
@@ -49,7 +49,7 @@ export class VendingMachine {
                     }
                 break;
                 
-                case states.POWER_DOWN:
+                case States.POWER_DOWN:
                     this.displayAdapter.output('Vending Machine Powering Down');
                     this.machineOn = false;
                 break;                    
