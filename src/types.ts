@@ -1,25 +1,22 @@
-export enum coins {
-    NO_COIN = 0,
-    PENNY = 1,
-    NICKEL = 2,
-    DIME = 3,
-    QUARTER = 4
+export enum Coins {
+    NO_COIN = 'NO_COIN',
+    PENNY = 'PENNY',
+    NICKEL = 'NICKEL',
+    DIME = 'DIME',
+    QUARTER = 'QUARTER',
+    SLUG = 'SLUG',
+    FOREIGN_COIN = 'FOREIGN_COIN'
 }
 
-export type CoinType = {
-    name: coins;
-    value: number;
-};
-
-export enum states {
-    POWER_UP = 0,
-    IDLE = 1,
-    POWER_DOWN = 2
+export enum States {
+    POWER_UP = 'POWER_UP',
+    IDLE = 'IDLE',
+    POWER_DOWN = 'POWER_DOWN'
 }
 
-export enum systemEvents {
-    POWER_DOWN = 0,
-    POWER_ON = 1,
-    NO_EVENT = 2
+export enum SystemEvents {
+    POWER_DOWN = 'POWER_DOWN',
+    POWER_ON = 'POWER_ON',
+    NO_EVENT = 'NO_EVENT'
 }
 

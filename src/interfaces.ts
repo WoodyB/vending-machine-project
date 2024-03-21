@@ -1,7 +1,7 @@
-import { CoinType, systemEvents } from './types';
+import { Coins, SystemEvents } from './types';
 
 export interface CoinMechanismInsertedCoinsInterface {
-    readCoin(): CoinType; 
+    insertCoin(coin: Coins): void; 
     readPendingTransactionTotal(): number;
 }
 
@@ -10,5 +10,5 @@ export interface DisplayInterface {
 }
 
 export interface SystemInterface {
-    readSystemEvent(): systemEvents;
+    readSystemEvent(): SystemEvents;
 }
