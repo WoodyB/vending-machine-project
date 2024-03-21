@@ -9,7 +9,7 @@ export class DisplaySimulatorAdapter implements DisplayInterface{
     constructor() {
         this.previousOutputString = '';
       }
-  
+
     public output(str: string): void {
         if (str !== this.previousOutputString) {
             this.previousOutputString = str;

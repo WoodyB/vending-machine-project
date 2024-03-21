@@ -2,20 +2,20 @@
 ** System Adapter for unit testing
 */
 import { SystemInterface } from '../interfaces'
-import { systemEvents } from '../types';
+import { SystemEvents } from '../types';
 
 export class SystemUnitTestAdapter implements SystemInterface{
-    private systemEvent: systemEvents;
+    private systemEvent: SystemEvents;
 
     constructor() {
-        this.systemEvent = systemEvents.NO_EVENT;
+        this.systemEvent = SystemEvents.NO_EVENT;
       }
   
-    public setSystemEvent(systemEvent: systemEvents): void {
+    public setSystemEvent(systemEvent: SystemEvents): void {
         this.systemEvent = systemEvent;
     }
  
-    public readSystemEvent(): systemEvents {
+    public readSystemEvent():SystemEvents {
         return this.systemEvent ;
     }
     
