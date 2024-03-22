@@ -7,10 +7,16 @@ import { VendingMachine } from './VendingMachine';
 import { CoinMechanismInsertedCoinsSimulatorAdapter } from './CoinMechanismAdapters/CoinMechanismInsertedCoinsSimulatorAdapter';
 import { DisplaySimulatorAdapter } from './DisplayAdapters/DisplaySimulatorAdapter';
 import { SystemSimulatorAdapter } from './SystemAdapters/SystemSimulatorAdapter';
+import { InputHandler } from './Simulator/InputHandler';
+import { Simulator } from './Simulator/Simulator';
+import { Terminal } from './Simulator/Terminal';
 
-const coinMechanismInsertedCoinsAdapter = new CoinMechanismInsertedCoinsSimulatorAdapter();
-const displaySimulatorAdapter = new DisplaySimulatorAdapter();
+const coinMechanismInsertedCoinsSimulatorAdapter = new CoinMechanismInsertedCoinsSimulatorAdapter();
+const terminal = new Terminal();
+const displaySimulatorAdapter = new DisplaySimulatorAdapter(terminal);
 const systemSimulatorAdapter = new SystemSimulatorAdapter();
-const vendingMachine = new VendingMachine(displaySimulatorAdapter, coinMechanismInsertedCoinsAdapter, systemSimulatorAdapter);
+const simulator = new Simulator(terminal, coinMechanismInsertedCoinsSimulatorAdapter, systemSimulatorAdapter);
 
-vendingMachine.start();
+new VendingMachine(displaySimulatorAdapter, coinMechanismInsertedCoinsSimulatorAdapter, systemSimulatorAdapter);
+new InputHandler(simulator);
+

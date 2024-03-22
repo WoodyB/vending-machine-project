@@ -11,4 +11,5 @@ export interface DisplayInterface {
 
 export interface SystemInterface {
     readSystemEvent(): SystemEvents;
+    reportSystemEvent(event: SystemEvents): void;
 }

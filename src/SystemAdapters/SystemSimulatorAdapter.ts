@@ -5,18 +5,18 @@ import { SystemInterface } from '../interfaces'
 import { SystemEvents } from '../types';
 
 export class SystemSimulatorAdapter implements SystemInterface{
-    private timesCalled: number;
+    private lastEvent: SystemEvents;
 
     constructor() {
-        this.timesCalled = 1;
+        this.lastEvent = SystemEvents.NO_EVENT; 
       }
 
     public readSystemEvent(): SystemEvents {
-        this.timesCalled += 1;
-        if (this.timesCalled > 100) {
-            return SystemEvents.POWER_DOWN;
-        }
-        return SystemEvents.NO_EVENT;
+        return this.lastEvent;
+    }
+
+    public reportSystemEvent(event: SystemEvents): void {
+        this.lastEvent = event;
     }
     
 }    
