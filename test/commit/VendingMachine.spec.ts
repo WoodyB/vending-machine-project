@@ -28,7 +28,6 @@ describe('Vending Machine FSM', () => {
       expect(stringsDisplayed[2]).toBe('Vending Machine Powering Down');
     });
 
-
     it('Should display Vending Machine Project Version followed by Insert Coin', async () => {
       vendingMachine.start();
       await delay(300);

@@ -16,7 +16,10 @@ export class SystemUnitTestAdapter implements SystemInterface{
     }
  
     public readSystemEvent():SystemEvents {
-        return this.systemEvent ;
+        return this.systemEvent 
     }
-    
+
+    public reportSystemEvent(systemEvent: SystemEvents): void {
+        this.systemEvent = systemEvent;
+    }
 }    

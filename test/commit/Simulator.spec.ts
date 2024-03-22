@@ -3,6 +3,8 @@ import { CoinMechanismInsertedCoinsInterface } from '../../src/interfaces';
 import { Coins } from '../../src/types';
 import { TerminalInterface } from '../../src/Simulator/interfaces';
 import { Keys } from '../../src/Simulator/types';
+import { SystemEvents } from '../../src/types';
+import { SystemInterface} from '../../src/interfaces'
 
 let terminalOutput: string[] = [];
 
@@ -11,12 +13,15 @@ describe('Simulator', () => {
   let mockInputHandler: MockInputHandler;
   let mockCoinMechanismInsertedAdapter: MockCoinMechanismInsertedAdapter;
   let mockTerminal: MockTerminal;
+  let mockSystemAdapter: MockSystemAdapter;
 
   beforeEach(() => {
     mockTerminal = new MockTerminal;
     mockCoinMechanismInsertedAdapter = new MockCoinMechanismInsertedAdapter();
-    simulator = new Simulator(mockTerminal, mockCoinMechanismInsertedAdapter);
+    mockSystemAdapter = new MockSystemAdapter();
+    simulator = new Simulator(mockTerminal, mockCoinMechanismInsertedAdapter, mockSystemAdapter);
     mockInputHandler = new MockInputHandler(simulator);
+    simulator.stop = fakeSimulatorStop;
   });
   
   afterEach(() => {
@@ -26,13 +31,16 @@ describe('Simulator', () => {
   it('should display started message', async () => {
     expect(terminalOutput[0]).toContain('Simulator started');
   });
+
+  it('should start up the Vending Machine FSM', async () => {
+    expect (mockSystemAdapter.readSystemEvent()).toBe(SystemEvents.POWER_ON);
+  });
   
   it('should ignore the y key when pressed followed by the enter key', async () => {
     await mockInputHandler.simulateKeyPress('y');
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
     expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.NO_COIN);
   });
-
 
   it('should not process a coin keys unless the enter key is pressed after it', async () => {
     await mockInputHandler.simulateKeyPress(Keys.Q);
@@ -78,6 +86,35 @@ describe('Simulator', () => {
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
     expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.FOREIGN_COIN);
   });
+
+  it('should not continue to use the last input coin if enter is repeated', async () => {
+    await mockInputHandler.simulateKeyPress(Keys.Q);
+    await mockInputHandler.simulateKeyPress(Keys.ENTER);
+    expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.QUARTER);
+    await mockInputHandler.simulateKeyPress(Keys.ENTER);
+    expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.NO_COIN);
+  });
+
+  it('should Power Down Vending Machine if the x key is pressed', async () => {
+    await mockInputHandler.simulateKeyPress(Keys.X);
+    expect (mockSystemAdapter.readSystemEvent()).toBe(SystemEvents.POWER_DOWN);
+  });
+
+  it('should Power Down Vending Machine if the Esc key is pressed', async () => {
+    await mockInputHandler.simulateKeyPress(Keys.ESC);
+    expect (mockSystemAdapter.readSystemEvent()).toBe(SystemEvents.POWER_DOWN);
+  });
+
+  it('should Power Down Vending Machine if CTL C keys are pressed', async () => {
+    await mockInputHandler.simulateKeyPress(Keys.CTL_C);
+    expect (mockSystemAdapter.readSystemEvent()).toBe(SystemEvents.POWER_DOWN);
+  });
+
+  it('should display it is shutting down when the x key is pressed', async () => {
+    await mockInputHandler.simulateKeyPress(Keys.X);
+    expect(terminalOutput[1]).toContain('Simulator shutting down');
+  });
+
 });
 
 class MockInputHandler {
@@ -88,6 +125,22 @@ class MockInputHandler {
       this.simulator.handleKeyPress(str, { sequence: str, name: str, ctrl: false, meta:false, shift:false });
       resolve(str);
     });
+  }
+}
+
+class MockSystemAdapter implements SystemInterface {
+  private lastEvent: SystemEvents;
+
+  constructor() {
+    this.lastEvent = SystemEvents.NO_EVENT;
+  }
+
+  public readSystemEvent(): SystemEvents {
+    return this.lastEvent;
+}
+
+  public reportSystemEvent(event: SystemEvents): void {
+    this.lastEvent = event;
   }
 }
 
@@ -107,7 +160,10 @@ class MockCoinMechanismInsertedAdapter implements CoinMechanismInsertedCoinsInte
   }
 
   public getLastInsertedCoin(): Coins {
-    return this.lastInsertedCoin;
+    const lastInsertedCoin = this.lastInsertedCoin;
+    /* Destructive Read */
+    this.lastInsertedCoin = Coins.NO_COIN;
+    return lastInsertedCoin;
   }
 }    
 
@@ -115,4 +171,8 @@ class MockTerminal implements TerminalInterface {
   output(str: string): void {
     terminalOutput.push(str);
   }
+}
+
+function fakeSimulatorStop(): void {
+  return;
 }

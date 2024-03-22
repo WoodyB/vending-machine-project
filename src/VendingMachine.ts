@@ -9,7 +9,7 @@ import { delay } from './utils/delay';
 
 export class VendingMachine {
     private machineOn: boolean;
-    private state = States.POWER_UP;
+    private state: States;
     private pendingTransactionTotal: number;
 
     constructor(
@@ -20,7 +20,9 @@ export class VendingMachine {
             this.displayAdapter = displayAdapter;
             this.systemAdapter = systemAdapter;    
             this.machineOn = false;
+            this.state =  States.POWER_UP;
             this.pendingTransactionTotal = 0;
+            this.start();
     }
 
     public async start() {
