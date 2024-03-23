@@ -13,7 +13,6 @@ export class CoinMechanismInsertedCoinsSimulatorAdapter implements CoinMechanism
   }
 
   public insertCoin(coin: Coins): void {
-    //console.log(`DEBUG: Coin Mech insertCoin(${coin})`);
     if (coin === Coins.QUARTER) {
       this.pendingTransactionTotal += .25;
     }
