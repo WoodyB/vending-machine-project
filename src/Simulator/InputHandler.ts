@@ -11,7 +11,17 @@ export class InputHandler {
     }
 
     process.stdin.on('keypress', (str, key) => {
+      if (this.isAlphanumeric(key.sequence)) {
+        process.stdout.write(key.sequence);
+      }
+      if (key.sequence === '\r') {
+        process.stdout.write('\n');
+      }
       this.simulator.handleKeyPress(str, key);
     });    
+  }
+
+  private isAlphanumeric(str: string): boolean {
+    return /^[a-zA-Z0-9]+$/.test(str);
   }
 }
