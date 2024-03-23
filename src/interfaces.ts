@@ -13,3 +13,7 @@ export interface SystemInterface {
     readSystemEvent(): SystemEvents;
     reportSystemEvent(event: SystemEvents): void;
 }
+
+export interface CoinHandlerInterface {
+    handleCoin(total: number): number;
+  }
