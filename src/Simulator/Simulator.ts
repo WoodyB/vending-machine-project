@@ -27,7 +27,8 @@ export class Simulator {
         if (key.sequence === Keys.X ||
             key.sequence === Keys.ESC ||
             key.sequence === Keys.CTL_C) {
-                this.terminal.output('Simulator shutting down');
+                this.terminal.output('\nSimulator shutting down');
+                process.removeAllListeners();
                 this.systemAdapter.reportSystemEvent(SystemEvents.POWER_DOWN);
                 await delay(1000);
                 this.stop();
