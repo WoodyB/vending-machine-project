@@ -4,8 +4,7 @@ import { CoinMechanismInsertedCoinsInterface } from './interfaces'
 import { DisplayInterface } from './interfaces';
 import { SystemInterface } from './interfaces';
 import { delay } from './utils/delay';
-
-
+import { VM_STR_INSERT_COIN, VM_STR_POWERING_DOWN, VM_STR_VERSION } from './constants/vending-machine-strings';
 
 export class VendingMachine {
     private machineOn: boolean;
@@ -20,15 +19,23 @@ export class VendingMachine {
             this.displayAdapter = displayAdapter;
             this.systemAdapter = systemAdapter;    
             this.machineOn = false;
-            this.state =  States.POWER_UP;
+            this.state =  States.POWER_DOWN;
             this.pendingTransactionTotal = 0;
-            this.start();
+            this.off();
+    }
+
+    public async off() {
+        while (!this.machineOn) {   
+            if (this.systemAdapter.readSystemEvent() === SystemEvents.POWER_ON) {
+                this.state = States.POWER_UP;
+                this.machineOn =  true;
+                this.start();
+            }
+            await delay(10);    
+        }
     }
 
     public async start() {
-        this.machineOn = true;
-        this.state = States.POWER_UP;
-
         while (this.machineOn) {
             if (this.systemAdapter.readSystemEvent() === SystemEvents.POWER_DOWN) {
                 this.state = States.POWER_DOWN;
@@ -37,7 +44,7 @@ export class VendingMachine {
             switch (this.state) {
 
                 case States.POWER_UP:
-                    this.displayAdapter.output(`Vending Machine Project Version ${appData.version}`);
+                    this.displayAdapter.output(`${VM_STR_VERSION} ${appData.version}`);
                     this.state = States.IDLE;
                 break;
                 
@@ -47,12 +54,12 @@ export class VendingMachine {
                         this.displayAdapter.output(this.pendingTransactionTotal.toFixed(2));
                     }
                     else {
-                        this.displayAdapter.output('Insert Coin');
+                        this.displayAdapter.output(VM_STR_INSERT_COIN);
                     }
                 break;
                 
                 case States.POWER_DOWN:
-                    this.displayAdapter.output('Vending Machine Powering Down');
+                    this.displayAdapter.output(VM_STR_POWERING_DOWN);
                     this.machineOn = false;
                 break;                    
             }

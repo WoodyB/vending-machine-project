@@ -1,5 +1,5 @@
 export enum Keys {
-    NO_KEY = '',
+    NO_KEY = 'No_Key',
     ENTER = '\r',
     ESC = '\u001b',
     CTL_C = '\u0003',
@@ -11,3 +11,6 @@ export enum Keys {
     F = 'f',
     X = 'x'
 }
+
+export type KeyHandler = () => Promise<void>;
+
