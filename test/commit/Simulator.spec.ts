@@ -5,6 +5,7 @@ import { TerminalInterface } from '../../src/Simulator/interfaces';
 import { Keys } from '../../src/Simulator/types';
 import { SystemEvents } from '../../src/types';
 import { SystemInterface} from '../../src/interfaces'
+import { SIM_STR_SHUTTING_DOWN, SIM_STR_STARTED } from '../../src/Simulator/constants';
 
 let terminalOutput: string[] = [];
 
@@ -29,7 +30,7 @@ describe('Simulator', () => {
   });
 
   it('should display started message', async () => {
-    expect(terminalOutput[0]).toContain('Simulator started');
+    expect(terminalOutput[0]).toContain(SIM_STR_STARTED);
   });
 
   it('should start up the Vending Machine FSM', async () => {
@@ -81,7 +82,7 @@ describe('Simulator', () => {
     expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.SLUG);
   });
 
-  it('should simulate a FOREIGN Coin inserted when the f key is pressed followed by the enter key', async () => {
+  it('should simulate a FOREIGN COIN inserted when the f key is pressed followed by the enter key', async () => {
     await mockInputHandler.simulateKeyPress(Keys.F);
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
     expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.FOREIGN_COIN);
@@ -95,24 +96,24 @@ describe('Simulator', () => {
     expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.NO_COIN);
   });
 
-  it('should Power Down Vending Machine if the x key is pressed', async () => {
+  it('should power down Vending Machine if the x key is pressed', async () => {
     await mockInputHandler.simulateKeyPress(Keys.X);
     expect (mockSystemAdapter.readSystemEvent()).toBe(SystemEvents.POWER_DOWN);
   });
 
-  it('should Power Down Vending Machine if the Esc key is pressed', async () => {
+  it('should power down Vending Machine if the Esc key is pressed', async () => {
     await mockInputHandler.simulateKeyPress(Keys.ESC);
     expect (mockSystemAdapter.readSystemEvent()).toBe(SystemEvents.POWER_DOWN);
   });
 
-  it('should Power Down Vending Machine if CTL C keys are pressed', async () => {
+  it('should power down Vending Machine if CTL C keys are pressed', async () => {
     await mockInputHandler.simulateKeyPress(Keys.CTL_C);
     expect (mockSystemAdapter.readSystemEvent()).toBe(SystemEvents.POWER_DOWN);
   });
 
   it('should display it is shutting down when the x key is pressed', async () => {
     await mockInputHandler.simulateKeyPress(Keys.X);
-    expect(terminalOutput[1]).toContain('Simulator shutting down');
+    expect(terminalOutput[1]).toContain(SIM_STR_SHUTTING_DOWN);
   });
 
 });
@@ -161,7 +162,8 @@ class MockCoinMechanismInsertedAdapter implements CoinMechanismInsertedCoinsInte
 
   public getLastInsertedCoin(): Coins {
     const lastInsertedCoin = this.lastInsertedCoin;
-    /* Destructive Read */
+
+    /* Intended Destructive Read */
     this.lastInsertedCoin = Coins.NO_COIN;
     return lastInsertedCoin;
   }

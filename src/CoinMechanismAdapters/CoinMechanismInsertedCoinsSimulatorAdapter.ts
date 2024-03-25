@@ -14,7 +14,6 @@ export class CoinMechanismInsertedCoinsSimulatorAdapter implements CoinMechanism
   }
 
   public insertCoin(coin: Coins): void {
-    //console.log(`DEBUG: Called insertCoin(${coin})`);
     const coinHandler = this.coinHandlers.get(coin);
     if (coinHandler) {
       this.pendingTransactionTotal = coinHandler.handleCoin(this.pendingTransactionTotal);
