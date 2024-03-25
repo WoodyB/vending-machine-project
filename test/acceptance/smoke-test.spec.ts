@@ -1,9 +1,10 @@
 import { fork } from 'child_process';
+import { VM_STR_POWERING_DOWN } from '../../src/constants/vending-machine-strings';
 
 describe('Smoke Test Vending Machine', () => {
-    it('Should display "DISPLAY: Vending Machine Powering Down"', async () => {
+    it(`Should display "DISPLAY: ${VM_STR_POWERING_DOWN}"`, async () => {
       const result = await runVendingMachine('./bin/index.js', 'x'); 
-      expect(result).toBe('DISPLAY: Vending Machine Powering Down\n');
+      expect(result).toBe(`DISPLAY: ${VM_STR_POWERING_DOWN}\n`);
     });
 });
 

@@ -5,6 +5,7 @@
   "main": "bin/index.js",
   "scripts": {
     "build": "tsc --project .",
+    "test": "jest %1",
     "test:commit": "jest test/commit/",
     "test:acceptance": "jest test/acceptance/",
     "lint": "eslint ./src --ext .ts",
