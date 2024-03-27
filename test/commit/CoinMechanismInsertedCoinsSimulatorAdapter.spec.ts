@@ -13,7 +13,7 @@ describe('CoinMechanismInsertedCoinsSimulatorAdapter', () => {
         expect(pendingTransactionTotal).toBe(0);
     });
 
-    it('Method readPendingTransactionTotal should return 0 if no valid coins are inserted ', () => {
+    it('Method readPendingTransactionTotal should return 0 if invalid coin penny is inserted ', () => {
         coinMechanismInsertedCoinsSimulatorAdapter.insertCoin(Coins.PENNY);
         const pendingTransactionTotal = coinMechanismInsertedCoinsSimulatorAdapter.readPendingTransactionTotal();
         expect(pendingTransactionTotal).toBe(0);
@@ -47,5 +47,4 @@ describe('CoinMechanismInsertedCoinsSimulatorAdapter', () => {
         const pendingTransactionTotal = coinMechanismInsertedCoinsSimulatorAdapter.readPendingTransactionTotal();
         expect(pendingTransactionTotal).toBe(0.80);
     });
-    
 });
