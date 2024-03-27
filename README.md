@@ -30,7 +30,13 @@ I think the the vending machine code kata is particularly interesting to me for 
 
 ## Design Notes
 
-See the [design directory](https://github.com/WoodyB/vending-machine-project/tree/main/design/developers-log) in this project for a developer's log along with supporting documents. Here's where I'm posting status updates as I go along. Often I will put in links so you can see how the code was at the time of writing the status. My hope is this will help show how the code evolves or maybe (I hope not) devolves over time.
+See the [developer's log in the design directory](https://github.com/WoodyB/vending-machine-project/tree/main/design/developers-log) in this project for a developer's log along with supporting documents. Here's where I'm posting status updates as I go along. Often I will put in links so you can see how the code was at the time of writing the status. My hope is this will help show how the code evolves or maybe (I hope not) devolves over time.
+
+Viewing the developer's log via GitHubs file viewer works well but it's a better experience viewing the other design documents via github.io which will enable the hyperlinks in the PDF documents. Here's the links for your convenience
+
+* [CD Deployment Pipelines](https://woodyb.github.io/vending-machine-project/design/CD-Deployment-Pipelines.pdf)
+* [Vending Machine Diagram](https://woodyb.github.io/vending-machine-project/design/vending-machine-diagram.pdf)
+* [Harnessing The Power of Hexagonal Architecture](https://woodyb.github.io/vending-machine-project/design/Harnessing-The-Power-of-Hexagonal-Architecture.pdf)
 
 ## Instructions as presented at <https://cyber-dojo.org>
 
