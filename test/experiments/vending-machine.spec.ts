@@ -65,7 +65,7 @@ describe('Vending Machine', () => {
       await simulatedKeyboardInputHandler.simulateKeyPress('x');
       await delay(1000);
       console.log = originalConsoleLog;
-      });
+    });
 
     it('Should stat up and display Insert Coin', async () => {
       const foundInsertCoin = await waitForVendingMachineToDisplay('DISPLAY: Insert Coin');
