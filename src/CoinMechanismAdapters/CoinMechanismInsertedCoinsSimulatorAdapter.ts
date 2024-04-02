@@ -1,6 +1,7 @@
 import { CoinMechanismInsertedCoinsInterface, CoinHandlerInterface } from '../interfaces'
 import { Coins } from '../types';
 import { Terminal } from '../Simulator/Terminal';
+import { VM_STR_ACTION, VM_STR_COIN_REJECTED } from '../constants/vending-machine-strings';
 
 export class CoinMechanismInsertedCoinsSimulatorAdapter implements CoinMechanismInsertedCoinsInterface{
   private pendingTransactionTotal: number;
@@ -23,7 +24,7 @@ export class CoinMechanismInsertedCoinsSimulatorAdapter implements CoinMechanism
       return;
     }
 
-    this.terminal.output(`ACTION: ${coin} was rejected and placed in the coin return`);
+    this.terminal.output(`${VM_STR_ACTION} ${coin} ${VM_STR_COIN_REJECTED}`);
   }
 
   public readPendingTransactionTotal(): number {
