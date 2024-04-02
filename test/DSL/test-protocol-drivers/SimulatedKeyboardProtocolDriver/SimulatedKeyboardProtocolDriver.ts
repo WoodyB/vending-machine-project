@@ -8,7 +8,7 @@ import { FakeTerminal } from './FakeTerminal';
 import { SimulatedKeyboardInputHandler } from './SimulateKeyboardInputHandler';
 import { VendingMachine } from '../../../../src/VendingMachine';
 import { delay } from '../../../../src/utils/delay';
-import {VM_STR_INSERT_COIN } from '../../../../src/constants/vending-machine-strings';
+import {VM_STR_INSERT_COIN, VM_STR_DISPLAY } from '../../../../src/constants/vending-machine-strings';
 
 
 export class SimulatedKeyboardDriver extends BaseDriver {
@@ -36,7 +36,7 @@ export class SimulatedKeyboardDriver extends BaseDriver {
 
     public override async setup(): Promise<void> {
         this.fakeTerminal = new FakeTerminal();
-        this.coinMechanismInsertedCoinsSimulatorAdapter = new CoinMechanismInsertedCoinsSimulatorAdapter();
+        this.coinMechanismInsertedCoinsSimulatorAdapter = new CoinMechanismInsertedCoinsSimulatorAdapter(this.fakeTerminal);
         this.displaySimulatorAdapter = new DisplaySimulatorAdapter(this.fakeTerminal);
         this.systemSimulatorAdapter = new SystemSimulatorAdapter();
 
@@ -53,7 +53,7 @@ export class SimulatedKeyboardDriver extends BaseDriver {
     }
 
     public override async insertCoin(coin: Coins): Promise<void> {
-        await this.waitForVendingMachineToDisplay(`DISPLAY: ${VM_STR_INSERT_COIN}`);
+        await this.waitForVendingMachineToDisplay(`${VM_STR_DISPLAY} ${VM_STR_INSERT_COIN}`);
 
         const coinKey = this.coinKeyMap[coin];
         if (coinKey) {
@@ -64,7 +64,7 @@ export class SimulatedKeyboardDriver extends BaseDriver {
     }
 
     public override async verifyDisplayOutput(str: string): Promise<boolean> {
-        return this.waitForVendingMachineToDisplay(`DISPLAY: ${str}`);
+        return this.waitForVendingMachineToDisplay(`${VM_STR_DISPLAY} ${str}`);
     }
 
     private fakeSimulatorStop(): void {

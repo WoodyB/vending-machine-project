@@ -1,8 +1,6 @@
-/* 
-** Display Adapter for our simulator
-*/
 import { DisplayInterface } from '../interfaces'
 import { Terminal } from '../Simulator/Terminal';
+import { VM_STR_DISPLAY } from '../constants/vending-machine-strings';
 
 export class DisplaySimulatorAdapter implements DisplayInterface{
     private previousOutputString: string;
@@ -16,7 +14,7 @@ export class DisplaySimulatorAdapter implements DisplayInterface{
     public output(str: string): void {
         if (str !== this.previousOutputString) {
             this.previousOutputString = str;
-            this.terminal.output(`DISPLAY: ${str}`);
+            this.terminal.output(`${VM_STR_DISPLAY} ${str}`);
         }
     } 
 }    
