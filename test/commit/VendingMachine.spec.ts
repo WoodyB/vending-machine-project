@@ -4,7 +4,10 @@ import { SystemSimulatorAdapter } from '../../src/SystemAdapters/SystemSimulator
 import { VendingMachine } from '../../src/VendingMachine';
 import { delay } from '../../src/utils/delay';
 import { SystemEvents} from '../../src/types';
-import { VM_STR_INSERT_COIN, VM_STR_VERSION, VM_STR_POWERING_DOWN } from '../../src/constants/vending-machine-strings';
+import { 
+  VM_STR_INSERT_COIN,
+  VM_STR_VERSION,
+  VM_STR_POWERING_DOWN } from '../../src/constants/vending-machine-strings';
 
 const FSM_TIMEOUT = 50;
 

@@ -11,8 +11,8 @@ import { InputHandler } from './Simulator/InputHandler';
 import { Simulator } from './Simulator/Simulator';
 import { Terminal } from './Simulator/Terminal';
 
-const coinMechanismInsertedCoinsSimulatorAdapter = new CoinMechanismInsertedCoinsSimulatorAdapter();
 const terminal = new Terminal();
+const coinMechanismInsertedCoinsSimulatorAdapter = new CoinMechanismInsertedCoinsSimulatorAdapter(terminal);
 const displaySimulatorAdapter = new DisplaySimulatorAdapter(terminal);
 const systemSimulatorAdapter = new SystemSimulatorAdapter();
 const simulator = new Simulator(terminal, coinMechanismInsertedCoinsSimulatorAdapter, systemSimulatorAdapter);
