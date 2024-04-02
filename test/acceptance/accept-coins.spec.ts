@@ -1,6 +1,11 @@
 import { determineProtocolDriver } from '../DSL/determineProtocolDriver';
 import { Coins } from '../../src/types'
-import {VM_STR_INSERT_COIN } from '../../src/constants/vending-machine-strings'
+import {
+    VM_STR_INSERT_COIN,
+    VM_STR_COIN_REJECTED
+} from '../../src/constants/vending-machine-strings'
+
+jest.setTimeout(15000);
 
 describe("Vending Machine", () => {
     const driver = determineProtocolDriver();
@@ -42,5 +47,23 @@ describe("Vending Machine", () => {
         await driver.insertCoin(Coins.NICKEL);
         const foundDisplay5Cents = await driver.verifyDisplayOutput('0.40');
         expect(foundDisplay5Cents).toBe(true);
+    });
+
+    it('Should report a PENNY was rejected', async () => {
+        await driver.insertCoin(Coins.PENNY);
+        const foundActionRejectedCoin = await driver.verifyActionOutput(`${Coins.PENNY} ${VM_STR_COIN_REJECTED}`);
+        expect(foundActionRejectedCoin).toBe(true);
+    });
+
+    it('Should report a FOREIGN_COIN was rejected', async () => {
+        await driver.insertCoin(Coins.FOREIGN_COIN);
+        const foundActionRejectedCoin = await driver.verifyActionOutput(`${Coins.FOREIGN_COIN} ${VM_STR_COIN_REJECTED}`);
+        expect(foundActionRejectedCoin).toBe(true);
+    });
+
+    it('Should report a SLUG was rejected', async () => {
+        await driver.insertCoin(Coins.SLUG);
+        const foundActionRejectedCoin = await driver.verifyActionOutput(`${Coins.SLUG} ${VM_STR_COIN_REJECTED}`);
+        expect(foundActionRejectedCoin).toBe(true);
     });
 });

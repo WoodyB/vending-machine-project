@@ -8,7 +8,11 @@ import { FakeTerminal } from './FakeTerminal';
 import { SimulatedKeyboardInputHandler } from './SimulateKeyboardInputHandler';
 import { VendingMachine } from '../../../../src/VendingMachine';
 import { delay } from '../../../../src/utils/delay';
-import {VM_STR_INSERT_COIN, VM_STR_DISPLAY } from '../../../../src/constants/vending-machine-strings';
+import {
+    VM_STR_INSERT_COIN,
+    VM_STR_DISPLAY,
+    VM_STR_ACTION
+} from '../../../../src/constants/vending-machine-strings';
 
 
 export class SimulatedKeyboardDriver extends BaseDriver {
@@ -65,6 +69,10 @@ export class SimulatedKeyboardDriver extends BaseDriver {
 
     public override async verifyDisplayOutput(str: string): Promise<boolean> {
         return this.waitForVendingMachineToDisplay(`${VM_STR_DISPLAY} ${str}`);
+    }
+
+    public override async verifyActionOutput(str: string): Promise<boolean> {
+        return this.waitForVendingMachineToDisplay(`${VM_STR_ACTION} ${str}`);
     }
 
     private fakeSimulatorStop(): void {
