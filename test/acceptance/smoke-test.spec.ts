@@ -1,10 +1,10 @@
 import { fork } from 'child_process';
-import { VM_STR_POWERING_DOWN } from '../../src/constants/vending-machine-strings';
+import { VM_STR_POWERING_DOWN, VM_STR_DISPLAY } from '../../src/constants/vending-machine-strings';
 
 describe('Smoke Test Vending Machine', () => {
-    it(`Should display "DISPLAY: ${VM_STR_POWERING_DOWN}"`, async () => {
+    it(`Should display "${VM_STR_DISPLAY} ${VM_STR_POWERING_DOWN}"`, async () => {
       const result = await runVendingMachine('./bin/index.js', 'x'); 
-      expect(result).toBe(`DISPLAY: ${VM_STR_POWERING_DOWN}\n`);
+      expect(result).toBe(`${VM_STR_DISPLAY} ${VM_STR_POWERING_DOWN}\n`);
     });
 });
 

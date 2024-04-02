@@ -18,6 +18,11 @@ export abstract class BaseDriver {
         return false;
     }
 
+    public async verifyActionOutput(str: string): Promise<boolean> {
+        this.failWithMethodNotImplemented(`verifyActionOutput(${str}))`);
+        return false;
+    }
+
     private failWithMethodNotImplemented(methodName: string): void {
         throw new Error(
             `This method ${methodName} has not been implemented for the selected protocol driver`
