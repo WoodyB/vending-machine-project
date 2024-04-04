@@ -1,6 +1,7 @@
 import { CoinMechanismInsertedCoinsInterface, SystemInterface} from '../interfaces';
+import { VendingMechanismProductSelectInterface } from '../interfaces';
 import { TerminalInterface } from './interfaces';
-import { Coins, SystemEvents } from '../types'
+import { Coins, Products, SystemEvents } from '../types'
 import { Keys, KeyHandler } from './types';
 import { delay } from '../utils/delay';
 import { SIM_STR_SHUTTING_DOWN, SIM_STR_STARTED } from './constants';
@@ -8,6 +9,7 @@ import { SIM_STR_SHUTTING_DOWN, SIM_STR_STARTED } from './constants';
 export class Simulator {
     private terminal: TerminalInterface;
     private coinMechanismAdapter: CoinMechanismInsertedCoinsInterface;
+    private vendingMechanismProductSelectAdapter: VendingMechanismProductSelectInterface;
     private systemAdapter: SystemInterface;
     private previousKey: Keys;
     private currentKey: Keys;
@@ -15,16 +17,20 @@ export class Simulator {
     private immediateKeyFunctionMap: { [key: string]: KeyHandler } = {};
 
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     constructor(terminal: TerminalInterface,
         coinMechanismAdapter: CoinMechanismInsertedCoinsInterface,
-        systemAdapter: SystemInterface) {
+        systemAdapter: SystemInterface,
+        vendingMechanismProductSelectAdapter: VendingMechanismProductSelectInterface) {
         this.deferredKeyFunctionMap[Keys.Q] = this.Q_KeyHandler.bind(this);
         this.deferredKeyFunctionMap[Keys.D] = this.D_KeyHandler.bind(this);
         this.deferredKeyFunctionMap[Keys.N] = this.N_KeyHandler.bind(this);
         this.deferredKeyFunctionMap[Keys.P] = this.P_KeyHandler.bind(this);
         this.deferredKeyFunctionMap[Keys.S] = this.S_KeyHandler.bind(this);
         this.deferredKeyFunctionMap[Keys.F] = this.F_KeyHandler.bind(this);
+        this.deferredKeyFunctionMap[Keys.A] = this.A_KeyHandler.bind(this);
+        this.deferredKeyFunctionMap[Keys.B] = this.B_KeyHandler.bind(this);
+        this.deferredKeyFunctionMap[Keys.C] = this.C_KeyHandler.bind(this);
+
 
         this.immediateKeyFunctionMap[Keys.X] = this.exitSimulator.bind(this);
         this.immediateKeyFunctionMap[Keys.ESC] = this.exitSimulator.bind(this);
@@ -33,6 +39,7 @@ export class Simulator {
         
         this.terminal = terminal;
         this.coinMechanismAdapter = coinMechanismAdapter;
+        this.vendingMechanismProductSelectAdapter = vendingMechanismProductSelectAdapter;
         this.systemAdapter = systemAdapter;
         this.previousKey = Keys.NO_KEY;
         this.currentKey = Keys.NO_KEY;
@@ -49,6 +56,18 @@ export class Simulator {
 
     public stop(): void {
         process.exit(0);
+    }
+
+    private async A_KeyHandler(): Promise<void> {
+        this.vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
+    }
+
+    private async B_KeyHandler(): Promise<void> {
+        this.vendingMechanismProductSelectAdapter.selectProduct(Products.CANDY);
+    }
+
+    private async C_KeyHandler(): Promise<void> {
+        this.vendingMechanismProductSelectAdapter.selectProduct(Products.CHIPS);
     }
 
     private async Q_KeyHandler(): Promise<void> {

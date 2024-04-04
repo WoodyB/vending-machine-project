@@ -1,6 +1,7 @@
 import { Simulator } from '../../src/Simulator/Simulator';
 import { CoinMechanismInsertedCoinsInterface } from '../../src/interfaces';
-import { Coins } from '../../src/types';
+import { VendingMechanismProductSelectInterface } from '../../src/interfaces'; 
+import { Coins, Products } from '../../src/types';
 import { TerminalInterface } from '../../src/Simulator/interfaces';
 import { Keys } from '../../src/Simulator/types';
 import { SystemEvents } from '../../src/types';
@@ -15,12 +16,14 @@ describe('Simulator', () => {
   let mockCoinMechanismInsertedAdapter: MockCoinMechanismInsertedAdapter;
   let mockTerminal: MockTerminal;
   let mockSystemAdapter: MockSystemAdapter;
+  let mockVendingMechanismProductSelectSimulatorAdapter: MockVendingMechanismProductSelectSimulatorAdapter;
 
   beforeEach(() => {
     mockTerminal = new MockTerminal;
     mockCoinMechanismInsertedAdapter = new MockCoinMechanismInsertedAdapter();
     mockSystemAdapter = new MockSystemAdapter();
-    simulator = new Simulator(mockTerminal, mockCoinMechanismInsertedAdapter, mockSystemAdapter);
+    mockVendingMechanismProductSelectSimulatorAdapter = new MockVendingMechanismProductSelectSimulatorAdapter()
+    simulator = new Simulator(mockTerminal, mockCoinMechanismInsertedAdapter, mockSystemAdapter, mockVendingMechanismProductSelectSimulatorAdapter);
     mockInputHandler = new MockInputHandler(simulator);
     simulator.stop = fakeSimulatorStop;
   });
@@ -116,6 +119,24 @@ describe('Simulator', () => {
     expect(terminalOutput[1]).toContain(SIM_STR_SHUTTING_DOWN);
   });
 
+  it('should simulate product COLA is selected when the a key is pressed followed by the enter key', async () => {
+    await mockInputHandler.simulateKeyPress(Keys.A);
+    await mockInputHandler.simulateKeyPress(Keys.ENTER);
+    expect(mockVendingMechanismProductSelectSimulatorAdapter.readProductSelection()).toBe(Products.COLA);
+  });
+
+  it('should simulate product CANDY is selected when the b key is pressed followed by the enter key', async () => {
+    await mockInputHandler.simulateKeyPress(Keys.B);
+    await mockInputHandler.simulateKeyPress(Keys.ENTER);
+    expect(mockVendingMechanismProductSelectSimulatorAdapter.readProductSelection()).toBe(Products.CANDY);
+  });
+
+  it('should simulate product CHIPS is selected when the c key is pressed followed by the enter key', async () => {
+    await mockInputHandler.simulateKeyPress(Keys.C);
+    await mockInputHandler.simulateKeyPress(Keys.ENTER);
+    expect(mockVendingMechanismProductSelectSimulatorAdapter.readProductSelection()).toBe(Products.CHIPS);
+  });
+
 });
 
 class MockInputHandler {
@@ -177,4 +198,20 @@ class MockTerminal implements TerminalInterface {
 
 function fakeSimulatorStop(): void {
   return;
+}
+
+class MockVendingMechanismProductSelectSimulatorAdapter implements VendingMechanismProductSelectInterface {
+  private selectedProduct!: Products;
+
+  constructor() {
+      this.selectedProduct = Products.NO_PRODUCT;
+  }
+
+  public selectProduct(product: Products): void {
+      this.selectedProduct = product;
+  }
+
+  public readProductSelection(): Products {
+      return this.selectedProduct;
+  }
 }

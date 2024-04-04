@@ -20,3 +20,10 @@ export enum SystemEvents {
     NO_EVENT = 'NO_EVENT'
 }
 
+export enum Products {
+    COLA = 'COLA',
+    CHIPS = 'CHIPS',
+    CANDY = 'CANDY',
+    NO_PRODUCT = 'NO_PRODUCT'
+}
+
