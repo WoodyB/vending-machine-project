@@ -1,8 +1,13 @@
-import { Coins, SystemEvents } from './types';
+import { Coins, SystemEvents, Products } from './types';
 
 export interface CoinMechanismInsertedCoinsInterface {
     insertCoin(coin: Coins): void; 
     readPendingTransactionTotal(): number;
+}
+
+export interface VendingMechanismProductSelectInterface {
+    selectProduct(product: Products): void; 
+    readProductSelection(): Products;
 }
 
 export interface DisplayInterface {
