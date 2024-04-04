@@ -9,7 +9,10 @@ export enum Keys {
     P = 'p',
     S = 's',
     F = 'f',
-    X = 'x'
+    X = 'x',
+    A = 'a',
+    B = 'b',
+    C = 'c'
 }
 
 export type KeyHandler = () => Promise<void>;

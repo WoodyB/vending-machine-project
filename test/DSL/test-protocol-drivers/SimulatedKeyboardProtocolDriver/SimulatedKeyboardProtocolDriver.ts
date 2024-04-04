@@ -1,6 +1,7 @@
 import { BaseDriver } from '../../bases/BaseDriver';
 import { Coins } from '../../../../src/types';
 import { CoinMechanismInsertedCoinsSimulatorAdapter } from '../../../../src/CoinMechanismAdapters/CoinMechanismInsertedCoinsSimulatorAdapter';
+import { VendingMechanismProductSelectSimulatorAdapter } from '../../../../src/VendingMechanismAdapters/VendingMechanismProductSelectSimulatorAdapter'
 import { DisplaySimulatorAdapter } from '../../../../src/DisplayAdapters/DisplaySimulatorAdapter';
 import { SystemSimulatorAdapter } from '../../../../src/SystemAdapters/SystemSimulatorAdapter';
 import { Simulator } from '../../../../src/Simulator/Simulator';
@@ -17,6 +18,7 @@ import {
 
 export class SimulatedKeyboardDriver extends BaseDriver {
     private coinMechanismInsertedCoinsSimulatorAdapter!: CoinMechanismInsertedCoinsSimulatorAdapter;
+    private vendingMechanismProductSelectSimulatorAdapter!: VendingMechanismProductSelectSimulatorAdapter;
     private displaySimulatorAdapter!: DisplaySimulatorAdapter;
     private systemSimulatorAdapter!: SystemSimulatorAdapter;
     private simulator!: Simulator;
@@ -44,7 +46,12 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         this.displaySimulatorAdapter = new DisplaySimulatorAdapter(this.fakeTerminal);
         this.systemSimulatorAdapter = new SystemSimulatorAdapter();
 
-        this.simulator = new Simulator(this.fakeTerminal, this.coinMechanismInsertedCoinsSimulatorAdapter, this.systemSimulatorAdapter);
+        this.simulator = new Simulator(
+            this.fakeTerminal,
+            this.coinMechanismInsertedCoinsSimulatorAdapter,
+            this.systemSimulatorAdapter,
+            this.vendingMechanismProductSelectSimulatorAdapter
+        );
         this.simulator.stop = this.fakeSimulatorStop;
 
         new VendingMachine(this.displaySimulatorAdapter, this.coinMechanismInsertedCoinsSimulatorAdapter, this.systemSimulatorAdapter);
