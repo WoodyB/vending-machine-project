@@ -22,3 +22,7 @@ export interface SystemInterface {
 export interface CoinHandlerInterface {
     handleCoin(total: number): number;
   }
+
+export interface VendingMechanismProductDispenseInterface {
+    dispenseProduct(product: Products): void;
+}
