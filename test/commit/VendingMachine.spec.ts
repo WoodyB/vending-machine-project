@@ -4,10 +4,14 @@ import { SystemSimulatorAdapter } from '../../src/SystemAdapters/SystemSimulator
 import { VendingMachine } from '../../src/VendingMachine';
 import { delay } from '../../src/utils/delay';
 import { SystemEvents} from '../../src/types';
+// import { Products } from '../../src/types';
+// import { VM_STR_THANK_YOU } from '../../src/constants/vending-machine-strings'
+
 import { 
   VM_STR_INSERT_COIN,
   VM_STR_VERSION,
-  VM_STR_POWERING_DOWN } from '../../src/constants/vending-machine-strings';
+  VM_STR_POWERING_DOWN
+} from '../../src/constants/vending-machine-strings';
 
 const FSM_TIMEOUT = 50;
 
@@ -52,6 +56,17 @@ describe('Vending Machine FSM', () => {
       expect(found25Cents).toBe(true);
       await powerOffSystem();
     });
+
+    // it('Should dispense COLA after inserting 1.00 and COLA is selected', async () => {
+    //   await powerOnSystem();
+    //   mockCoinMechanismInsertedCoins.updatePendingTransactionTotal(1.00);
+    //   await waitForVendingMachineToDisplay('1.00');
+    //   vendingMechanismProductSelectSimulatorAdapter.selectProduct(Products.COLA);
+    //   await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
+    //   //const lastProductDispensed = mockVendingMechanismProductDispenser.getLastProductDispensed();
+    //   //expect(lastProductDispensed).toBe(Products.COLA);
+    //   await powerOffSystem();
+    // });
 });
 
 async function powerOnSystem(): Promise<boolean> {

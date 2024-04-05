@@ -11,6 +11,7 @@ export enum Coins {
 export enum States {
     POWER_UP = 'POWER_UP',
     IDLE = 'IDLE',
+    PENDING_TRANSACTION = 'PENDING_TRANSACTION',
     POWER_DOWN = 'POWER_DOWN'
 }
 
