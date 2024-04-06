@@ -181,6 +181,10 @@ class MockCoinMechanismInsertedAdapter implements CoinMechanismInsertedCoinsInte
     return 0;
   }
 
+  resetPendingTransactionTotal(): void {
+    return;
+  }
+
   public getLastInsertedCoin(): Coins {
     const lastInsertedCoin = this.lastInsertedCoin;
 

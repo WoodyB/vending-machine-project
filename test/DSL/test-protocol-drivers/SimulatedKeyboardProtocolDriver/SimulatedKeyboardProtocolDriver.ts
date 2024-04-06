@@ -1,7 +1,8 @@
 import { BaseDriver } from '../../bases/BaseDriver';
-import { Coins } from '../../../../src/types';
+import { Coins, Products } from '../../../../src/types';
 import { CoinMechanismInsertedCoinsSimulatorAdapter } from '../../../../src/CoinMechanismAdapters/CoinMechanismInsertedCoinsSimulatorAdapter';
 import { VendingMechanismProductSelectSimulatorAdapter } from '../../../../src/VendingMechanismAdapters/VendingMechanismProductSelectSimulatorAdapter'
+import { VendingMechanismProductDispenseSimulatorAdapter } from '../../../../src/VendingMechanismAdapters/VendingMechanismProductDispenseSimulatorAdapter'
 import { DisplaySimulatorAdapter } from '../../../../src/DisplayAdapters/DisplaySimulatorAdapter';
 import { SystemSimulatorAdapter } from '../../../../src/SystemAdapters/SystemSimulatorAdapter';
 import { Simulator } from '../../../../src/Simulator/Simulator';
@@ -19,6 +20,7 @@ import {
 export class SimulatedKeyboardDriver extends BaseDriver {
     private coinMechanismInsertedCoinsSimulatorAdapter!: CoinMechanismInsertedCoinsSimulatorAdapter;
     private vendingMechanismProductSelectSimulatorAdapter!: VendingMechanismProductSelectSimulatorAdapter;
+    private vendingMechanismProductDispenseSimulatorAdapter!: VendingMechanismProductDispenseSimulatorAdapter;
     private displaySimulatorAdapter!: DisplaySimulatorAdapter;
     private systemSimulatorAdapter!: SystemSimulatorAdapter;
     private simulator!: Simulator;
@@ -35,6 +37,12 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         [Coins.SLUG]: 's',
         [Coins.FOREIGN_COIN]: 'f'
     };
+    private productKeyMap: Record<Products, string> = {
+        [Products.COLA]: 'a',
+        [Products.CHIPS]: 'b',
+        [Products.CANDY]: 'c',
+        [Products.NO_PRODUCT]: ''
+    };
 
     constructor() {
         super();
@@ -45,6 +53,8 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         this.coinMechanismInsertedCoinsSimulatorAdapter = new CoinMechanismInsertedCoinsSimulatorAdapter(this.fakeTerminal);
         this.displaySimulatorAdapter = new DisplaySimulatorAdapter(this.fakeTerminal);
         this.systemSimulatorAdapter = new SystemSimulatorAdapter();
+        this.vendingMechanismProductSelectSimulatorAdapter = new VendingMechanismProductSelectSimulatorAdapter();
+        this.vendingMechanismProductDispenseSimulatorAdapter = new VendingMechanismProductDispenseSimulatorAdapter(this.fakeTerminal);
 
         this.simulator = new Simulator(
             this.fakeTerminal,
@@ -54,7 +64,13 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         );
         this.simulator.stop = this.fakeSimulatorStop;
 
-        new VendingMachine(this.displaySimulatorAdapter, this.coinMechanismInsertedCoinsSimulatorAdapter, this.systemSimulatorAdapter);
+        new VendingMachine(
+            this.displaySimulatorAdapter,
+            this.coinMechanismInsertedCoinsSimulatorAdapter,
+            this.vendingMechanismProductSelectSimulatorAdapter,
+            this.vendingMechanismProductDispenseSimulatorAdapter,
+            this.systemSimulatorAdapter
+        );
         this.simulatedKeyboardInputHandler = new SimulatedKeyboardInputHandler(this.simulator);
     }
 
@@ -69,6 +85,17 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         const coinKey = this.coinKeyMap[coin];
         if (coinKey) {
             await this.simulatedKeyboardInputHandler.simulateKeyPress(coinKey);
+        }
+
+        await this.simulatedKeyboardInputHandler.simulateKeyPress('\r');
+    }
+
+    public override async selectProduct(product: Products): Promise<void> {
+        await this.waitForVendingMachineToDisplay(`${VM_STR_DISPLAY}`);
+
+        const productKey = this.productKeyMap[product];
+        if (productKey) {
+            await this.simulatedKeyboardInputHandler.simulateKeyPress(productKey);
         }
 
         await this.simulatedKeyboardInputHandler.simulateKeyPress('\r');
