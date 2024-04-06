@@ -45,6 +45,7 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         this.coinMechanismInsertedCoinsSimulatorAdapter = new CoinMechanismInsertedCoinsSimulatorAdapter(this.fakeTerminal);
         this.displaySimulatorAdapter = new DisplaySimulatorAdapter(this.fakeTerminal);
         this.systemSimulatorAdapter = new SystemSimulatorAdapter();
+        this.vendingMechanismProductSelectSimulatorAdapter = new VendingMechanismProductSelectSimulatorAdapter();
 
         this.simulator = new Simulator(
             this.fakeTerminal,
@@ -54,7 +55,12 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         );
         this.simulator.stop = this.fakeSimulatorStop;
 
-        new VendingMachine(this.displaySimulatorAdapter, this.coinMechanismInsertedCoinsSimulatorAdapter, this.systemSimulatorAdapter);
+        new VendingMachine(
+            this.displaySimulatorAdapter,
+            this.coinMechanismInsertedCoinsSimulatorAdapter,
+            this.vendingMechanismProductSelectSimulatorAdapter,
+            this.systemSimulatorAdapter
+        );
         this.simulatedKeyboardInputHandler = new SimulatedKeyboardInputHandler(this.simulator);
     }
 

@@ -24,6 +24,11 @@ const simulator = new Simulator(
     vendingMechanismProductSelectSimulatorAdapter
 );
 
-new VendingMachine(displaySimulatorAdapter, coinMechanismInsertedCoinsSimulatorAdapter, systemSimulatorAdapter);
+new VendingMachine(
+    displaySimulatorAdapter,
+    coinMechanismInsertedCoinsSimulatorAdapter,
+    vendingMechanismProductSelectSimulatorAdapter,
+    systemSimulatorAdapter
+);
 new InputHandler(simulator);
 

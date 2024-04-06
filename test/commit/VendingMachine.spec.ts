@@ -1,11 +1,13 @@
 import { CoinMechanismInsertedCoinsUnitTestAdapter } from '../../src/CoinMechanismAdapters/CoinMechanismInsertedCoinsUnitTestAdapter';
+import { VendingMechanismProductSelectSimulatorAdapter } from '../../src/VendingMechanismAdapters/VendingMechanismProductSelectSimulatorAdapter';
+import { VendingMechanismProductDispenseInterface } from '../../src/interfaces';
 import { DisplayUnitTestAdapter } from '../../src/DisplayAdapters/DisplayUnitTestAdapter';
 import { SystemSimulatorAdapter } from '../../src/SystemAdapters/SystemSimulatorAdapter'
 import { VendingMachine } from '../../src/VendingMachine';
 import { delay } from '../../src/utils/delay';
 import { SystemEvents} from '../../src/types';
-// import { Products } from '../../src/types';
-// import { VM_STR_THANK_YOU } from '../../src/constants/vending-machine-strings'
+import { Products } from '../../src/types';
+import { VM_STR_THANK_YOU } from '../../src/constants/vending-machine-strings'
 
 import { 
   VM_STR_INSERT_COIN,
@@ -15,16 +17,25 @@ import {
 
 const FSM_TIMEOUT = 50;
 
-let mockCoinMechanismInsertedCoins: CoinMechanismInsertedCoinsUnitTestAdapter;
+let mockCoinMechanismInsertedCoinsAdapter: CoinMechanismInsertedCoinsUnitTestAdapter;
+let vendingMechanismProductSelectAdapter: VendingMechanismProductSelectSimulatorAdapter;
+let mockVendingMechanismProductDispenseSimulatorAdapter: MockVendingMechanismProductDispenseSimulatorAdapter;
 let mockDisplay: DisplayUnitTestAdapter;
-let mockSystem: SystemSimulatorAdapter;
+let systemSimulatorAdapter: SystemSimulatorAdapter;
 
 describe('Vending Machine FSM', () => { 
     beforeEach(() => {
-      mockCoinMechanismInsertedCoins = new CoinMechanismInsertedCoinsUnitTestAdapter();
+      mockCoinMechanismInsertedCoinsAdapter = new CoinMechanismInsertedCoinsUnitTestAdapter();
+      mockVendingMechanismProductDispenseSimulatorAdapter = new MockVendingMechanismProductDispenseSimulatorAdapter(null);
       mockDisplay = new DisplayUnitTestAdapter();
-      mockSystem = new SystemSimulatorAdapter();
-      new VendingMachine(mockDisplay, mockCoinMechanismInsertedCoins, mockSystem);
+      systemSimulatorAdapter = new SystemSimulatorAdapter();
+      vendingMechanismProductSelectAdapter = new VendingMechanismProductSelectSimulatorAdapter();
+      new VendingMachine(
+        mockDisplay,
+        mockCoinMechanismInsertedCoinsAdapter,
+        vendingMechanismProductSelectAdapter,
+        systemSimulatorAdapter
+      );
     });
 
     afterAll( async () => {
@@ -51,31 +62,31 @@ describe('Vending Machine FSM', () => {
 
     it('Should display 0.25 after a quarter is inserted', async () => {
       await powerOnSystem();
-      mockCoinMechanismInsertedCoins.updatePendingTransactionTotal(.25);
+      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(.25);
       const found25Cents = await waitForVendingMachineToDisplay('0.25');
       expect(found25Cents).toBe(true);
       await powerOffSystem();
     });
 
-    // it('Should dispense COLA after inserting 1.00 and COLA is selected', async () => {
-    //   await powerOnSystem();
-    //   mockCoinMechanismInsertedCoins.updatePendingTransactionTotal(1.00);
-    //   await waitForVendingMachineToDisplay('1.00');
-    //   vendingMechanismProductSelectSimulatorAdapter.selectProduct(Products.COLA);
-    //   await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
-    //   //const lastProductDispensed = mockVendingMechanismProductDispenser.getLastProductDispensed();
-    //   //expect(lastProductDispensed).toBe(Products.COLA);
-    //   await powerOffSystem();
-    // });
+    it('Should dispense COLA after inserting 1.00 and COLA is selected', async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(1.00);
+      await waitForVendingMachineToDisplay('1.00');
+      vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
+      await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
+      const lastProductDispensed = mockVendingMechanismProductDispenseSimulatorAdapter.getLastProductDispensed();
+      expect(lastProductDispensed).toBe(Products.COLA);
+      await powerOffSystem();
+    });
 });
 
 async function powerOnSystem(): Promise<boolean> {
-  mockSystem.reportSystemEvent(SystemEvents.POWER_ON);
+  systemSimulatorAdapter.reportSystemEvent(SystemEvents.POWER_ON);
   return waitForVendingMachineToDisplay(VM_STR_INSERT_COIN);
 }
 
 async function powerOffSystem(): Promise<boolean> {
-  mockSystem.reportSystemEvent(SystemEvents.POWER_DOWN);
+  systemSimulatorAdapter.reportSystemEvent(SystemEvents.POWER_DOWN);
   return waitForVendingMachineToDisplay(VM_STR_POWERING_DOWN);
 }
 
@@ -92,4 +103,20 @@ async function waitForVendingMachineToDisplay(expectedDisplayOutput: string): Pr
   }
   
   return false;
+}
+
+class MockVendingMechanismProductDispenseSimulatorAdapter implements VendingMechanismProductDispenseInterface{
+  private productDispensed: Products;
+
+  constructor(private terminal: null) {
+      this.productDispensed = Products.NO_PRODUCT;
+  }
+
+  public dispenseProduct(product: Products): void {
+    this.productDispensed = product;
+  }
+
+  public getLastProductDispensed() {
+    return this.productDispensed;
+  }
 }

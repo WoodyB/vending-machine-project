@@ -1,6 +1,3 @@
-/* 
-** System Adapter for our simulator
-*/
 import { SystemInterface } from '../interfaces'
 import { SystemEvents } from '../types';
 
