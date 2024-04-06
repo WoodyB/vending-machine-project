@@ -30,6 +30,10 @@ export class CoinMechanismInsertedCoinsSimulatorAdapter implements CoinMechanism
   public readPendingTransactionTotal(): number {
     return this.pendingTransactionTotal;
   }
+
+  public resetPendingTransactionTotal(): void {
+    this.pendingTransactionTotal = 0;
+  }
 }    
 
 class QuarterHandler implements CoinHandlerInterface {
