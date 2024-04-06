@@ -1,4 +1,4 @@
-import { Coins } from '../../../src/types';
+import { Coins, Products } from '../../../src/types';
 
 export abstract class BaseDriver {
     public async setup(): Promise<void> {
@@ -11,6 +11,10 @@ export abstract class BaseDriver {
 
     public async insertCoin(coin: Coins): Promise<void> {
         this.failWithMethodNotImplemented(`insertCoin(${coin})`);
+    }
+    
+    public async selectProduct(product: Products): Promise<void> {
+        this.failWithMethodNotImplemented(`selectProduct(${product})`);
     }
 
     public async verifyDisplayOutput(str: string): Promise<boolean> {
