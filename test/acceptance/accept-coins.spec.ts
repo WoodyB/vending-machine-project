@@ -81,7 +81,7 @@ describe("Vending Machine", () => {
         expect(foundThankYouMessage).toBe(true);
     });
 
-    it(`should dispense ${Products.COLA } after inserting 1.00 in dimes`, async () => {
+    it(`should dispense ${Products.COLA } after inserting 10 dimes`, async () => {
         await driver.insertCoin(Coins.DIME);
         await driver.insertCoin(Coins.DIME);
         await driver.insertCoin(Coins.DIME);
