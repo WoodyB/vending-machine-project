@@ -62,7 +62,7 @@ describe('Vending Machine FSM', () => {
 
     it('Should display 0.25 after a quarter is inserted', async () => {
       await powerOnSystem();
-      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(.25);
+      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(25);
       const found25Cents = await waitForVendingMachineToDisplay('0.25');
       expect(found25Cents).toBe(true);
       await powerOffSystem();
@@ -70,7 +70,7 @@ describe('Vending Machine FSM', () => {
 
     it('Should dispense COLA after inserting 1.00 and COLA is selected', async () => {
       await powerOnSystem();
-      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(1.00);
+      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(100);
       await waitForVendingMachineToDisplay('1.00');
       vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
       await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
@@ -81,7 +81,7 @@ describe('Vending Machine FSM', () => {
 
     it(`Should display ${VM_STR_THANK_YOU} after dispensing a product is successfully dispensed`, async () => {
       await powerOnSystem();
-      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(1.00);
+      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(100);
       await waitForVendingMachineToDisplay('1.00');
       vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
       const foundThankYouMessage = await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
@@ -91,7 +91,7 @@ describe('Vending Machine FSM', () => {
 
     it(`Should display ${VM_STR_INSERT_COIN} after dispensing product`, async () => {
       await powerOnSystem();
-      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(1.00);
+      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(100);
       await waitForVendingMachineToDisplay('1.00');
       mockDisplayAdapter.clearStringsDisplayed();
       vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
@@ -102,7 +102,7 @@ describe('Vending Machine FSM', () => {
 
     it('Should NOT dispense COLA after inserting .50 and COLA is selected', async () => {
       await powerOnSystem();
-      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(0.50);
+      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(50);
       await waitForVendingMachineToDisplay('0.50');
       vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
       await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
