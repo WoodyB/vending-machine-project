@@ -38,18 +38,18 @@ export class CoinMechanismInsertedCoinsSimulatorAdapter implements CoinMechanism
 
 class QuarterHandler implements CoinHandlerInterface {
   handleCoin(total: number): number {
-    return total + 0.25;
+    return total + 25;
   }
 }
 
 class DimeHandler implements CoinHandlerInterface {
   handleCoin(total: number): number {
-    return total + 0.10;
+    return total + 10;
   }
 }
 
 class NickelHandler implements CoinHandlerInterface {
   handleCoin(total: number): number {
-    return total + 0.05;
+    return total + 5;
   }
 }
