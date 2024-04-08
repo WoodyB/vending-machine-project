@@ -21,9 +21,9 @@ export class VendingMachine {
     private newPendingTransactionTotal: number;
     private productSelected: Products;
     private productPricesMap: Record<Products, number> = {
-        [Products.COLA]: 1.00,
-        [Products.CANDY]: 0.65,
-        [Products.CHIPS]: 0.50,
+        [Products.COLA]: 100,
+        [Products.CANDY]: 65,
+        [Products.CHIPS]: 50,
         [Products.NO_PRODUCT]: 0,
     };
 
@@ -90,7 +90,7 @@ export class VendingMachine {
                 break;
 
                 case States.PENDING_TRANSACTION:
-                    this.displayAdapter.output(this.pendingTransactionTotal.toFixed(2));
+                    this.displayAdapter.output(formatCurrency(this.pendingTransactionTotal));
                     this.state = States.IDLE;  
                 break;
 
@@ -120,4 +120,14 @@ export class VendingMachine {
             await delay(10);
         }
     }
+}
+
+function formatCurrency(amount: number): string {
+    const amountString = amount.toString().padStart(2, '0');
+    let dollars = amountString.slice(0, -2);
+    if (dollars === '') {
+        dollars = '0';
+    }
+    const cents = amountString.slice(-2);
+    return dollars + "." + cents;
 }

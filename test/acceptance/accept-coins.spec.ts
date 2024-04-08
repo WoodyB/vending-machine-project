@@ -47,8 +47,8 @@ describe("Vending Machine", () => {
         await driver.insertCoin(Coins.QUARTER);
         await driver.insertCoin(Coins.DIME);
         await driver.insertCoin(Coins.NICKEL);
-        const foundDisplay5Cents = await driver.verifyDisplayOutput('0.40');
-        expect(foundDisplay5Cents).toBe(true);
+        const foundDisplay40Cents = await driver.verifyDisplayOutput('0.40');
+        expect(foundDisplay40Cents).toBe(true);
     });
 
     it('Should report a PENNY was rejected', async () => {
@@ -74,6 +74,24 @@ describe("Vending Machine", () => {
         await driver.insertCoin(Coins.QUARTER);
         await driver.insertCoin(Coins.QUARTER);
         await driver.insertCoin(Coins.QUARTER);
+        await driver.selectProduct(Products.COLA);
+        const foundProductDispensedAction = await driver.verifyActionOutput(`${Products.COLA} ${VM_STR_PRODUCT_DISPENSED}`);
+        expect(foundProductDispensedAction).toBe(true);
+        const foundThankYouMessage = await driver.verifyDisplayOutput(VM_STR_THANK_YOU);
+        expect(foundThankYouMessage).toBe(true);
+    });
+
+    it(`should dispense ${Products.COLA } after inserting 1.00 in dimes`, async () => {
+        await driver.insertCoin(Coins.DIME);
+        await driver.insertCoin(Coins.DIME);
+        await driver.insertCoin(Coins.DIME);
+        await driver.insertCoin(Coins.DIME);
+        await driver.insertCoin(Coins.DIME);
+        await driver.insertCoin(Coins.DIME);
+        await driver.insertCoin(Coins.DIME);
+        await driver.insertCoin(Coins.DIME);
+        await driver.insertCoin(Coins.DIME);
+        await driver.insertCoin(Coins.DIME);
         await driver.selectProduct(Products.COLA);
         const foundProductDispensedAction = await driver.verifyActionOutput(`${Products.COLA} ${VM_STR_PRODUCT_DISPENSED}`);
         expect(foundProductDispensedAction).toBe(true);

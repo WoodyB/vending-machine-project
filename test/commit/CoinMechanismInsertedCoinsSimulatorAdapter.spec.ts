@@ -33,19 +33,19 @@ describe('CoinMechanismInsertedCoinsSimulatorAdapter', () => {
     it('Method readPendingTransactionTotal should return 0.25 if a quarter is inserted ', () => {
         coinMechanismInsertedCoinsSimulatorAdapter.insertCoin(Coins.QUARTER);
         const pendingTransactionTotal = coinMechanismInsertedCoinsSimulatorAdapter.readPendingTransactionTotal();
-        expect(pendingTransactionTotal).toBe(0.25);
+        expect(pendingTransactionTotal).toBe(25);
     });
 
     it('Method readPendingTransactionTotal should return 0.10 if a dime is inserted ', () => {
         coinMechanismInsertedCoinsSimulatorAdapter.insertCoin(Coins.DIME);
         const pendingTransactionTotal = coinMechanismInsertedCoinsSimulatorAdapter.readPendingTransactionTotal();
-        expect(pendingTransactionTotal).toBe(0.10);
+        expect(pendingTransactionTotal).toBe(10);
     });
 
     it('Method readPendingTransactionTotal should return 0.05 if a nickel is inserted ', () => {
         coinMechanismInsertedCoinsSimulatorAdapter.insertCoin(Coins.NICKEL);
         const pendingTransactionTotal = coinMechanismInsertedCoinsSimulatorAdapter.readPendingTransactionTotal();
-        expect(pendingTransactionTotal).toBe(0.05);
+        expect(pendingTransactionTotal).toBe(5);
     });
 
     it('Method readPendingTransactionTotal should return 0.80 when 2 quarters, 2 dimes, 2 nickels inserted ', () => {
@@ -56,7 +56,7 @@ describe('CoinMechanismInsertedCoinsSimulatorAdapter', () => {
         coinMechanismInsertedCoinsSimulatorAdapter.insertCoin(Coins.NICKEL);
         coinMechanismInsertedCoinsSimulatorAdapter.insertCoin(Coins.NICKEL);
         const pendingTransactionTotal = coinMechanismInsertedCoinsSimulatorAdapter.readPendingTransactionTotal();
-        expect(pendingTransactionTotal).toBe(0.80);
+        expect(pendingTransactionTotal).toBe(80);
     });
 
     it('Should report a PENNY was rejected', () => {
