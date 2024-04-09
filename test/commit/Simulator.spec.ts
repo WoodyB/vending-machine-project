@@ -6,7 +6,11 @@ import { TerminalInterface } from '../../src/Simulator/interfaces';
 import { Keys } from '../../src/Simulator/types';
 import { SystemEvents } from '../../src/types';
 import { SystemInterface} from '../../src/interfaces'
-import { SIM_STR_SHUTTING_DOWN, SIM_STR_STARTED } from '../../src/Simulator/constants';
+import {
+  SIM_STR_SHUTTING_DOWN,
+  SIM_STR_STARTED,
+  SIM_STR_INSTRUCTIONS
+} from '../../src/Simulator/constants';
 
 let terminalOutput: string[] = [];
 
@@ -34,6 +38,10 @@ describe('Simulator', () => {
 
   it('should display started message', async () => {
     expect(terminalOutput[0]).toContain(SIM_STR_STARTED);
+  });
+
+  it('should display simulator instructions', async () => {
+    expect(terminalOutput[1]).toContain(SIM_STR_INSTRUCTIONS);
   });
 
   it('should start up the Vending Machine FSM', async () => {
@@ -116,7 +124,12 @@ describe('Simulator', () => {
 
   it('should display it is shutting down when the x key is pressed', async () => {
     await mockInputHandler.simulateKeyPress(Keys.X);
-    expect(terminalOutput[1]).toContain(SIM_STR_SHUTTING_DOWN);
+    expect(terminalOutput[2]).toContain(SIM_STR_SHUTTING_DOWN);
+  });
+
+  it('should display simulator instructions when the h key is pressed', async () => {
+    await mockInputHandler.simulateKeyPress(Keys.H);
+    expect(terminalOutput[2]).toContain(SIM_STR_INSTRUCTIONS);
   });
 
   it('should simulate product COLA is selected when the a key is pressed followed by the enter key', async () => {
@@ -136,7 +149,6 @@ describe('Simulator', () => {
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
     expect(mockVendingMechanismProductSelectSimulatorAdapter.readProductSelection()).toBe(Products.CHIPS);
   });
-
 });
 
 class MockInputHandler {

@@ -4,7 +4,11 @@ import { TerminalInterface } from './interfaces';
 import { Coins, Products, SystemEvents } from '../types'
 import { Keys, KeyHandler } from './types';
 import { delay } from '../utils/delay';
-import { SIM_STR_SHUTTING_DOWN, SIM_STR_STARTED } from './constants';
+import {
+    SIM_STR_SHUTTING_DOWN,
+    SIM_STR_STARTED,
+    SIM_STR_INSTRUCTIONS
+} from './constants';
 
 export class Simulator {
     private terminal: TerminalInterface;
@@ -31,7 +35,7 @@ export class Simulator {
         this.deferredKeyFunctionMap[Keys.B] = this.B_KeyHandler.bind(this);
         this.deferredKeyFunctionMap[Keys.C] = this.C_KeyHandler.bind(this);
 
-
+        this.immediateKeyFunctionMap[Keys.H] = this.H_KeyHandler.bind(this);
         this.immediateKeyFunctionMap[Keys.X] = this.exitSimulator.bind(this);
         this.immediateKeyFunctionMap[Keys.ESC] = this.exitSimulator.bind(this);
         this.immediateKeyFunctionMap[Keys.CTL_C] = this.exitSimulator.bind(this);
@@ -44,6 +48,7 @@ export class Simulator {
         this.previousKey = Keys.NO_KEY;
         this.currentKey = Keys.NO_KEY;
         this.terminal.output(SIM_STR_STARTED);
+        this.terminal.output(SIM_STR_INSTRUCTIONS);
         this.systemAdapter.reportSystemEvent(SystemEvents.POWER_ON);    
     }
 
@@ -100,6 +105,10 @@ export class Simulator {
         this.systemAdapter.reportSystemEvent(SystemEvents.POWER_DOWN);
         await delay(1000);
         this.stop();
+    }
+
+    private async H_KeyHandler(): Promise<void> {
+        this.terminal.output(`\n${SIM_STR_INSTRUCTIONS}`);
     }
 
     private async ENTER_KeyHandler(): Promise<void> {

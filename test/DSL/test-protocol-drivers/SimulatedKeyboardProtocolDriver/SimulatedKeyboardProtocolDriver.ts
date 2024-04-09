@@ -39,8 +39,8 @@ export class SimulatedKeyboardDriver extends BaseDriver {
     };
     private productKeyMap: Record<Products, string> = {
         [Products.COLA]: 'a',
-        [Products.CHIPS]: 'b',
-        [Products.CANDY]: 'c',
+        [Products.CANDY]: 'b',
+        [Products.CHIPS]: 'c',
         [Products.NO_PRODUCT]: ''
     };
 
@@ -91,8 +91,6 @@ export class SimulatedKeyboardDriver extends BaseDriver {
     }
 
     public override async selectProduct(product: Products): Promise<void> {
-        await this.waitForVendingMachineToDisplay(`${VM_STR_DISPLAY}`);
-
         const productKey = this.productKeyMap[product];
         if (productKey) {
             await this.simulatedKeyboardInputHandler.simulateKeyPress(productKey);
