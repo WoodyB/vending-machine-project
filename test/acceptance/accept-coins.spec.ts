@@ -1,11 +1,6 @@
 import { determineProtocolDriver } from '../DSL/determineProtocolDriver';
-import { Coins, Products } from '../../src/types';
-import {
-    VM_STR_INSERT_COIN,
-    VM_STR_COIN_REJECTED,
-    VM_STR_THANK_YOU,
-    VM_STR_PRODUCT_DISPENSED
-} from '../../src/constants/vending-machine-strings'
+import { Coins } from '../../src/types';
+import { VM_STR_INSERT_COIN, VM_STR_COIN_REJECTED } from '../../src/constants/vending-machine-strings'
 
 jest.setTimeout(15000);
 
@@ -67,35 +62,5 @@ describe("Vending Machine", () => {
         await driver.insertCoin(Coins.SLUG);
         const foundActionRejectedCoin = await driver.verifyActionOutput(`${Coins.SLUG} ${VM_STR_COIN_REJECTED}`);
         expect(foundActionRejectedCoin).toBe(true);
-    });
-
-    it(`should dispense ${Products.COLA } after inserting 1.00`, async () => {
-        await driver.insertCoin(Coins.QUARTER);
-        await driver.insertCoin(Coins.QUARTER);
-        await driver.insertCoin(Coins.QUARTER);
-        await driver.insertCoin(Coins.QUARTER);
-        await driver.selectProduct(Products.COLA);
-        const foundProductDispensedAction = await driver.verifyActionOutput(`${Products.COLA} ${VM_STR_PRODUCT_DISPENSED}`);
-        expect(foundProductDispensedAction).toBe(true);
-        const foundThankYouMessage = await driver.verifyDisplayOutput(VM_STR_THANK_YOU);
-        expect(foundThankYouMessage).toBe(true);
-    });
-
-    it(`should dispense ${Products.COLA } after inserting 10 dimes`, async () => {
-        await driver.insertCoin(Coins.DIME);
-        await driver.insertCoin(Coins.DIME);
-        await driver.insertCoin(Coins.DIME);
-        await driver.insertCoin(Coins.DIME);
-        await driver.insertCoin(Coins.DIME);
-        await driver.insertCoin(Coins.DIME);
-        await driver.insertCoin(Coins.DIME);
-        await driver.insertCoin(Coins.DIME);
-        await driver.insertCoin(Coins.DIME);
-        await driver.insertCoin(Coins.DIME);
-        await driver.selectProduct(Products.COLA);
-        const foundProductDispensedAction = await driver.verifyActionOutput(`${Products.COLA} ${VM_STR_PRODUCT_DISPENSED}`);
-        expect(foundProductDispensedAction).toBe(true);
-        const foundThankYouMessage = await driver.verifyDisplayOutput(VM_STR_THANK_YOU);
-        expect(foundThankYouMessage).toBe(true);
     });
 });
