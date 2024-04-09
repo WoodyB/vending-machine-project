@@ -6,7 +6,7 @@ import { SystemSimulatorAdapter } from '../../src/SystemAdapters/SystemSimulator
 import { VendingMachine } from '../../src/VendingMachine';
 import { delay } from '../../src/utils/delay';
 import { SystemEvents, Products, Coins } from '../../src/types';
-import { VM_STR_THANK_YOU } from '../../src/constants/vending-machine-strings'
+import { VM_STR_THANK_YOU, VM_STR_PRICE } from '../../src/constants/vending-machine-strings'
 
 import { 
   VM_STR_INSERT_COIN,
@@ -79,7 +79,29 @@ describe('Vending Machine FSM', () => {
       await powerOffSystem();
     });
 
-    it(`Should display ${VM_STR_THANK_YOU} after dispensing a product is successfully dispensed`, async () => {
+    it('Should dispense CANDY after inserting 0.65 and CANDY is selected', async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(65);
+      await waitForVendingMachineToDisplay('0.65');
+      vendingMechanismProductSelectAdapter.selectProduct(Products.CANDY);
+      await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
+      const lastProductDispensed = mockVendingMechanismProductDispenseSimulatorAdapter.getLastProductDispensed();
+      expect(lastProductDispensed).toBe(Products.CANDY);
+      await powerOffSystem();
+    });
+
+    it('Should dispense CHIPS after inserting 0.50 and CHIPS is selected', async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(50);
+      await waitForVendingMachineToDisplay('0.50');
+      vendingMechanismProductSelectAdapter.selectProduct(Products.CHIPS);
+      await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
+      const lastProductDispensed = mockVendingMechanismProductDispenseSimulatorAdapter.getLastProductDispensed();
+      expect(lastProductDispensed).toBe(Products.CHIPS);
+      await powerOffSystem();
+    });
+
+    it(`Should display ${VM_STR_THANK_YOU} after a product is successfully dispensed`, async () => {
       await powerOnSystem();
       mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(100);
       await waitForVendingMachineToDisplay('1.00');
@@ -108,6 +130,47 @@ describe('Vending Machine FSM', () => {
       await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
       const lastProductDispensed = mockVendingMechanismProductDispenseSimulatorAdapter.getLastProductDispensed();
       expect(lastProductDispensed).toBe(Products.NO_PRODUCT);
+      await powerOffSystem();
+    });
+
+    it(`Should display ${VM_STR_PRICE} 1.00 when no coins have been inserted and COLA is selected`, async () => {
+      await powerOnSystem();
+      await waitForVendingMachineToDisplay(VM_STR_INSERT_COIN);
+      vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
+      const foundPriceMessage = await waitForVendingMachineToDisplay(`${VM_STR_PRICE} 1.00`);
+      expect(foundPriceMessage).toBe(true);
+      await powerOffSystem();
+    });
+
+    it(`Should display ${VM_STR_INSERT_COIN} after price message when no coins have been inserted and COLA is selected`, async () => {
+      await powerOnSystem();
+      await waitForVendingMachineToDisplay(VM_STR_INSERT_COIN);
+      mockDisplayAdapter.clearStringsDisplayed();
+      vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
+      await waitForVendingMachineToDisplay(`${VM_STR_PRICE} 1.00`);
+      const foundInsertCoinMessage = await waitForVendingMachineToDisplay(VM_STR_INSERT_COIN);
+      expect(foundInsertCoinMessage).toBe(true);
+      await powerOffSystem();
+    });
+
+    it('Should display current balance after price message when 0.50 has been inserted and COLA is selected', async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(50);
+      await waitForVendingMachineToDisplay('0.50');
+      mockDisplayAdapter.clearStringsDisplayed();
+      vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
+      await waitForVendingMachineToDisplay(`${VM_STR_PRICE} 1.00`);
+      const foundTotalAmountMessage = await waitForVendingMachineToDisplay('0.50');
+      expect(foundTotalAmountMessage).toBe(true);
+      await powerOffSystem();
+    });
+
+    it('Should NOT display current balance after price message when no coins have been inserted and COLA is selected', async () => {
+      await powerOnSystem();
+      vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
+      await waitForVendingMachineToDisplay(`${VM_STR_PRICE} 1.00`);
+      const foundTotalAmountMessage = await waitForVendingMachineToDisplay('0.00');
+      expect(foundTotalAmountMessage).toBe(false);
       await powerOffSystem();
     });
 });

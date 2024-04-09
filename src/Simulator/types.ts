@@ -12,7 +12,8 @@ export enum Keys {
     X = 'x',
     A = 'a',
     B = 'b',
-    C = 'c'
+    C = 'c',
+    H = 'h'
 }
 
 export type KeyHandler = () => Promise<void>;

@@ -11,7 +11,8 @@ import {
     VM_STR_INSERT_COIN,
     VM_STR_POWERING_DOWN,
     VM_STR_VERSION,
-    VM_STR_THANK_YOU
+    VM_STR_THANK_YOU,
+    VM_STR_PRICE
 } from './constants/vending-machine-strings';
 
 export class VendingMachine {
@@ -20,13 +21,13 @@ export class VendingMachine {
     private pendingTransactionTotal: number;
     private newPendingTransactionTotal: number;
     private productSelected: Products;
+    private productSelectedWithInsufficientFunds: boolean;
     private productPricesMap: Record<Products, number> = {
         [Products.COLA]: 100,
         [Products.CANDY]: 65,
         [Products.CHIPS]: 50,
         [Products.NO_PRODUCT]: 0,
     };
-
 
     constructor(
         private displayAdapter: DisplayInterface,
@@ -42,6 +43,7 @@ export class VendingMachine {
             this.state =  States.POWER_DOWN;
             this.pendingTransactionTotal = 0;
             this.newPendingTransactionTotal = 0;
+            this.productSelectedWithInsufficientFunds = false;
             this.productSelected = Products.NO_PRODUCT;
             this.off();
     }
@@ -72,7 +74,7 @@ export class VendingMachine {
                 
                 case States.IDLE:
                     this.newPendingTransactionTotal = this.coinMechanismInsertedCoinsAdapter.readPendingTransactionTotal();
-                    if (this.newPendingTransactionTotal > this.pendingTransactionTotal) {
+                    if (this.newPendingTransactionTotal > this.pendingTransactionTotal || this.productSelectedWithInsufficientFunds) {
                         this.pendingTransactionTotal = this.newPendingTransactionTotal;
                         this.state = States.PENDING_TRANSACTION;
                         break;
@@ -90,7 +92,10 @@ export class VendingMachine {
                 break;
 
                 case States.PENDING_TRANSACTION:
-                    this.displayAdapter.output(formatCurrency(this.pendingTransactionTotal));
+                    if (this.pendingTransactionTotal) {
+                        this.displayAdapter.output(formatCurrency(this.pendingTransactionTotal));
+                    }
+                    this.productSelectedWithInsufficientFunds = false;
                     this.state = States.IDLE;  
                 break;
 
@@ -100,7 +105,7 @@ export class VendingMachine {
                         this.state = States.TRANSACTION_COMPLETE;
                         break;
                     }
-                    this.state = States.IDLE;         
+                    this.state = States.INSUFFICIENT_FUNDS;         
                 break;
 
                 case States.TRANSACTION_COMPLETE:
@@ -109,6 +114,13 @@ export class VendingMachine {
                     this.pendingTransactionTotal = 0;
                     this.newPendingTransactionTotal = 0;
                     this.coinMechanismInsertedCoinsAdapter.resetPendingTransactionTotal();    
+                    this.state = States.IDLE;
+                break;
+
+                case States.INSUFFICIENT_FUNDS:
+                    this.displayAdapter.output(`${VM_STR_PRICE} ${formatCurrency(this.productPricesMap[this.productSelected])}`);
+                    await delay(1000);
+                    this.productSelectedWithInsufficientFunds = true;
                     this.state = States.IDLE;
                 break;
 
