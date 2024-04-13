@@ -74,8 +74,6 @@ export class SimulatedKeyboardDriver extends BaseDriver {
             this.displaySimulatorAdapter,
             this.currencyHandler,
             this.vendingHandler,
-            //this.vendingMechanismProductSelectSimulatorAdapter,
-            //this.vendingMechanismProductDispenseSimulatorAdapter,
             this.systemSimulatorAdapter
         );
         this.simulatedKeyboardInputHandler = new SimulatedKeyboardInputHandler(this.simulator);

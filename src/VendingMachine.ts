@@ -19,7 +19,6 @@ export class VendingMachine {
     private machineOn: boolean;
     private state: States;
     private pendingTransactionTotal: number;
-    private newPendingTransactionTotal: number;
     private productSelected: Products;
     private productSelectedWithInsufficientFunds: boolean;
 
@@ -32,7 +31,6 @@ export class VendingMachine {
             this.state =  States.POWER_DOWN;
 
             this.pendingTransactionTotal = 0;
-            this.newPendingTransactionTotal = 0;
             this.productSelectedWithInsufficientFunds = false;
             
             this.productSelected = Products.NO_PRODUCT;
@@ -88,9 +86,9 @@ export class VendingMachine {
     }
     
     private idleAction(): void {
-        this.newPendingTransactionTotal = this.currencyHandler.readPendingTransactionTotal();
-        if (this.newPendingTransactionTotal > this.pendingTransactionTotal || this.productSelectedWithInsufficientFunds) {
-            this.pendingTransactionTotal = this.newPendingTransactionTotal;
+        const pendingTotal = this.currencyHandler.readPendingTransactionTotal();
+        this.pendingTransactionTotal = pendingTotal.amount;
+        if ( pendingTotal.changed || this.productSelectedWithInsufficientFunds) {
             this.state = States.PENDING_TRANSACTION;
             return;
         }
@@ -117,19 +115,13 @@ export class VendingMachine {
     }
     
     private productSelectedAction(): void {
-        if (this.pendingTransactionTotal >= this.vendingHandler.getProductPrice(this.productSelected)) {
-            this.vendingHandler.dispenseProduct(this.productSelected);
-            this.state = States.TRANSACTION_COMPLETE;
-            return;
-        }
-        this.state = States.INSUFFICIENT_FUNDS;         
+        this.state = this.vendingHandler.dispenseProduct(this.productSelected, this.pendingTransactionTotal);         
     }
 
     private async transactionCompleteAction(): Promise<void> {
         this.displayAdapter.output(VM_STR_THANK_YOU);
         await delay(1000);
         this.pendingTransactionTotal = 0;
-        this.newPendingTransactionTotal = 0;
         this.currencyHandler.resetPendingTransactionTotal();    
         this.state = States.IDLE;
     }

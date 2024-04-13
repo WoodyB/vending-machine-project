@@ -33,8 +33,6 @@ const simulator = new Simulator(
 new VendingMachine(
     displaySimulatorAdapter,
     currencyHandler,
-    // vendingMechanismProductSelectSimulatorAdapter,
-    // vendingMechanismProductDispenseSimulatorAdapter,
     vendingHandler,
     systemSimulatorAdapter
 );
