@@ -4,9 +4,10 @@ import { VendingMechanismProductDispenseInterface } from '../../src/interfaces';
 import { DisplayInterface } from '../../src/interfaces'
 import { SystemSimulatorAdapter } from '../../src/SystemAdapters/SystemSimulatorAdapter'
 import { VendingMachine } from '../../src/VendingMachine';
+import { CurrencyHandler } from '../../src/CurrencyHandler';
 import { delay } from '../../src/utils/delay';
 import { SystemEvents, Products, Coins } from '../../src/types';
-import { VM_STR_THANK_YOU, VM_STR_PRICE } from '../../src/constants/vending-machine-strings'
+import { VM_STR_THANK_YOU, VM_STR_PRICE } from '../../src/constants/vending-machine-strings';
 
 import { 
   VM_STR_INSERT_COIN,
@@ -21,17 +22,19 @@ let vendingMechanismProductSelectAdapter: VendingMechanismProductSelectSimulator
 let mockVendingMechanismProductDispenseSimulatorAdapter: MockVendingMechanismProductDispenseSimulatorAdapter;
 let mockDisplayAdapter: MockDisplayAdapter;
 let systemSimulatorAdapter: SystemSimulatorAdapter;
+let currencyHandler: CurrencyHandler;
 
-describe('Vending Machine FSM', () => { 
+describe('Vending Machine', () => { 
     beforeEach(() => {
       mockCoinMechanismInsertedCoinsAdapter = new MockCoinMechanismInsertedCoinsAdapter();
+      currencyHandler = new CurrencyHandler(mockCoinMechanismInsertedCoinsAdapter)
       mockVendingMechanismProductDispenseSimulatorAdapter = new MockVendingMechanismProductDispenseSimulatorAdapter(null);
       mockDisplayAdapter = new MockDisplayAdapter();
       systemSimulatorAdapter = new SystemSimulatorAdapter();
       vendingMechanismProductSelectAdapter = new VendingMechanismProductSelectSimulatorAdapter();
       new VendingMachine(
         mockDisplayAdapter,
-        mockCoinMechanismInsertedCoinsAdapter,
+        currencyHandler,
         vendingMechanismProductSelectAdapter,
         mockVendingMechanismProductDispenseSimulatorAdapter,
         systemSimulatorAdapter
@@ -62,15 +65,43 @@ describe('Vending Machine FSM', () => {
 
     it('Should display 0.25 after a quarter is inserted', async () => {
       await powerOnSystem();
-      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(25);
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
       const found25Cents = await waitForVendingMachineToDisplay('0.25');
       expect(found25Cents).toBe(true);
       await powerOffSystem();
     });
 
+    it('Should display 0.50 after 2 quarters are inserted', async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      const found50Cents = await waitForVendingMachineToDisplay('0.50');
+      expect(found50Cents).toBe(true);
+      await powerOffSystem();
+    });
+
+    it('Should display 0.40 after a quarter, a dime and a nickel are inserted', async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.DIME);
+      await waitForVendingMachineToDisplay('0.35');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.NICKEL)
+      const found40Cents = await waitForVendingMachineToDisplay('0.40');
+      expect(found40Cents).toBe(true);
+      await powerOffSystem();
+    });
+
     it('Should dispense COLA after inserting 1.00 and COLA is selected', async () => {
       await powerOnSystem();
-      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(100);
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.50');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.75');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
       await waitForVendingMachineToDisplay('1.00');
       vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
       await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
@@ -81,7 +112,13 @@ describe('Vending Machine FSM', () => {
 
     it('Should dispense CANDY after inserting 0.65 and CANDY is selected', async () => {
       await powerOnSystem();
-      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(65);
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.50');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.DIME);
+      await waitForVendingMachineToDisplay('0.60');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.NICKEL);
       await waitForVendingMachineToDisplay('0.65');
       vendingMechanismProductSelectAdapter.selectProduct(Products.CANDY);
       await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
@@ -92,7 +129,9 @@ describe('Vending Machine FSM', () => {
 
     it('Should dispense CHIPS after inserting 0.50 and CHIPS is selected', async () => {
       await powerOnSystem();
-      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(50);
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
       await waitForVendingMachineToDisplay('0.50');
       vendingMechanismProductSelectAdapter.selectProduct(Products.CHIPS);
       await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
@@ -103,7 +142,13 @@ describe('Vending Machine FSM', () => {
 
     it(`Should display ${VM_STR_THANK_YOU} after a product is successfully dispensed`, async () => {
       await powerOnSystem();
-      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(100);
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.50');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.75');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
       await waitForVendingMachineToDisplay('1.00');
       vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
       const foundThankYouMessage = await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
@@ -113,7 +158,13 @@ describe('Vending Machine FSM', () => {
 
     it(`Should display ${VM_STR_INSERT_COIN} after dispensing product`, async () => {
       await powerOnSystem();
-      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(100);
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.50');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.75');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
       await waitForVendingMachineToDisplay('1.00');
       mockDisplayAdapter.clearStringsDisplayed();
       vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
@@ -124,7 +175,9 @@ describe('Vending Machine FSM', () => {
 
     it('Should NOT dispense COLA after inserting .50 and COLA is selected', async () => {
       await powerOnSystem();
-      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(50);
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
       await waitForVendingMachineToDisplay('0.50');
       vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
       await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
@@ -155,7 +208,9 @@ describe('Vending Machine FSM', () => {
 
     it('Should display current balance after price message when 0.50 has been inserted and COLA is selected', async () => {
       await powerOnSystem();
-      mockCoinMechanismInsertedCoinsAdapter.updatePendingTransactionTotal(50);
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
       await waitForVendingMachineToDisplay('0.50');
       mockDisplayAdapter.clearStringsDisplayed();
       vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
@@ -216,35 +271,28 @@ class MockVendingMechanismProductDispenseSimulatorAdapter implements VendingMech
   }
 }
 
-class MockCoinMechanismInsertedCoinsAdapter implements CoinMechanismInsertedCoinsInterface{
-  private pendingTransactionTotal: number;
+class MockCoinMechanismInsertedCoinsAdapter implements CoinMechanismInsertedCoinsInterface {
+  private insertedCoin = Coins.NO_COIN;
   
-  constructor() {
-    this.pendingTransactionTotal = 0;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public insertCoin(coin: Coins): void {
-      /* Not used in unit testing but must exist to fulfill Interface */
-    }
-  
-  public resetPendingTransactionTotal(): void {
-    this.pendingTransactionTotal = 0;
-  }
+      this.insertedCoin = coin;
 
-  public readPendingTransactionTotal(): number {
-      return this.pendingTransactionTotal;
-  }
-
-  public updatePendingTransactionTotal(amount: number) {
-      this.pendingTransactionTotal = amount;
   }
 
   public readInsertedCoin(): Coins {
-    return Coins.NO_COIN;
+    const coin = this.insertedCoin; 
+    this.insertedCoin = Coins.NO_COIN;
+    return coin;
   }
 
+  public readPendingTransactionTotal(): number {
+    return 0;
+  }
+
+  public resetPendingTransactionTotal(): void {
+  }
 }    
+
 
 class MockDisplayAdapter implements DisplayInterface{
   private stringsDisplayed: string[];
@@ -271,4 +319,3 @@ class MockDisplayAdapter implements DisplayInterface{
     this.previousOutputString = '';
   }
 }    
-
