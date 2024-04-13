@@ -31,3 +31,4 @@ export enum Products {
     NO_PRODUCT = 'NO_PRODUCT'
 }
 
+export type PendingTotal = {changed: boolean, amount: number};

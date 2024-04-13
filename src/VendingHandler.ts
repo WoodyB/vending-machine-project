@@ -1,6 +1,6 @@
 import { VendingMechanismProductSelectInterface } from './interfaces';
 import { VendingMechanismProductDispenseInterface } from './interfaces';
-import { Products } from './types';
+import { Products, States } from './types';
 
 export class VendingHandler {
     private productPricesMap: Record<Products, number> = {
@@ -22,15 +22,21 @@ export class VendingHandler {
         return this.vendingMechanismProductSelectAdapter.readProductSelection();
     }
 
+
     public selectProduct(product: Products): void {
         this.vendingMechanismProductSelectAdapter.selectProduct(product);
     }
     
-    public dispenseProduct(product: Products) {
-        this.vendingMechanismProductDispenseAdapter.dispenseProduct(product);
-    }
-
     public getProductPrice(product: Products): number {
         return this.productPricesMap[product];
+    }
+
+    public dispenseProduct(product: Products, pendingTransactionTotal: number): States {
+        if ( pendingTransactionTotal >= this.getProductPrice(product)) {
+            this.vendingMechanismProductDispenseAdapter.dispenseProduct(product);
+            return(States.TRANSACTION_COMPLETE);
+        }
+    
+        return States.INSUFFICIENT_FUNDS;
     }
 }

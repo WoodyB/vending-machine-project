@@ -31,7 +31,7 @@ describe('VendingHandler', () => {
     });
 
     it(`Method dispenseProduct() should dispense ${Products.CANDY} correctly`, () => {
-        vendingHandler.dispenseProduct(Products.CANDY);
+        vendingHandler.dispenseProduct(Products.CANDY, 65);
         expect(terminalSpy.getStringsDisplayed()).toBe(`${VM_STR_ACTION} ${Products.CANDY} ${VM_STR_PRODUCT_DISPENSED}`);
     });
 
