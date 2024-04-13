@@ -3,7 +3,7 @@ import { TerminalInterface } from '../../src/Simulator/interfaces';
 import { CoinMechanismInsertedCoinsSimulatorAdapter } from '../../src/CoinMechanismAdapters/CoinMechanismInsertedCoinsSimulatorAdapter';
 import { Coins } from '../../src/types';
 
-describe('Currency', () => {
+describe('CurrencyHandler', () => {
     let currencyHandler!: CurrencyHandler;
     let coinMechanismInsertedCoinsAdapter!: CoinMechanismInsertedCoinsSimulatorAdapter;
     let fakeTerminal!: FakeTerminal;
@@ -13,10 +13,6 @@ describe('Currency', () => {
         coinMechanismInsertedCoinsAdapter = new CoinMechanismInsertedCoinsSimulatorAdapter(fakeTerminal);
         currencyHandler = new CurrencyHandler(coinMechanismInsertedCoinsAdapter);
     });
-
-    afterEach(() => {
-    });
-    
     
     it('Method readPendingTransactionTotal should return 0 if no coins are inserted ', () => {
         const pendingTransactionTotal = currencyHandler.readPendingTransactionTotal();
@@ -34,7 +30,6 @@ describe('Currency', () => {
         const pendingTransactionTotal = currencyHandler.readPendingTransactionTotal();
         expect(pendingTransactionTotal).toBe(10);
     });
-
 
     it('Method readPendingTransactionTotal should return 5 if a nickel is inserted ', () => {
         coinMechanismInsertedCoinsAdapter.insertCoin(Coins.NICKEL);

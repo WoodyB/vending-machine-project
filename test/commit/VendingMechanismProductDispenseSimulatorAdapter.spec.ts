@@ -33,7 +33,7 @@ describe('VendingMechanismProductDispenseSimulatorAdapter', () => {
     });
 });
 
-export class TerminalSpy implements TerminalInterface {
+class TerminalSpy implements TerminalInterface {
     private stringsDisplayed: string;
   
     constructor() {
