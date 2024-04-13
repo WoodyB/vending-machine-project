@@ -9,6 +9,7 @@ import { Simulator } from '../../../../src/Simulator/Simulator';
 import { FakeTerminal } from './FakeTerminal';
 import { SimulatedKeyboardInputHandler } from './SimulateKeyboardInputHandler';
 import { CurrencyHandler } from '../../../../src/CurrencyHandler';
+import { VendingHandler } from '../../../../src/VendingHandler';
 import { VendingMachine } from '../../../../src/VendingMachine';
 import { delay } from '../../../../src/utils/delay';
 import {
@@ -23,6 +24,7 @@ export class SimulatedKeyboardDriver extends BaseDriver {
     private currencyHandler!: CurrencyHandler;
     private vendingMechanismProductSelectSimulatorAdapter!: VendingMechanismProductSelectSimulatorAdapter;
     private vendingMechanismProductDispenseSimulatorAdapter!: VendingMechanismProductDispenseSimulatorAdapter;
+    private vendingHandler!: VendingHandler;
     private displaySimulatorAdapter!: DisplaySimulatorAdapter;
     private systemSimulatorAdapter!: SystemSimulatorAdapter;
     private simulator!: Simulator;
@@ -58,6 +60,7 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         this.systemSimulatorAdapter = new SystemSimulatorAdapter();
         this.vendingMechanismProductSelectSimulatorAdapter = new VendingMechanismProductSelectSimulatorAdapter();
         this.vendingMechanismProductDispenseSimulatorAdapter = new VendingMechanismProductDispenseSimulatorAdapter(this.fakeTerminal);
+        this.vendingHandler = new VendingHandler(this.vendingMechanismProductSelectSimulatorAdapter, this.vendingMechanismProductDispenseSimulatorAdapter);
 
         this.simulator = new Simulator(
             this.fakeTerminal,
@@ -70,8 +73,9 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         new VendingMachine(
             this.displaySimulatorAdapter,
             this.currencyHandler,
-            this.vendingMechanismProductSelectSimulatorAdapter,
-            this.vendingMechanismProductDispenseSimulatorAdapter,
+            this.vendingHandler,
+            //this.vendingMechanismProductSelectSimulatorAdapter,
+            //this.vendingMechanismProductDispenseSimulatorAdapter,
             this.systemSimulatorAdapter
         );
         this.simulatedKeyboardInputHandler = new SimulatedKeyboardInputHandler(this.simulator);
