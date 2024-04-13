@@ -12,6 +12,7 @@ import { Simulator } from './Simulator/Simulator';
 import { Terminal } from './Simulator/Terminal';
 import { VendingMechanismProductSelectSimulatorAdapter } from './VendingMechanismAdapters/VendingMechanismProductSelectSimulatorAdapter';
 import { VendingMechanismProductDispenseSimulatorAdapter } from './VendingMechanismAdapters/VendingMechanismProductDispenseSimulatorAdapter';
+import { CurrencyHandler } from './CurrencyHandler';
 
 const terminal = new Terminal();
 const coinMechanismInsertedCoinsSimulatorAdapter = new CoinMechanismInsertedCoinsSimulatorAdapter(terminal);
@@ -19,6 +20,7 @@ const displaySimulatorAdapter = new DisplaySimulatorAdapter(terminal);
 const systemSimulatorAdapter = new SystemSimulatorAdapter();
 const vendingMechanismProductSelectSimulatorAdapter = new VendingMechanismProductSelectSimulatorAdapter();
 const vendingMechanismProductDispenseSimulatorAdapter = new VendingMechanismProductDispenseSimulatorAdapter(terminal);
+const currencyHandler = new CurrencyHandler(coinMechanismInsertedCoinsSimulatorAdapter);
 const simulator = new Simulator(
     terminal,
     coinMechanismInsertedCoinsSimulatorAdapter,
@@ -28,7 +30,7 @@ const simulator = new Simulator(
 
 new VendingMachine(
     displaySimulatorAdapter,
-    coinMechanismInsertedCoinsSimulatorAdapter,
+    currencyHandler,
     vendingMechanismProductSelectSimulatorAdapter,
     vendingMechanismProductDispenseSimulatorAdapter,
     systemSimulatorAdapter

@@ -1,30 +1,20 @@
-import { CoinMechanismInsertedCoinsInterface, CoinHandlerInterface } from '../interfaces'
+import { CoinMechanismInsertedCoinsInterface } from '../interfaces'
 import { Coins } from '../types';
 import { Terminal } from '../Simulator/Terminal';
 import { VM_STR_ACTION, VM_STR_COIN_REJECTED } from '../constants/vending-machine-strings';
 
 export class CoinMechanismInsertedCoinsSimulatorAdapter implements CoinMechanismInsertedCoinsInterface{
   private insertedCoin = Coins.NO_COIN;
-  private pendingTransactionTotal: number;
-  private coinHandlers: Map<Coins, CoinHandlerInterface>;
   private terminal: Terminal;
 
   constructor(terminal: Terminal) {
     this.terminal = terminal;
-    this.pendingTransactionTotal = 0;
-    this.coinHandlers = new Map<Coins, CoinHandlerInterface>();
-    this.coinHandlers.set(Coins.QUARTER, new QuarterHandler);
-    this.coinHandlers.set(Coins.DIME, new DimeHandler);
-    this.coinHandlers.set(Coins.NICKEL, new NickelHandler);
   }
 
   public insertCoin(coin: Coins): void {
-    const coinHandler = this.coinHandlers.get(coin);
-
-    if (coinHandler) {
+    if (this.isValidCoin(coin)) {
       this.insertedCoin = coin;
-      this.pendingTransactionTotal = coinHandler.handleCoin(this.pendingTransactionTotal);
-      return;
+      return;  
     }
 
     this.terminal.output(`${VM_STR_ACTION} ${coin} ${VM_STR_COIN_REJECTED}`);
@@ -36,29 +26,7 @@ export class CoinMechanismInsertedCoinsSimulatorAdapter implements CoinMechanism
     return coin;
   }
 
-  public readPendingTransactionTotal(): number {
-    return this.pendingTransactionTotal;
-  }
-
-  public resetPendingTransactionTotal(): void {
-    this.pendingTransactionTotal = 0;
-  }
-}    
-
-class QuarterHandler implements CoinHandlerInterface {
-  handleCoin(total: number): number {
-    return total + 25;
-  }
-}
-
-class DimeHandler implements CoinHandlerInterface {
-  handleCoin(total: number): number {
-    return total + 10;
-  }
-}
-
-class NickelHandler implements CoinHandlerInterface {
-  handleCoin(total: number): number {
-    return total + 5;
+  private isValidCoin(coin: Coins) {
+    return (coin === Coins.QUARTER || coin === Coins.DIME || coin === Coins.NICKEL);
   }
 }
