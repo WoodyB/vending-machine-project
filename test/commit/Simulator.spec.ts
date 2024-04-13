@@ -17,17 +17,17 @@ let terminalOutput: string[] = [];
 describe('Simulator', () => {
   let simulator: Simulator;
   let mockInputHandler: MockInputHandler;
-  let mockCoinMechanismInsertedAdapter: MockCoinMechanismInsertedAdapter;
+  let mockCoinMechanismInsertedCoinsAdapter: MockCoinMechanismInsertedCoinsAdapter;
   let mockTerminal: MockTerminal;
   let mockSystemAdapter: MockSystemAdapter;
   let mockVendingMechanismProductSelectSimulatorAdapter: MockVendingMechanismProductSelectSimulatorAdapter;
 
   beforeEach(() => {
     mockTerminal = new MockTerminal;
-    mockCoinMechanismInsertedAdapter = new MockCoinMechanismInsertedAdapter();
+    mockCoinMechanismInsertedCoinsAdapter = new MockCoinMechanismInsertedCoinsAdapter();
     mockSystemAdapter = new MockSystemAdapter();
     mockVendingMechanismProductSelectSimulatorAdapter = new MockVendingMechanismProductSelectSimulatorAdapter()
-    simulator = new Simulator(mockTerminal, mockCoinMechanismInsertedAdapter, mockSystemAdapter, mockVendingMechanismProductSelectSimulatorAdapter);
+    simulator = new Simulator(mockTerminal, mockCoinMechanismInsertedCoinsAdapter, mockSystemAdapter, mockVendingMechanismProductSelectSimulatorAdapter);
     mockInputHandler = new MockInputHandler(simulator);
     simulator.stop = fakeSimulatorStop;
   });
@@ -51,18 +51,18 @@ describe('Simulator', () => {
   it('should ignore the y key when pressed followed by the enter key', async () => {
     await mockInputHandler.simulateKeyPress('y');
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
-    expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.NO_COIN);
+    expect (mockCoinMechanismInsertedCoinsAdapter.getLastInsertedCoin()).toBe(Coins.NO_COIN);
   });
 
   it('should not process a coin keys unless the enter key is pressed after it', async () => {
     await mockInputHandler.simulateKeyPress(Keys.Q);
-    expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.NO_COIN);
+    expect (mockCoinMechanismInsertedCoinsAdapter.getLastInsertedCoin()).toBe(Coins.NO_COIN);
   });
 
   it('should simulate a QUARTER inserted when the q key is pressed followed by the enter key', async () => {
     await mockInputHandler.simulateKeyPress(Keys.Q);
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
-    expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.QUARTER);
+    expect (mockCoinMechanismInsertedCoinsAdapter.getLastInsertedCoin()).toBe(Coins.QUARTER);
   });
 
   it('should simulate a DIME inserted when the q key is pressed 3 times followed by d and the enter key', async () => {
@@ -72,39 +72,39 @@ describe('Simulator', () => {
 
     await mockInputHandler.simulateKeyPress(Keys.D);
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
-    expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.DIME);
+    expect (mockCoinMechanismInsertedCoinsAdapter.getLastInsertedCoin()).toBe(Coins.DIME);
   });
 
   it('should simulate a NICKEL inserted when the n key is pressed followed by the enter key', async () => {
     await mockInputHandler.simulateKeyPress(Keys.N);
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
-    expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.NICKEL);
+    expect (mockCoinMechanismInsertedCoinsAdapter.getLastInsertedCoin()).toBe(Coins.NICKEL);
   });
 
   it('should simulate a PENNY inserted when the p key is pressed followed by the enter key', async () => {
     await mockInputHandler.simulateKeyPress(Keys.P);
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
-    expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.PENNY);
+    expect (mockCoinMechanismInsertedCoinsAdapter.getLastInsertedCoin()).toBe(Coins.PENNY);
   });
 
   it('should simulate a SLUG inserted when the s key is pressed followed by the enter key', async () => {
     await mockInputHandler.simulateKeyPress(Keys.S);
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
-    expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.SLUG);
+    expect (mockCoinMechanismInsertedCoinsAdapter.getLastInsertedCoin()).toBe(Coins.SLUG);
   });
 
   it('should simulate a FOREIGN COIN inserted when the f key is pressed followed by the enter key', async () => {
     await mockInputHandler.simulateKeyPress(Keys.F);
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
-    expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.FOREIGN_COIN);
+    expect (mockCoinMechanismInsertedCoinsAdapter.getLastInsertedCoin()).toBe(Coins.FOREIGN_COIN);
   });
 
   it('should not continue to use the last input coin if enter is repeated', async () => {
     await mockInputHandler.simulateKeyPress(Keys.Q);
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
-    expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.QUARTER);
+    expect (mockCoinMechanismInsertedCoinsAdapter.getLastInsertedCoin()).toBe(Coins.QUARTER);
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
-    expect (mockCoinMechanismInsertedAdapter.getLastInsertedCoin()).toBe(Coins.NO_COIN);
+    expect (mockCoinMechanismInsertedCoinsAdapter.getLastInsertedCoin()).toBe(Coins.NO_COIN);
   });
 
   it('should power down Vending Machine if the x key is pressed', async () => {
@@ -178,7 +178,7 @@ class MockSystemAdapter implements SystemInterface {
   }
 }
 
-class MockCoinMechanismInsertedAdapter implements CoinMechanismInsertedCoinsInterface{
+class MockCoinMechanismInsertedCoinsAdapter implements CoinMechanismInsertedCoinsInterface{
   private lastInsertedCoin: Coins;
 
   constructor() {
@@ -196,6 +196,11 @@ class MockCoinMechanismInsertedAdapter implements CoinMechanismInsertedCoinsInte
   resetPendingTransactionTotal(): void {
     return;
   }
+
+  public readInsertedCoin(): Coins {
+    return this.lastInsertedCoin;
+  }
+
 
   public getLastInsertedCoin(): Coins {
     const lastInsertedCoin = this.lastInsertedCoin;

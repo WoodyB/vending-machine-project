@@ -9,7 +9,9 @@ export class SystemSimulatorAdapter implements SystemInterface{
       }
 
     public readSystemEvent(): SystemEvents {
-        return this.lastEvent;
+        const systemEvent = this.lastEvent;
+        this.lastEvent = SystemEvents.NO_EVENT;
+        return systemEvent;
     }
 
     public reportSystemEvent(event: SystemEvents): void {

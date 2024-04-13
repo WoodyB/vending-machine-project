@@ -18,7 +18,29 @@ describe('CoinMechanismInsertedCoinsSimulatorAdapter', () => {
         terminalOutput = [];
       });
     
+    it('Method readInsertedCoin() should return NO_COIN if no coins are inserted ', () => {
+        const coin = coinMechanismInsertedCoinsSimulatorAdapter.readInsertedCoin();
+        expect(coin).toBe(Coins.NO_COIN);
+    });
     
+    it(`Method readInsertedCoin() should return ${Coins.QUARTER} if a quarter is inserted `, () => {
+        coinMechanismInsertedCoinsSimulatorAdapter.insertCoin(Coins.QUARTER);
+        const coin = coinMechanismInsertedCoinsSimulatorAdapter.readInsertedCoin();
+        expect(coin).toBe(Coins.QUARTER);
+    });
+
+    it(`Method readInsertedCoin() should return ${Coins.DIME} if a dime is inserted `, () => {
+        coinMechanismInsertedCoinsSimulatorAdapter.insertCoin(Coins.DIME);
+        const coin = coinMechanismInsertedCoinsSimulatorAdapter.readInsertedCoin();
+        expect(coin).toBe(Coins.DIME);
+    });
+
+    it(`Method readInsertedCoin() should return ${Coins.NICKEL} if a dime is inserted `, () => {
+        coinMechanismInsertedCoinsSimulatorAdapter.insertCoin(Coins.NICKEL);
+        const coin = coinMechanismInsertedCoinsSimulatorAdapter.readInsertedCoin();
+        expect(coin).toBe(Coins.NICKEL);
+    });
+
     it('Method readPendingTransactionTotal should return 0 if no coins are inserted ', () => {
         const pendingTransactionTotal = coinMechanismInsertedCoinsSimulatorAdapter.readPendingTransactionTotal();
         expect(pendingTransactionTotal).toBe(0);
