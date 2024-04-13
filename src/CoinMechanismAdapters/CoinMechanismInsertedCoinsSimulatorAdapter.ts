@@ -4,6 +4,7 @@ import { Terminal } from '../Simulator/Terminal';
 import { VM_STR_ACTION, VM_STR_COIN_REJECTED } from '../constants/vending-machine-strings';
 
 export class CoinMechanismInsertedCoinsSimulatorAdapter implements CoinMechanismInsertedCoinsInterface{
+  private insertedCoin = Coins.NO_COIN;
   private pendingTransactionTotal: number;
   private coinHandlers: Map<Coins, CoinHandlerInterface>;
   private terminal: Terminal;
@@ -19,12 +20,20 @@ export class CoinMechanismInsertedCoinsSimulatorAdapter implements CoinMechanism
 
   public insertCoin(coin: Coins): void {
     const coinHandler = this.coinHandlers.get(coin);
+
     if (coinHandler) {
+      this.insertedCoin = coin;
       this.pendingTransactionTotal = coinHandler.handleCoin(this.pendingTransactionTotal);
       return;
     }
 
     this.terminal.output(`${VM_STR_ACTION} ${coin} ${VM_STR_COIN_REJECTED}`);
+  }
+
+  public readInsertedCoin(): Coins {
+    const coin = this.insertedCoin; 
+    this.insertedCoin = Coins.NO_COIN;
+    return coin;
   }
 
   public readPendingTransactionTotal(): number {

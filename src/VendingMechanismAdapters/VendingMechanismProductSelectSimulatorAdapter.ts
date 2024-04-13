@@ -13,8 +13,8 @@ export class VendingMechanismProductSelectSimulatorAdapter implements VendingMec
     }
 
     public readProductSelection(): Products {
-        const returnValue = this.selectedProduct;
+        const product = this.selectedProduct;
         this.selectedProduct = Products.NO_PRODUCT;
-        return returnValue;
+        return product;
     }
 }
