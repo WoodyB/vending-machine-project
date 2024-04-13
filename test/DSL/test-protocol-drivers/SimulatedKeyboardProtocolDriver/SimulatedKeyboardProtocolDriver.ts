@@ -8,6 +8,7 @@ import { SystemSimulatorAdapter } from '../../../../src/SystemAdapters/SystemSim
 import { Simulator } from '../../../../src/Simulator/Simulator';
 import { FakeTerminal } from './FakeTerminal';
 import { SimulatedKeyboardInputHandler } from './SimulateKeyboardInputHandler';
+import { CurrencyHandler } from '../../../../src/CurrencyHandler';
 import { VendingMachine } from '../../../../src/VendingMachine';
 import { delay } from '../../../../src/utils/delay';
 import {
@@ -19,6 +20,7 @@ import {
 
 export class SimulatedKeyboardDriver extends BaseDriver {
     private coinMechanismInsertedCoinsSimulatorAdapter!: CoinMechanismInsertedCoinsSimulatorAdapter;
+    private currencyHandler!: CurrencyHandler;
     private vendingMechanismProductSelectSimulatorAdapter!: VendingMechanismProductSelectSimulatorAdapter;
     private vendingMechanismProductDispenseSimulatorAdapter!: VendingMechanismProductDispenseSimulatorAdapter;
     private displaySimulatorAdapter!: DisplaySimulatorAdapter;
@@ -51,6 +53,7 @@ export class SimulatedKeyboardDriver extends BaseDriver {
     public override async setup(): Promise<void> {
         this.fakeTerminal = new FakeTerminal();
         this.coinMechanismInsertedCoinsSimulatorAdapter = new CoinMechanismInsertedCoinsSimulatorAdapter(this.fakeTerminal);
+        this.currencyHandler = new CurrencyHandler(this.coinMechanismInsertedCoinsSimulatorAdapter);
         this.displaySimulatorAdapter = new DisplaySimulatorAdapter(this.fakeTerminal);
         this.systemSimulatorAdapter = new SystemSimulatorAdapter();
         this.vendingMechanismProductSelectSimulatorAdapter = new VendingMechanismProductSelectSimulatorAdapter();
@@ -66,7 +69,7 @@ export class SimulatedKeyboardDriver extends BaseDriver {
 
         new VendingMachine(
             this.displaySimulatorAdapter,
-            this.coinMechanismInsertedCoinsSimulatorAdapter,
+            this.currencyHandler,
             this.vendingMechanismProductSelectSimulatorAdapter,
             this.vendingMechanismProductDispenseSimulatorAdapter,
             this.systemSimulatorAdapter
@@ -86,8 +89,10 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         if (coinKey) {
             await this.simulatedKeyboardInputHandler.simulateKeyPress(coinKey);
         }
-
         await this.simulatedKeyboardInputHandler.simulateKeyPress('\r');
+        // This works but it's not optimal. What would be better maybe is
+        // waiting for the fake terminal to display "DISPLAY: x.xx"
+        await delay(200);
     }
 
     public override async selectProduct(product: Products): Promise<void> {

@@ -1,6 +1,6 @@
 import { appData } from './app-data';
 import { States, SystemEvents } from './types'
-import { CoinMechanismInsertedCoinsInterface } from './interfaces';
+import { CurrencyHandler } from './CurrencyHandler';
 import { VendingMechanismProductSelectInterface } from './interfaces';
 import { VendingMechanismProductDispenseInterface } from './interfaces';
 import { DisplayInterface } from './interfaces';
@@ -32,11 +32,11 @@ export class VendingMachine {
 
     constructor(
         private displayAdapter: DisplayInterface,
-        private coinMechanismInsertedCoinsAdapter: CoinMechanismInsertedCoinsInterface,
+        private currencyHandler: CurrencyHandler,
         private vendingMechanismProductSelectAdapter: VendingMechanismProductSelectInterface,
         private vendingMechanismProductDispenseAdapter: VendingMechanismProductDispenseInterface,
         private systemAdapter: SystemInterface) {
-            this.coinMechanismInsertedCoinsAdapter = coinMechanismInsertedCoinsAdapter;
+            this.currencyHandler = currencyHandler;
             this.vendingMechanismProductSelectAdapter = vendingMechanismProductSelectAdapter;
             this.displayAdapter = displayAdapter;
             this.systemAdapter = systemAdapter;    
@@ -72,7 +72,8 @@ export class VendingMachine {
                 break;
                 
                 case States.IDLE:
-                    this.newPendingTransactionTotal = this.coinMechanismInsertedCoinsAdapter.readPendingTransactionTotal();
+                    // this.newPendingTransactionTotal = this.coinMechanismInsertedCoinsAdapter.readPendingTransactionTotal();
+                    this.newPendingTransactionTotal = this.currencyHandler.readPendingTransactionTotal();
                     if (this.newPendingTransactionTotal > this.pendingTransactionTotal || this.productSelectedWithInsufficientFunds) {
                         this.pendingTransactionTotal = this.newPendingTransactionTotal;
                         this.state = States.PENDING_TRANSACTION;
@@ -112,7 +113,7 @@ export class VendingMachine {
                     await delay(1000);
                     this.pendingTransactionTotal = 0;
                     this.newPendingTransactionTotal = 0;
-                    this.coinMechanismInsertedCoinsAdapter.resetPendingTransactionTotal();    
+                    this.currencyHandler.resetPendingTransactionTotal();    
                     this.state = States.IDLE;
                 break;
 
