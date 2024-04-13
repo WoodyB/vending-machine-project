@@ -5,6 +5,7 @@ import { DisplayInterface } from '../../src/interfaces'
 import { SystemSimulatorAdapter } from '../../src/SystemAdapters/SystemSimulatorAdapter'
 import { VendingMachine } from '../../src/VendingMachine';
 import { CurrencyHandler } from '../../src/CurrencyHandler';
+import { VendingHandler } from '../../src/VendingHandler';
 import { delay } from '../../src/utils/delay';
 import { SystemEvents, Products, Coins } from '../../src/types';
 import { VM_STR_THANK_YOU, VM_STR_PRICE } from '../../src/constants/vending-machine-strings';
@@ -23,6 +24,7 @@ let mockVendingMechanismProductDispenseSimulatorAdapter: MockVendingMechanismPro
 let mockDisplayAdapter: MockDisplayAdapter;
 let systemSimulatorAdapter: SystemSimulatorAdapter;
 let currencyHandler: CurrencyHandler;
+let vendingHandler: VendingHandler;
 
 describe('Vending Machine', () => { 
     beforeEach(() => {
@@ -32,11 +34,14 @@ describe('Vending Machine', () => {
       mockDisplayAdapter = new MockDisplayAdapter();
       systemSimulatorAdapter = new SystemSimulatorAdapter();
       vendingMechanismProductSelectAdapter = new VendingMechanismProductSelectSimulatorAdapter();
+      vendingHandler = new VendingHandler(vendingMechanismProductSelectAdapter, mockVendingMechanismProductDispenseSimulatorAdapter);
+
       new VendingMachine(
         mockDisplayAdapter,
         currencyHandler,
-        vendingMechanismProductSelectAdapter,
-        mockVendingMechanismProductDispenseSimulatorAdapter,
+        vendingHandler,
+        // vendingMechanismProductSelectAdapter,
+        // mockVendingMechanismProductDispenseSimulatorAdapter,
         systemSimulatorAdapter
       );
     });
