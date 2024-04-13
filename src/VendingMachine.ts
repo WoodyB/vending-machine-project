@@ -72,7 +72,6 @@ export class VendingMachine {
                 break;
                 
                 case States.IDLE:
-                    // this.newPendingTransactionTotal = this.coinMechanismInsertedCoinsAdapter.readPendingTransactionTotal();
                     this.newPendingTransactionTotal = this.currencyHandler.readPendingTransactionTotal();
                     if (this.newPendingTransactionTotal > this.pendingTransactionTotal || this.productSelectedWithInsufficientFunds) {
                         this.pendingTransactionTotal = this.newPendingTransactionTotal;
