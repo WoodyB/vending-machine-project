@@ -4,6 +4,8 @@ export interface CoinMechanismInsertedCoinsInterface {
     insertCoin(coin: Coins): void; 
     readPendingTransactionTotal(): number;
     resetPendingTransactionTotal(): void;
+    readInsertedCoin(): Coins;
+
 }
 
 export interface VendingMechanismProductSelectInterface {

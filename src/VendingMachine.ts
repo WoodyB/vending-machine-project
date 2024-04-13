@@ -6,6 +6,7 @@ import { VendingMechanismProductDispenseInterface } from './interfaces';
 import { DisplayInterface } from './interfaces';
 import { SystemInterface } from './interfaces';
 import { delay } from './utils/delay';
+import { formatCurrency } from './utils/formatCurrency';
 import { Products } from './types';
 import {
     VM_STR_INSERT_COIN,
@@ -45,10 +46,10 @@ export class VendingMachine {
             this.newPendingTransactionTotal = 0;
             this.productSelectedWithInsufficientFunds = false;
             this.productSelected = Products.NO_PRODUCT;
-            this.off();
+            this.start();
     }
 
-    public async off() {
+    public async start() {
         while (!this.machineOn) {   
             if (this.systemAdapter.readSystemEvent() === SystemEvents.POWER_ON) {
                 this.state = States.POWER_UP;
@@ -57,9 +58,7 @@ export class VendingMachine {
             }
             await delay(10);    
         }
-    }
 
-    public async start() {
         while (this.machineOn) {
             if (this.systemAdapter.readSystemEvent() === SystemEvents.POWER_DOWN) {
                 this.state = States.POWER_DOWN;
@@ -132,14 +131,4 @@ export class VendingMachine {
             await delay(10);
         }
     }
-}
-
-function formatCurrency(amount: number): string {
-    const amountString = amount.toString().padStart(2, '0');
-    let dollars = amountString.slice(0, -2);
-    if (dollars === '') {
-        dollars = '0';
-    }
-    const cents = amountString.slice(-2);
-    return dollars + "." + cents;
 }

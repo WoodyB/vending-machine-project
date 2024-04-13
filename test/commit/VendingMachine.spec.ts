@@ -239,6 +239,11 @@ class MockCoinMechanismInsertedCoinsAdapter implements CoinMechanismInsertedCoin
   public updatePendingTransactionTotal(amount: number) {
       this.pendingTransactionTotal = amount;
   }
+
+  public readInsertedCoin(): Coins {
+    return Coins.NO_COIN;
+  }
+
 }    
 
 class MockDisplayAdapter implements DisplayInterface{
