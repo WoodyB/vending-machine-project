@@ -28,98 +28,134 @@ export class VendingMachine {
         private currencyHandler: CurrencyHandler,
         private vendingHandler: VendingHandler,
         private systemAdapter: SystemInterface) {
-            this.currencyHandler = currencyHandler;
-            this.displayAdapter = displayAdapter;
-            this.systemAdapter = systemAdapter;    
             this.machineOn = false;
             this.state =  States.POWER_DOWN;
+
             this.pendingTransactionTotal = 0;
             this.newPendingTransactionTotal = 0;
             this.productSelectedWithInsufficientFunds = false;
+            
             this.productSelected = Products.NO_PRODUCT;
             this.start();
     }
 
     public async start() {
         while (!this.machineOn) {   
-            if (this.systemAdapter.readSystemEvent() === SystemEvents.POWER_ON) {
-                this.state = States.POWER_UP;
-                this.machineOn =  true;
-                this.start();
-            }
+            this.systemEventsAction();
             await delay(10);    
         }
 
         while (this.machineOn) {
-            if (this.systemAdapter.readSystemEvent() === SystemEvents.POWER_DOWN) {
-                this.state = States.POWER_DOWN;
-            }
+            this.systemEventsAction();
 
             switch (this.state) {
 
                 case States.POWER_UP:
-                    this.displayAdapter.output(`${VM_STR_VERSION} ${appData.version}`);
-                    this.state = States.IDLE;
+                    this.powerUpAction();
                 break;
                 
                 case States.IDLE:
-                    this.newPendingTransactionTotal = this.currencyHandler.readPendingTransactionTotal();
-                    if (this.newPendingTransactionTotal > this.pendingTransactionTotal || this.productSelectedWithInsufficientFunds) {
-                        this.pendingTransactionTotal = this.newPendingTransactionTotal;
-                        this.state = States.PENDING_TRANSACTION;
-                        break;
-                    }
-                    
-                    if (this.pendingTransactionTotal === 0) {
-                        this.displayAdapter.output(VM_STR_INSERT_COIN);
-                    }
-
-                    this.productSelected = this.vendingHandler.readProductSelection();
-                    if (this.productSelected != Products.NO_PRODUCT) {
-                        this.state = States.PRODUCT_SELECTED;
-                        break;
-                    }
+                    this.idleAction();
                 break;
 
                 case States.PENDING_TRANSACTION:
-                    if (this.pendingTransactionTotal) {
-                        this.displayAdapter.output(formatCurrency(this.pendingTransactionTotal));
-                    }
-                    this.productSelectedWithInsufficientFunds = false;
-                    this.state = States.IDLE;  
+                    this.pendingTransactionAction();  
                 break;
 
                 case States.PRODUCT_SELECTED:
-                    if (this.pendingTransactionTotal >= this.vendingHandler.getProductPrice(this.productSelected)) {
-                        this.vendingHandler.dispenseProduct(this.productSelected);
-                        this.state = States.TRANSACTION_COMPLETE;
-                        break;
-                    }
-                    this.state = States.INSUFFICIENT_FUNDS;         
+                    this.productSelectedAction();         
                 break;
 
                 case States.TRANSACTION_COMPLETE:
-                    this.displayAdapter.output(VM_STR_THANK_YOU);
-                    await delay(1000);
-                    this.pendingTransactionTotal = 0;
-                    this.newPendingTransactionTotal = 0;
-                    this.currencyHandler.resetPendingTransactionTotal();    
-                    this.state = States.IDLE;
+                    await this.transactionCompleteAction();
                 break;
 
                 case States.INSUFFICIENT_FUNDS:
-                    this.displayAdapter.output(`${VM_STR_PRICE} ${formatCurrency(this.vendingHandler.getProductPrice(this.productSelected))}`);
-                    await delay(1000);
-                    this.productSelectedWithInsufficientFunds = true;
-                    this.state = States.IDLE;
+                    await this.insufficientFundsAction();
                 break;
 
                 case States.POWER_DOWN:
-                    this.displayAdapter.output(VM_STR_POWERING_DOWN);
-                    this.machineOn = false;
+                    this.powerDownAction();
                 break;                    
             }
             await delay(10);
+        }
+    }
+
+    private powerUpAction(): void {
+        this.displayAdapter.output(`${VM_STR_VERSION} ${appData.version}`);
+        this.state = States.IDLE;
+    }
+    
+    private idleAction(): void {
+        this.newPendingTransactionTotal = this.currencyHandler.readPendingTransactionTotal();
+        if (this.newPendingTransactionTotal > this.pendingTransactionTotal || this.productSelectedWithInsufficientFunds) {
+            this.pendingTransactionTotal = this.newPendingTransactionTotal;
+            this.state = States.PENDING_TRANSACTION;
+            return;
+        }
+        
+        if (this.pendingTransactionTotal === 0) {
+            this.displayAdapter.output(VM_STR_INSERT_COIN);
+        }
+
+        this.productSelected = this.vendingHandler.readProductSelection();
+        if (this.productSelected != Products.NO_PRODUCT) {
+            this.state = States.PRODUCT_SELECTED;
+            return;
+        }
+
+        this.state = States.IDLE;
+    }
+
+    private pendingTransactionAction(): void {
+        if (this.pendingTransactionTotal) {
+            this.displayAdapter.output(formatCurrency(this.pendingTransactionTotal));
+        }
+        this.productSelectedWithInsufficientFunds = false;
+        this.state = States.IDLE;  
+    }
+    
+    private productSelectedAction(): void {
+        if (this.pendingTransactionTotal >= this.vendingHandler.getProductPrice(this.productSelected)) {
+            this.vendingHandler.dispenseProduct(this.productSelected);
+            this.state = States.TRANSACTION_COMPLETE;
+            return;
+        }
+        this.state = States.INSUFFICIENT_FUNDS;         
+    }
+
+    private async transactionCompleteAction(): Promise<void> {
+        this.displayAdapter.output(VM_STR_THANK_YOU);
+        await delay(1000);
+        this.pendingTransactionTotal = 0;
+        this.newPendingTransactionTotal = 0;
+        this.currencyHandler.resetPendingTransactionTotal();    
+        this.state = States.IDLE;
+    }
+
+    private async insufficientFundsAction(): Promise<void> {
+        this.displayAdapter.output(`${VM_STR_PRICE} ${formatCurrency(this.vendingHandler.getProductPrice(this.productSelected))}`);
+        await delay(1000);
+        this.productSelectedWithInsufficientFunds = true;
+        this.state = States.IDLE;
+    }
+
+    private powerDownAction(): void {
+        this.displayAdapter.output(VM_STR_POWERING_DOWN);
+        this.machineOn = false;
+    }
+
+    private systemEventsAction(): void {
+        const event = this.systemAdapter.readSystemEvent();
+
+        if (event === SystemEvents.POWER_DOWN) {
+            this.state = States.POWER_DOWN;
+        }
+
+        if (event === SystemEvents.POWER_ON) {
+            this.state = States.POWER_UP;
+            this.machineOn =  true;
         }
     }
 }
