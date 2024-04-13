@@ -1,8 +1,7 @@
 import { appData } from './app-data';
 import { States, SystemEvents } from './types'
 import { CurrencyHandler } from './CurrencyHandler';
-import { VendingMechanismProductSelectInterface } from './interfaces';
-import { VendingMechanismProductDispenseInterface } from './interfaces';
+import { VendingHandler } from './VendingHandler';
 import { DisplayInterface } from './interfaces';
 import { SystemInterface } from './interfaces';
 import { delay } from './utils/delay';
@@ -23,21 +22,13 @@ export class VendingMachine {
     private newPendingTransactionTotal: number;
     private productSelected: Products;
     private productSelectedWithInsufficientFunds: boolean;
-    private productPricesMap: Record<Products, number> = {
-        [Products.COLA]: 100,
-        [Products.CANDY]: 65,
-        [Products.CHIPS]: 50,
-        [Products.NO_PRODUCT]: 0,
-    };
 
     constructor(
         private displayAdapter: DisplayInterface,
         private currencyHandler: CurrencyHandler,
-        private vendingMechanismProductSelectAdapter: VendingMechanismProductSelectInterface,
-        private vendingMechanismProductDispenseAdapter: VendingMechanismProductDispenseInterface,
+        private vendingHandler: VendingHandler,
         private systemAdapter: SystemInterface) {
             this.currencyHandler = currencyHandler;
-            this.vendingMechanismProductSelectAdapter = vendingMechanismProductSelectAdapter;
             this.displayAdapter = displayAdapter;
             this.systemAdapter = systemAdapter;    
             this.machineOn = false;
@@ -83,7 +74,7 @@ export class VendingMachine {
                         this.displayAdapter.output(VM_STR_INSERT_COIN);
                     }
 
-                    this.productSelected = this.vendingMechanismProductSelectAdapter.readProductSelection();
+                    this.productSelected = this.vendingHandler.readProductSelection();
                     if (this.productSelected != Products.NO_PRODUCT) {
                         this.state = States.PRODUCT_SELECTED;
                         break;
@@ -99,8 +90,8 @@ export class VendingMachine {
                 break;
 
                 case States.PRODUCT_SELECTED:
-                    if (this.pendingTransactionTotal >= this.productPricesMap[this.productSelected]) {
-                        this.vendingMechanismProductDispenseAdapter.dispenseProduct(this.productSelected);
+                    if (this.pendingTransactionTotal >= this.vendingHandler.getProductPrice(this.productSelected)) {
+                        this.vendingHandler.dispenseProduct(this.productSelected);
                         this.state = States.TRANSACTION_COMPLETE;
                         break;
                     }
@@ -117,7 +108,7 @@ export class VendingMachine {
                 break;
 
                 case States.INSUFFICIENT_FUNDS:
-                    this.displayAdapter.output(`${VM_STR_PRICE} ${formatCurrency(this.productPricesMap[this.productSelected])}`);
+                    this.displayAdapter.output(`${VM_STR_PRICE} ${formatCurrency(this.vendingHandler.getProductPrice(this.productSelected))}`);
                     await delay(1000);
                     this.productSelectedWithInsufficientFunds = true;
                     this.state = States.IDLE;
