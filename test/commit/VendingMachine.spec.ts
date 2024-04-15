@@ -286,6 +286,30 @@ describe('Vending Machine', () => {
       await powerOffSystem();
     });
 
+    it('Should dispense 2 quarters after inserting 1.50 and purchasing a product that costs 1.00', async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.50');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.75');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('1.00');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('1.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('1.50');
+      vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
+      await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
+      const coinsDispensed = mockCoinMechanismMakeChangeAdapter.getCoinsDispensed();
+      expect(coinsDispensed[0]).toBe(Coins.QUARTER);
+      expect(coinsDispensed[1]).toBe(Coins.QUARTER);
+      expect(coinsDispensed.length).toBe(2);
+
+      await powerOffSystem();
+    });
+
 });
 
 async function powerOnSystem(): Promise<boolean> {
