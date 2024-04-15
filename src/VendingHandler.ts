@@ -22,7 +22,6 @@ export class VendingHandler {
         return this.vendingMechanismProductSelectAdapter.readProductSelection();
     }
 
-
     public selectProduct(product: Products): void {
         this.vendingMechanismProductSelectAdapter.selectProduct(product);
     }
@@ -32,9 +31,14 @@ export class VendingHandler {
     }
 
     public dispenseProduct(product: Products, pendingTransactionTotal: number): States {
-        if ( pendingTransactionTotal >= this.getProductPrice(product)) {
+        if ( pendingTransactionTotal === this.getProductPrice(product)) {
             this.vendingMechanismProductDispenseAdapter.dispenseProduct(product);
             return(States.TRANSACTION_COMPLETE);
+        }
+        
+        if ( pendingTransactionTotal > this.getProductPrice(product)) {
+            this.vendingMechanismProductDispenseAdapter.dispenseProduct(product);
+            return(States.MAKE_CHANGE);            
         }
     
         return States.INSUFFICIENT_FUNDS;

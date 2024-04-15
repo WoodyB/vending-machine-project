@@ -72,6 +72,10 @@ export class VendingMachine {
                     await this.insufficientFundsAction();
                 break;
 
+                case States.MAKE_CHANGE:
+                    this.makeChangeAction();
+                break;
+
                 case States.POWER_DOWN:
                     this.powerDownAction();
                 break;                    
@@ -116,6 +120,11 @@ export class VendingMachine {
     
     private productSelectedAction(): void {
         this.state = this.vendingHandler.dispenseProduct(this.productSelected, this.pendingTransactionTotal);         
+    }
+
+    private makeChangeAction(): void {
+        this.state = States.TRANSACTION_COMPLETE;
+        this.currencyHandler.dispenseChange(this.pendingTransactionTotal, this.vendingHandler.getProductPrice(this.productSelected));
     }
 
     private async transactionCompleteAction(): Promise<void> {
