@@ -1,12 +1,29 @@
-import { CoinMechanismInsertedCoinsInterface, CoinHandlerInterface } from './interfaces';
+import {
+  CoinMechanismInsertedCoinsInterface,
+  CoinMechanismDispenseCoinsInterface,
+  CoinHandlerInterface
+} from './interfaces';
 import { Coins, PendingTotal } from './types';
 
 export class CurrencyHandler {
   private pendingTransactionTotal: number;
   private coinHandlers: Map<Coins, CoinHandlerInterface>;
+  private coinValuesMap: Record<Coins, number> = {
+    [Coins.QUARTER]: 25,
+    [Coins.DIME]: 10,
+    [Coins.NICKEL]: 5,
+    [Coins.NO_COIN]: 0,
+    [Coins.PENNY]: 0,
+    [Coins.SLUG]: 0,
+    [Coins.FOREIGN_COIN]: 0
+  };
 
-  constructor(private coinMechanismInsertedCoinsAdapter: CoinMechanismInsertedCoinsInterface) {
-      this.coinMechanismInsertedCoinsAdapter = coinMechanismInsertedCoinsAdapter;
+
+  constructor(
+    private coinMechanismInsertedCoinsAdapter: CoinMechanismInsertedCoinsInterface,
+    private coinMechanismDispenseCoinsAdapter: CoinMechanismDispenseCoinsInterface
+
+    ) {
       this.pendingTransactionTotal = 0;
       this.coinHandlers = new Map<Coins, CoinHandlerInterface>();
       this.coinHandlers.set(Coins.QUARTER, new QuarterHandler);
@@ -29,7 +46,46 @@ export class CurrencyHandler {
 
   public resetPendingTransactionTotal(): void {
       this.pendingTransactionTotal = 0;
-  }        
+  }
+
+  public dispenseChange(totalSubmitted: number, productCost: number): void {
+    const changeDue = totalSubmitted - productCost;
+    this.dispenseCoins(this.determineChangeInCoins(changeDue));
+  }
+  
+  private dispenseCoins(coins: Coins[]): void {
+    for (const coin of coins) {
+      this.coinMechanismDispenseCoinsAdapter.dispenseCoin(coin);
+    }
+  }
+
+  private determineChangeInCoins(change: number): Coins[] {
+    let arrayOfCoins: Coins[] = [];
+
+    const quarters = this.determineNumberOfCoins(Coins.QUARTER, change);
+    change %= this.coinValuesMap[Coins.QUARTER];
+    arrayOfCoins = arrayOfCoins.concat(quarters);
+
+    const dimes = this.determineNumberOfCoins(Coins.DIME, change);
+    change %= this.coinValuesMap[Coins.DIME];
+    arrayOfCoins = arrayOfCoins.concat(dimes);
+
+    const nickels = this.determineNumberOfCoins(Coins.NICKEL, change);
+    change %= this.coinValuesMap[Coins.NICKEL];
+    arrayOfCoins = arrayOfCoins.concat(nickels);
+    
+    return arrayOfCoins;
+  }
+
+  private determineNumberOfCoins(coinType: Coins, amount: number): Coins[] {
+    const arrayOfCoins: Coins[] = [];
+    
+    const numberOfCoins = Math.floor(amount / this.coinValuesMap[coinType]);
+    for (let i=0; i < numberOfCoins; i++) {
+      arrayOfCoins.push(coinType);
+    }
+    return arrayOfCoins;
+  }  
 }
 
 class QuarterHandler implements CoinHandlerInterface {
@@ -49,4 +105,3 @@ class NickelHandler implements CoinHandlerInterface {
     return total + 5;
   }
 }
-  

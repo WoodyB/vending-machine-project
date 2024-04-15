@@ -10,7 +10,7 @@ describe('VendingMechanismProductDispenseSimulatorAdapter', () => {
     beforeEach(() => {
         terminalSpy = new TerminalSpy();
         vendingMechanismProductDispenseSimulatorAdapter = new VendingMechanismProductDispenseSimulatorAdapter(terminalSpy);
-      });
+    });
     
     it(`Method dispenseProduct() should dispense ${Products.COLA} correctly`, () => {
         vendingMechanismProductDispenseSimulatorAdapter.dispenseProduct(Products.COLA);

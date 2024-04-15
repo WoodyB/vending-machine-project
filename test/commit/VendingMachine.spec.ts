@@ -1,7 +1,10 @@
-import { CoinMechanismInsertedCoinsInterface } from '../../src/interfaces';
+import {
+  CoinMechanismInsertedCoinsInterface,
+  CoinMechanismDispenseCoinsInterface,
+  VendingMechanismProductDispenseInterface,
+  DisplayInterface 
+} from '../../src/interfaces';
 import { VendingMechanismProductSelectSimulatorAdapter } from '../../src/VendingMechanismAdapters/VendingMechanismProductSelectSimulatorAdapter';
-import { VendingMechanismProductDispenseInterface } from '../../src/interfaces';
-import { DisplayInterface } from '../../src/interfaces'
 import { SystemSimulatorAdapter } from '../../src/SystemAdapters/SystemSimulatorAdapter'
 import { VendingMachine } from '../../src/VendingMachine';
 import { CurrencyHandler } from '../../src/CurrencyHandler';
@@ -19,6 +22,7 @@ import {
 const FSM_TIMEOUT = 250;
 
 let mockCoinMechanismInsertedCoinsAdapter: MockCoinMechanismInsertedCoinsAdapter;
+let mockCoinMechanismMakeChangeAdapter: MockCoinMechanismMakeChangeAdapter;
 let vendingMechanismProductSelectAdapter: VendingMechanismProductSelectSimulatorAdapter;
 let mockVendingMechanismProductDispenseSimulatorAdapter: MockVendingMechanismProductDispenseSimulatorAdapter;
 let mockDisplayAdapter: MockDisplayAdapter;
@@ -29,7 +33,8 @@ let vendingHandler: VendingHandler;
 describe('Vending Machine', () => { 
     beforeEach(() => {
       mockCoinMechanismInsertedCoinsAdapter = new MockCoinMechanismInsertedCoinsAdapter();
-      currencyHandler = new CurrencyHandler(mockCoinMechanismInsertedCoinsAdapter)
+      mockCoinMechanismMakeChangeAdapter = new MockCoinMechanismMakeChangeAdapter();
+      currencyHandler = new CurrencyHandler(mockCoinMechanismInsertedCoinsAdapter, mockCoinMechanismMakeChangeAdapter)
       mockVendingMechanismProductDispenseSimulatorAdapter = new MockVendingMechanismProductDispenseSimulatorAdapter(null);
       mockDisplayAdapter = new MockDisplayAdapter();
       systemSimulatorAdapter = new SystemSimulatorAdapter();
@@ -40,8 +45,6 @@ describe('Vending Machine', () => {
         mockDisplayAdapter,
         currencyHandler,
         vendingHandler,
-        // vendingMechanismProductSelectAdapter,
-        // mockVendingMechanismProductDispenseSimulatorAdapter,
         systemSimulatorAdapter
       );
     });
@@ -73,6 +76,40 @@ describe('Vending Machine', () => {
       mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
       const found25Cents = await waitForVendingMachineToDisplay('0.25');
       expect(found25Cents).toBe(true);
+      await powerOffSystem();
+    });
+
+    it('Should display 0.10 after a dime is inserted', async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.DIME);
+      const found10Cents = await waitForVendingMachineToDisplay('0.10');
+      expect(found10Cents).toBe(true);
+      await powerOffSystem();
+    });
+
+    it('Should display 0.05 after a nickel is inserted', async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.NICKEL);
+      const found5Cents = await waitForVendingMachineToDisplay('0.05');
+      expect(found5Cents).toBe(true);
+      await powerOffSystem();
+    });
+
+    it('Should display 0.80 after 2 quarters, 2 dimes, 2 nickels are inserted inserted', async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.50');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.DIME);
+      await waitForVendingMachineToDisplay('0.60');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.DIME);
+      await waitForVendingMachineToDisplay('0.70');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.NICKEL);
+      await waitForVendingMachineToDisplay('0.75');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.NICKEL);
+      const found80Cents = await waitForVendingMachineToDisplay('0.80');
+      expect(found80Cents).toBe(true);
       await powerOffSystem();
     });
 
@@ -233,6 +270,46 @@ describe('Vending Machine', () => {
       expect(foundTotalAmountMessage).toBe(false);
       await powerOffSystem();
     });
+
+    it('Should dispense a DIME after inserting 75 cents and purchasing a product that costs 65 cents', async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.50');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.75');
+      vendingMechanismProductSelectAdapter.selectProduct(Products.CANDY);
+      await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
+      const coinsDispensed = mockCoinMechanismMakeChangeAdapter.getCoinsDispensed();
+      expect(coinsDispensed[0]).toBe(Coins.DIME);
+      await powerOffSystem();
+    });
+
+    it('Should dispense 2 quarters after inserting 1.50 and purchasing a product that costs 1.00', async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.50');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.75');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('1.00');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('1.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('1.50');
+      vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
+      await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
+      const coinsDispensed = mockCoinMechanismMakeChangeAdapter.getCoinsDispensed();
+      expect(coinsDispensed[0]).toBe(Coins.QUARTER);
+      expect(coinsDispensed[1]).toBe(Coins.QUARTER);
+      expect(coinsDispensed.length).toBe(2);
+
+      await powerOffSystem();
+    });
+
 });
 
 async function powerOnSystem(): Promise<boolean> {
@@ -298,6 +375,22 @@ class MockCoinMechanismInsertedCoinsAdapter implements CoinMechanismInsertedCoin
   }
 }    
 
+class MockCoinMechanismMakeChangeAdapter implements CoinMechanismDispenseCoinsInterface {
+    private coinsDispensed: Coins[];
+  
+    constructor() {
+      this.coinsDispensed = [];
+    }
+
+    public dispenseCoin(coin: Coins): void {
+      this.coinsDispensed.push(coin);
+    }
+
+    public getCoinsDispensed(): Coins[] {
+      return this.coinsDispensed;
+    }
+    
+}    
 
 class MockDisplayAdapter implements DisplayInterface{
   private stringsDisplayed: string[];
