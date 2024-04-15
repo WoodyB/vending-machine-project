@@ -22,7 +22,6 @@ export class VendingHandler {
         return this.vendingMechanismProductSelectAdapter.readProductSelection();
     }
 
-
     public selectProduct(product: Products): void {
         this.vendingMechanismProductSelectAdapter.selectProduct(product);
     }

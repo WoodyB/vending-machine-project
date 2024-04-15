@@ -27,3 +27,7 @@ export interface CoinHandlerInterface {
 export interface VendingMechanismProductDispenseInterface {
     dispenseProduct(product: Products): void;
 }
+
+export interface CoinMechanismDispenseCoinsInterface {
+    dispenseCoin(coin: Coins): void;
+}

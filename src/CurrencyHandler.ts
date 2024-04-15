@@ -1,11 +1,19 @@
-import { CoinMechanismInsertedCoinsInterface, CoinHandlerInterface } from './interfaces';
+import {
+  CoinMechanismInsertedCoinsInterface,
+  CoinMechanismDispenseCoinsInterface,
+  CoinHandlerInterface
+} from './interfaces';
 import { Coins, PendingTotal } from './types';
 
 export class CurrencyHandler {
   private pendingTransactionTotal: number;
   private coinHandlers: Map<Coins, CoinHandlerInterface>;
 
-  constructor(private coinMechanismInsertedCoinsAdapter: CoinMechanismInsertedCoinsInterface) {
+  constructor(
+    private coinMechanismInsertedCoinsAdapter: CoinMechanismInsertedCoinsInterface,
+    private coinMechanismDispenseCoinsInterface: CoinMechanismDispenseCoinsInterface
+
+    ) {
       this.coinMechanismInsertedCoinsAdapter = coinMechanismInsertedCoinsAdapter;
       this.pendingTransactionTotal = 0;
       this.coinHandlers = new Map<Coins, CoinHandlerInterface>();
@@ -29,7 +37,12 @@ export class CurrencyHandler {
 
   public resetPendingTransactionTotal(): void {
       this.pendingTransactionTotal = 0;
-  }        
+  }
+  
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public dispenseCoin(coin: Coins): void {
+    
+  }
 }
 
 class QuarterHandler implements CoinHandlerInterface {
