@@ -3,7 +3,8 @@ import { Coins, SystemEvents, Products } from './types';
 export interface CoinMechanismInsertedCoinsInterface {
     insertCoin(coin: Coins): void; 
     readInsertedCoin(): Coins;
-
+    readReturnCoinsStatus(): boolean;
+    setReturnCoinsStatusToTrue(): void;
 }
 
 export interface VendingMechanismProductSelectInterface {
