@@ -358,13 +358,19 @@ class MockCoinMechanismInsertedCoinsAdapter implements CoinMechanismInsertedCoin
   
   public insertCoin(coin: Coins): void {
       this.insertedCoin = coin;
-
   }
 
   public readInsertedCoin(): Coins {
     const coin = this.insertedCoin; 
     this.insertedCoin = Coins.NO_COIN;
     return coin;
+  }
+
+  public readReturnCoinsStatus(): boolean {
+    return false;
+  }
+
+  public setReturnCoinsStatusToTrue(): void {
   }
 
   public readPendingTransactionTotal(): number {
