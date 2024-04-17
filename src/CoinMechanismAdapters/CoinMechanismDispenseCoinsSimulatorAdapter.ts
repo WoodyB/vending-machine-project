@@ -1,7 +1,7 @@
 import { CoinMechanismDispenseCoinsInterface } from '../interfaces'
 import { Coins } from '../types';
 import { Terminal } from '../Simulator/Terminal';
-import { VM_STR_ACTION, VM_STR_CHANGE_DISPENSED } from '../constants/vending-machine-strings';
+import { VM_STR_ACTION, VM_STR_COIN_WAS_DISPENSED } from '../constants/vending-machine-strings';
 
 export class CoinMechanismDispenseCoinsSimulatorAdapter implements CoinMechanismDispenseCoinsInterface{
   private terminal: Terminal;
@@ -14,6 +14,6 @@ export class CoinMechanismDispenseCoinsSimulatorAdapter implements CoinMechanism
     if (coin === Coins.NO_COIN) {
       return;
     }
-    this.terminal.output(`${VM_STR_ACTION} ${coin} ${VM_STR_CHANGE_DISPENSED}`);
+    this.terminal.output(`${VM_STR_ACTION} ${coin} ${VM_STR_COIN_WAS_DISPENSED}`);
   }
 }
