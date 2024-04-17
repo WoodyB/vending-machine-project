@@ -9,4 +9,4 @@ export const VM_STR_ACTION = 'ACTION:'
 
 export const VM_STR_COIN_REJECTED = 'was rejected and placed in the coin return';
 export const VM_STR_PRODUCT_DISPENSED = 'product was dispensed';
-export const VM_STR_CHANGE_DISPENSED = 'change was dispensed';
+export const VM_STR_COIN_WAS_DISPENSED = 'was dispensed';
