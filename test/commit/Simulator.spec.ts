@@ -201,6 +201,12 @@ class MockCoinMechanismInsertedCoinsAdapter implements CoinMechanismInsertedCoin
     return this.lastInsertedCoin;
   }
 
+  public readReturnCoinsStatus(): boolean {
+    return false;
+  }
+  
+  public setReturnCoinsStatusToTrue(): void {
+  }
 
   public getLastInsertedCoin(): Coins {
     const lastInsertedCoin = this.lastInsertedCoin;
