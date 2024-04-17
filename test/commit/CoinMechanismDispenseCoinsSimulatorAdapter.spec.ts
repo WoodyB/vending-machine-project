@@ -1,7 +1,7 @@
 import { CoinMechanismDispenseCoinsSimulatorAdapter } from '../../src/CoinMechanismAdapters/CoinMechanismDispenseCoinsSimulatorAdapter';
 import { Coins } from '../../src/types';
 import { TerminalInterface } from '../../src/Simulator/interfaces';
-import { VM_STR_ACTION, VM_STR_CHANGE_DISPENSED } from '../../src/constants/vending-machine-strings';
+import { VM_STR_ACTION, VM_STR_COIN_WAS_DISPENSED } from '../../src/constants/vending-machine-strings';
 
 let terminalOutput: string[] = [];
 
@@ -25,17 +25,17 @@ describe('CoinMechanismDispenseCoinsSimulatorAdapter', () => {
     
     it('Should report a Quarter was dispensed', () => {
         coinMechanismDispenseCoinsSimulatorAdapter.dispenseCoin(Coins.QUARTER);
-        expect(terminalOutput[0]).toContain(`${VM_STR_ACTION} ${Coins.QUARTER} ${VM_STR_CHANGE_DISPENSED}`);
+        expect(terminalOutput[0]).toContain(`${VM_STR_ACTION} ${Coins.QUARTER} ${VM_STR_COIN_WAS_DISPENSED}`);
     });
 
     it('Should report a DIME was dispensed', () => {
         coinMechanismDispenseCoinsSimulatorAdapter.dispenseCoin(Coins.DIME);
-        expect(terminalOutput[0]).toContain(`${VM_STR_ACTION} ${Coins.DIME} ${VM_STR_CHANGE_DISPENSED}`);
+        expect(terminalOutput[0]).toContain(`${VM_STR_ACTION} ${Coins.DIME} ${VM_STR_COIN_WAS_DISPENSED}`);
     });
 
     it('Should report a NICKEL was dispensed', () => {
         coinMechanismDispenseCoinsSimulatorAdapter.dispenseCoin(Coins.NICKEL);
-        expect(terminalOutput[0]).toContain(`${VM_STR_ACTION} ${Coins.NICKEL} ${VM_STR_CHANGE_DISPENSED}`);
+        expect(terminalOutput[0]).toContain(`${VM_STR_ACTION} ${Coins.NICKEL} ${VM_STR_COIN_WAS_DISPENSED}`);
     });
 });
 
