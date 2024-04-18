@@ -17,6 +17,10 @@ export abstract class BaseDriver {
         this.failWithMethodNotImplemented(`selectProduct(${product})`);
     }
 
+    public async returnCoins(): Promise<void> {
+        this.failWithMethodNotImplemented('returnsCoins())');
+    }
+
     public async verifyDisplayOutput(str: string): Promise<boolean> {
         this.failWithMethodNotImplemented(`verifyDisplayOutput(${str}))`);
         return false;
