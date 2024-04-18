@@ -149,6 +149,13 @@ describe('Simulator', () => {
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
     expect(mockVendingMechanismProductSelectSimulatorAdapter.readProductSelection()).toBe(Products.CHIPS);
   });
+
+  it('should simulate coin return when r key is pressed followed by the enter key', async () => {
+    await mockInputHandler.simulateKeyPress(Keys.R);
+    await mockInputHandler.simulateKeyPress(Keys.ENTER);
+    expect(mockCoinMechanismInsertedCoinsAdapter.readReturnCoinsStatus()).toBe(true);
+  });
+
 });
 
 class MockInputHandler {
@@ -180,6 +187,7 @@ class MockSystemAdapter implements SystemInterface {
 
 class MockCoinMechanismInsertedCoinsAdapter implements CoinMechanismInsertedCoinsInterface{
   private lastInsertedCoin: Coins;
+  private returnCoinsStatus = false;
 
   constructor() {
     this.lastInsertedCoin= Coins.NO_COIN;
@@ -202,10 +210,11 @@ class MockCoinMechanismInsertedCoinsAdapter implements CoinMechanismInsertedCoin
   }
 
   public readReturnCoinsStatus(): boolean {
-    return false;
+    return this.returnCoinsStatus;
   }
   
   public setReturnCoinsStatusToTrue(): void {
+    this.returnCoinsStatus = true;
   }
 
   public getLastInsertedCoin(): Coins {

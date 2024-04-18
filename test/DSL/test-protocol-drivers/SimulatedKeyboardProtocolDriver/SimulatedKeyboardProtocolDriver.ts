@@ -117,6 +117,11 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         return this.waitForVendingMachineToDisplay(`${VM_STR_ACTION} ${str}`);
     }
 
+    public override async returnCoins(): Promise<void> {
+        await this.simulatedKeyboardInputHandler.simulateKeyPress('r');
+        await this.simulatedKeyboardInputHandler.simulateKeyPress('\r');    
+    }
+
     private fakeSimulatorStop(): void {
         return;
     }
