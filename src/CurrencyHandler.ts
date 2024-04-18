@@ -7,6 +7,7 @@ import { Coins, PendingTotal } from './types';
 
 export class CurrencyHandler {
   private pendingTransactionTotal: number;
+  private pendingTransactionCoins: Coins [];
   private coinHandlers: Map<Coins, CoinHandlerInterface>;
   private coinValuesMap: Record<Coins, number> = {
     [Coins.QUARTER]: 25,
@@ -29,6 +30,7 @@ export class CurrencyHandler {
       this.coinHandlers.set(Coins.QUARTER, new QuarterHandler);
       this.coinHandlers.set(Coins.DIME, new DimeHandler);
       this.coinHandlers.set(Coins.NICKEL, new NickelHandler);
+      this.pendingTransactionCoins = [];
   }
 
   public readPendingTransactionTotal(): PendingTotal {
@@ -39,6 +41,7 @@ export class CurrencyHandler {
     if (coinHandler) {
         this.pendingTransactionTotal = coinHandler.handleCoin(this.pendingTransactionTotal);
         result.changed = true;
+        this.pendingTransactionCoins.push(coin);
     }
     result.amount = this.pendingTransactionTotal;
     return result;
@@ -46,11 +49,22 @@ export class CurrencyHandler {
 
   public resetPendingTransactionTotal(): void {
       this.pendingTransactionTotal = 0;
+      this.pendingTransactionCoins = [];
   }
 
   public dispenseChange(totalSubmitted: number, productCost: number): void {
     const changeDue = totalSubmitted - productCost;
     this.dispenseCoins(this.determineChangeInCoins(changeDue));
+  }
+
+  public readReturnCoinsStatus(): boolean {
+    const returnCoinStatus = this.coinMechanismInsertedCoinsAdapter.readReturnCoinsStatus();
+    return returnCoinStatus;
+  }
+
+  public returnPendingTransactionCoins(): void {
+    this.dispenseCoins(this.pendingTransactionCoins);
+    this.resetPendingTransactionTotal();
   }
   
   private dispenseCoins(coins: Coins[]): void {
