@@ -306,11 +306,84 @@ describe('Vending Machine', () => {
       expect(coinsDispensed[0]).toBe(Coins.QUARTER);
       expect(coinsDispensed[1]).toBe(Coins.QUARTER);
       expect(coinsDispensed.length).toBe(2);
-
       await powerOffSystem();
     });
 
+    it('Should return all coins in pending transaction when coin return is activated', async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.DIME);
+      await waitForVendingMachineToDisplay('0.35');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.NICKEL);
+      await waitForVendingMachineToDisplay('0.40');
+      mockCoinMechanismInsertedCoinsAdapter.setReturnCoinsStatusToTrue();
+      await waitForMachineToDispenseCoins(3);
+      const coinsDispensed = mockCoinMechanismMakeChangeAdapter.getCoinsDispensed();
+      expect(coinsDispensed.length).toBe(3);
+      expect(coinsDispensed.includes(Coins.QUARTER)).toBe(true);
+      expect(coinsDispensed.includes(Coins.DIME)).toBe(true);
+      expect(coinsDispensed.includes(Coins.NICKEL)).toBe(true);
+      await powerOffSystem();
+    });
+
+    it(`Should display ${VM_STR_INSERT_COIN} after coin return has been activated`, async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.DIME);
+      await waitForVendingMachineToDisplay('0.35');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.NICKEL);
+      await waitForVendingMachineToDisplay('0.40');
+      mockDisplayAdapter.clearStringsDisplayed(); 
+      mockCoinMechanismInsertedCoinsAdapter.setReturnCoinsStatusToTrue();
+      await waitForMachineToDispenseCoins(3);
+      const coinsDispensed = mockCoinMechanismMakeChangeAdapter.getCoinsDispensed();
+      if (coinsDispensed.length !== 3) {
+        throw new Error('Cannot continue test because coins were not returned');
+      }
+      const stringsDisplayed = mockDisplayAdapter.getStringsDisplayed();
+      await waitForVendingMachineToDisplay(VM_STR_INSERT_COIN);
+      expect(stringsDisplayed[0]).toBe(VM_STR_INSERT_COIN);
+      await powerOffSystem();
+    });
+
+    it('Should ignore when coin return is activated a second time', async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.DIME);
+      await waitForVendingMachineToDisplay('0.35');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.NICKEL);
+      await waitForVendingMachineToDisplay('0.40');
+      mockCoinMechanismInsertedCoinsAdapter.setReturnCoinsStatusToTrue();
+      await waitForMachineToDispenseCoins(3);
+      const coinsDispensed = mockCoinMechanismMakeChangeAdapter.getCoinsDispensed();
+      if (coinsDispensed.length !== 3) {
+        throw new Error('Cannot continue test because coins were not returned');
+      }
+      mockCoinMechanismMakeChangeAdapter.clearCoinsDispensed();
+      mockCoinMechanismInsertedCoinsAdapter.setReturnCoinsStatusToTrue();
+      await waitForMachineToDispenseCoins(1);
+      const coinsDispensedSecondAttempt = mockCoinMechanismMakeChangeAdapter.getCoinsDispensed();
+      expect(coinsDispensedSecondAttempt.length).toBe(0);
+      await powerOffSystem();
+    });
 });
+
+async function waitForMachineToDispenseCoins(expectedNumberOfCoins: number): Promise<void> {
+  let coinsDispensed: Coins[];
+  let count = FSM_TIMEOUT;
+
+  while (count > 0) {
+      coinsDispensed = mockCoinMechanismMakeChangeAdapter.getCoinsDispensed();
+      if (coinsDispensed.length >= expectedNumberOfCoins) {
+        break;
+      }
+      await delay(5);
+      count--;
+  }
+}
 
 async function powerOnSystem(): Promise<boolean> {
   systemSimulatorAdapter.reportSystemEvent(SystemEvents.POWER_ON);
@@ -355,6 +428,7 @@ class MockVendingMechanismProductDispenseSimulatorAdapter implements VendingMech
 
 class MockCoinMechanismInsertedCoinsAdapter implements CoinMechanismInsertedCoinsInterface {
   private insertedCoin = Coins.NO_COIN;
+  private returnCoinsStatus = false;
   
   public insertCoin(coin: Coins): void {
       this.insertedCoin = coin;
@@ -366,11 +440,14 @@ class MockCoinMechanismInsertedCoinsAdapter implements CoinMechanismInsertedCoin
     return coin;
   }
 
-  public readReturnCoinsStatus(): boolean {
-    return false;
+  public setReturnCoinsStatusToTrue(): void {
+    this.returnCoinsStatus = true;
   }
 
-  public setReturnCoinsStatusToTrue(): void {
+  public readReturnCoinsStatus(): boolean {
+    const returnCoinsStatus = this.returnCoinsStatus;
+    this.returnCoinsStatus = false;
+    return returnCoinsStatus;
   }
 
   public readPendingTransactionTotal(): number {
@@ -394,6 +471,10 @@ class MockCoinMechanismMakeChangeAdapter implements CoinMechanismDispenseCoinsIn
 
     public getCoinsDispensed(): Coins[] {
       return this.coinsDispensed;
+    }
+
+    public clearCoinsDispensed(): void {
+      this.coinsDispensed = [];      
     }
     
 }    

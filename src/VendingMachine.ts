@@ -76,6 +76,10 @@ export class VendingMachine {
                     this.makeChangeAction();
                 break;
 
+                case States.RETURN_COINS:
+                    this.returnCoinsAction();
+                break;
+
                 case States.POWER_DOWN:
                     this.powerDownAction();
                 break;                    
@@ -91,6 +95,13 @@ export class VendingMachine {
     
     private idleAction(): void {
         const pendingTotal = this.currencyHandler.readPendingTransactionTotal();
+        const returnCoinsStatus = this.currencyHandler.readReturnCoinsStatus();
+        
+        if (returnCoinsStatus === true) {
+            this.state = States.RETURN_COINS;
+            return;
+        }
+
         this.pendingTransactionTotal = pendingTotal.amount;
         if ( pendingTotal.changed || this.productSelectedWithInsufficientFunds) {
             this.state = States.PENDING_TRANSACTION;
@@ -139,6 +150,11 @@ export class VendingMachine {
         this.displayAdapter.output(`${VM_STR_PRICE} ${formatCurrency(this.vendingHandler.getProductPrice(this.productSelected))}`);
         await delay(1000);
         this.productSelectedWithInsufficientFunds = true;
+        this.state = States.IDLE;
+    }
+
+    private returnCoinsAction(): void {
+        this.currencyHandler.returnPendingTransactionCoins();
         this.state = States.IDLE;
     }
 
