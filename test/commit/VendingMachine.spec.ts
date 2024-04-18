@@ -344,7 +344,6 @@ describe('Vending Machine', () => {
       }
       const stringsDisplayed = mockDisplayAdapter.getStringsDisplayed();
       await waitForVendingMachineToDisplay(VM_STR_INSERT_COIN);
-      console.log(stringsDisplayed);
       expect(stringsDisplayed[0]).toBe(VM_STR_INSERT_COIN);
       await powerOffSystem();
     });
