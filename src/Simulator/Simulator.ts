@@ -34,6 +34,7 @@ export class Simulator {
         this.deferredKeyFunctionMap[Keys.A] = this.A_KeyHandler.bind(this);
         this.deferredKeyFunctionMap[Keys.B] = this.B_KeyHandler.bind(this);
         this.deferredKeyFunctionMap[Keys.C] = this.C_KeyHandler.bind(this);
+        this.deferredKeyFunctionMap[Keys.R] = this.R_KeyHandler.bind(this);
 
         this.immediateKeyFunctionMap[Keys.H] = this.H_KeyHandler.bind(this);
         this.immediateKeyFunctionMap[Keys.X] = this.exitSimulator.bind(this);
@@ -97,6 +98,10 @@ export class Simulator {
 
     private async F_KeyHandler(): Promise<void> {
         this.coinMechanismAdapter.insertCoin(Coins.FOREIGN_COIN);
+    }
+
+    private async R_KeyHandler(): Promise<void> {
+        this.coinMechanismAdapter.setReturnCoinsStatusToTrue();
     }
 
     private async exitSimulator(): Promise<void> {
