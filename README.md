@@ -30,7 +30,7 @@ See the developer's log in the [design directory](https://github.com/WoodyB/vend
 
 Viewing the developer's log via GitHubs file viewer works but it's a better experience viewing it and the other design documents via github.io which will enable the hyperlinks in the PDF documents. Here are the links for your convenience
 
-* [Developer's Log]((https://woodyb.github.io/vending-machine-project/design/developers-log/Directory-Of-Developers-Logs))
+* [Developer's Log](https://woodyb.github.io/vending-machine-project/design/developers-log/Directory-Of-Developers-Logs)
 * [CD Deployment Pipelines](https://woodyb.github.io/vending-machine-project/design/CD-Deployment-Pipelines.pdf)
 * [Vending Machine Diagram](https://woodyb.github.io/vending-machine-project/design/vending-machine-diagram.pdf)
 * [Harnessing The Power of Hexagonal Architecture](https://woodyb.github.io/vending-machine-project/design/Harnessing-The-Power-of-Hexagonal-Architecture.pdf)
