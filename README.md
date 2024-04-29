@@ -24,19 +24,20 @@ ISC License
 
 THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-## Why The Vending Machine Code Kata
-
-I think the the vending machine code kata is particularly interesting to me for two reasons. Firstly, it is a little larger than other katas like FizzBuzz. Secondly, the first assignment in a software engineering class at university back in the day was to implement a vending machine in code. I was really disappointed that my team received a grade of B. We failed to understand that we were supposed to implement a real-time system. The assignment didn't mention a real-time system, but to be fair, we didn't ask. I learned a valuable lesson and ended up with an A for the class at the end so no damage. However, I think it will be fun to correct past mistakes.
-
 ## Design Notes
 
-See the [developer's log in the design directory](https://woodyb.github.io/vending-machine-project/design/developers-log/Directory-Of-Developers-Logs) in this project for a developer's log along with supporting documents. Here's where I'm posting status updates as I go along. Often I will put in links so you can see how the code was at the time of writing the status. My hope is this will help show how the code evolves or maybe (I hope not) devolves over time.
+See the developer's log in the [design directory](https://github.com/WoodyB/vending-machine-project/tree/main/design/developers-log) or for a better browser view [use this link](https://woodyb.github.io/vending-machine-project/design/developers-log/Directory-Of-Developers-Logs). Here's where I'm posting status updates as I go along. Often I will put in links so you can see how the code was at the time of writing the status. My hope is this will help show how the code evolves or maybe (I hope not) devolves over time.
 
-Viewing the developer's log via GitHubs file viewer works well but it's a better experience viewing the other design documents via github.io which will enable the hyperlinks in the PDF documents. Here's the links for your convenience
+Viewing the developer's log via GitHubs file viewer works but it's a better experience viewing it and the other design documents via github.io which will enable the hyperlinks in the PDF documents. Here are the links for your convenience
 
+* [Developer's Log]((https://woodyb.github.io/vending-machine-project/design/developers-log/Directory-Of-Developers-Logs))
 * [CD Deployment Pipelines](https://woodyb.github.io/vending-machine-project/design/CD-Deployment-Pipelines.pdf)
 * [Vending Machine Diagram](https://woodyb.github.io/vending-machine-project/design/vending-machine-diagram.pdf)
 * [Harnessing The Power of Hexagonal Architecture](https://woodyb.github.io/vending-machine-project/design/Harnessing-The-Power-of-Hexagonal-Architecture.pdf)
+
+## Why The Vending Machine Code Kata
+
+I think the the vending machine code kata is particularly interesting to me for two reasons. Firstly, it is a little larger than other katas like FizzBuzz. Secondly, the first assignment in a software engineering class at university back in the day was to implement a vending machine in code. I was really disappointed that my team received a grade of B. We failed to understand that we were supposed to implement a real-time system. The assignment didn't mention a real-time system, but to be fair, we didn't ask. I learned a valuable lesson and ended up with an A for the class at the end so no damage. However, I think it will be fun to correct past mistakes.
 
 ## Instructions as presented at <https://cyber-dojo.org>
 

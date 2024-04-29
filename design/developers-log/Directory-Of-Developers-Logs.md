@@ -1,12 +1,24 @@
 # Directory Of Developer's Log
 
-[2023.12.29 Kickoff](https://woodyb.github.io/vending-machine-project/design/developers-log/2023.12.29-kickoff)
-
-[2024.01.02](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.01.02)
-
-[2024.01.09](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.01.09)
-
-[2024.01.29](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.01.29)
+* [2023.12.29 Kickoff](https://woodyb.github.io/vending-machine-project/design/developers-log/2023.12.29-kickoff)
+* [2024.01.02](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.01.02)
+* [2024.01.09](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.01.09)
+* [2024.01.29](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.01.29)
+* [2024.01.31](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.01.31)
+* [2024.02.03](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.02.03)
+* [2024.02.13](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.02.13)
+* [2024.02.29](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.02.29)
+* [2024.03.03](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.03.03)
+* [2024.03.04](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.03.04)
+* [2024.03.07](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.03.07)
+* [2024.03.15](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.03.15)
+* [2024.03.21](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.03.21)
+* [2024.03.27](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.03.27)
+* [2024.03.29](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.03.29)
+* [2024.04.01](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.04.01)
+* [2024.04.08](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.04.08)
+* [2024.04.14](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.04.14)
+* [2024.04.22](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.04.22)
 
 ## Supporting Documents
 
