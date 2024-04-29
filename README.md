@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The main purpose of this project is learning and sharing. I'm learning and I'm hoping by sharing my adventure it may help you learn. If nothing else, maybe it will at least entertain you. Watching me make bonehead mistakes and hopefully discover them and fix them may be slightly entertaining. I have enabled [Discussions](https://github.com/WoodyB/vending-machine-project/discussions) in this project if you would like to drop a line or ask a question.
+The main purpose of this project is learning and sharing. I'm learning and I'm hoping by sharing my adventure it may help you learn. If nothing else, maybe it will at least entertain you. Watching me make bonehead mistakes and hopefully discovering and fixing them may be slightly entertaining. I have enabled [Discussions](https://github.com/WoodyB/vending-machine-project/discussions) in this project if you would like to drop a line or ask a question.
 
 ## Goals
 
@@ -12,7 +12,7 @@ The main purpose of this project is learning and sharing. I'm learning and I'm h
 
 ## Releases
 
-Releases can be found on Box.com in the [vending-machine-project-releases](https://app.box.com/s/rdff61foy8s2y3uoo4j0qbhijkt1er17/folder/250524193403) folder. The application is a NodeJS console app that runs in your terminal. You will need to install NodeJS in order to run it. Install Node version20.x or greater from [NodeJS Org](https://nodejs.org/en/download). The app doesn't do much right now but if you want to execute it simply unzip the release then in the root directory
+Releases can be found on Box.com in the [vending-machine-project-releases](https://app.box.com/s/rdff61foy8s2y3uoo4j0qbhijkt1er17/folder/250524193403) folder. The application is a NodeJS console app that runs in your terminal. You will need to install NodeJS in order to run it. Install Node version20.x or greater from [NodeJS Org](https://nodejs.org/en/download). To execute it simply unzip the release then in the root directory
 
 ``` bash
 node bin/index
@@ -30,7 +30,7 @@ I think the the vending machine code kata is particularly interesting to me for 
 
 ## Design Notes
 
-See the [developer's log in the design directory](https://github.com/WoodyB/vending-machine-project/tree/main/design/developers-log) in this project for a developer's log along with supporting documents. Here's where I'm posting status updates as I go along. Often I will put in links so you can see how the code was at the time of writing the status. My hope is this will help show how the code evolves or maybe (I hope not) devolves over time.
+See the [developer's log in the design directory](https://woodyb.github.io/vending-machine-project/design/developers-log/Directory-Of-Developers-Logs) in this project for a developer's log along with supporting documents. Here's where I'm posting status updates as I go along. Often I will put in links so you can see how the code was at the time of writing the status. My hope is this will help show how the code evolves or maybe (I hope not) devolves over time.
 
 Viewing the developer's log via GitHubs file viewer works well but it's a better experience viewing the other design documents via github.io which will enable the hyperlinks in the PDF documents. Here's the links for your convenience
 
