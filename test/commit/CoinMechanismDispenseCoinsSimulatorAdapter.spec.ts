@@ -43,4 +43,4 @@ class TerminalSpy implements TerminalInterface {
     output(str: string): void {
       terminalOutput.push(str);
     }
-  }
+}

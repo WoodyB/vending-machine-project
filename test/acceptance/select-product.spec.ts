@@ -3,7 +3,8 @@ import { Coins, Products } from '../../src/types';
 import {
     VM_STR_THANK_YOU,
     VM_STR_PRODUCT_DISPENSED,
-    VM_STR_PRICE
+    VM_STR_PRICE,
+    VM_STR_SOLD_OUT
 } from '../../src/constants/vending-machine-strings'
 
 jest.setTimeout(15000);
@@ -77,5 +78,12 @@ describe("Vending Machine", () => {
         await driver.selectProduct(Products.CHIPS);
         const foundPriceMessage = await driver.verifyDisplayOutput(`${VM_STR_PRICE} 0.50`);
         expect(foundPriceMessage).toBe(true);
+    });
+
+    it(`should display ${VM_STR_SOLD_OUT} when ${Products.COLA} is out of stock and product is selected`, async () => {
+        await driver.simulateProductEmptyEvent(Products.COLA);
+        await driver.selectProduct(Products.COLA);
+        const foundSoldOutMessage = await driver.verifyDisplayOutput(`${VM_STR_SOLD_OUT}`);
+        expect(foundSoldOutMessage).toBe(true);
     });
 });
