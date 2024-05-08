@@ -10,6 +10,8 @@ export interface CoinMechanismInsertedCoinsInterface {
 export interface VendingMechanismProductSelectInterface {
     selectProduct(product: Products): void; 
     readProductSelection(): Products;
+    setProductOutOfStockStatus(product: Products): void;
+    readProductOutOfStockStatus(product: Products): boolean;
 }
 
 export interface DisplayInterface {

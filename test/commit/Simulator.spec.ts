@@ -250,4 +250,15 @@ class MockVendingMechanismProductSelectSimulatorAdapter implements VendingMechan
   public readProductSelection(): Products {
       return this.selectedProduct;
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public setProductOutOfStockStatus(product: Products): void {
+
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public readProductOutOfStockStatus(product: Products): boolean {
+      return false;  
+  }
+
 }
