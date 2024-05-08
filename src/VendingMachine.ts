@@ -12,7 +12,8 @@ import {
     VM_STR_POWERING_DOWN,
     VM_STR_VERSION,
     VM_STR_THANK_YOU,
-    VM_STR_PRICE
+    VM_STR_PRICE,
+    VM_STR_SOLD_OUT
 } from './constants/vending-machine-strings';
 
 export class VendingMachine {
@@ -78,6 +79,10 @@ export class VendingMachine {
 
                 case States.RETURN_COINS:
                     this.returnCoinsAction();
+                break;
+
+                case States.SOLD_OUT:
+                    await this.soldOutAction();
                 break;
 
                 case States.POWER_DOWN:
@@ -155,6 +160,12 @@ export class VendingMachine {
 
     private returnCoinsAction(): void {
         this.currencyHandler.returnPendingTransactionCoins();
+        this.state = States.IDLE;
+    }
+
+    private async soldOutAction(): Promise<void> {
+        this.displayAdapter.output(`${VM_STR_SOLD_OUT}`);
+        await delay(1000);
         this.state = States.IDLE;
     }
 

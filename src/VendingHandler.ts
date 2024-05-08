@@ -30,7 +30,16 @@ export class VendingHandler {
         return this.productPricesMap[product];
     }
 
+    public readProductOutOfStockStatus(product: Products): boolean {
+        return this.vendingMechanismProductSelectAdapter.readProductOutOfStockStatus(product);
+    }
+
+
     public dispenseProduct(product: Products, pendingTransactionTotal: number): States {
+        if (this.readProductOutOfStockStatus(product)) {
+            return(States.SOLD_OUT);
+        }
+
         if ( pendingTransactionTotal === this.getProductPrice(product)) {
             this.vendingMechanismProductDispenseAdapter.dispenseProduct(product);
             return(States.TRANSACTION_COMPLETE);

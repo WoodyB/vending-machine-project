@@ -16,7 +16,8 @@ import { VM_STR_THANK_YOU, VM_STR_PRICE } from '../../src/constants/vending-mach
 import { 
   VM_STR_INSERT_COIN,
   VM_STR_VERSION,
-  VM_STR_POWERING_DOWN
+  VM_STR_POWERING_DOWN,
+  VM_STR_SOLD_OUT
 } from '../../src/constants/vending-machine-strings';
 
 const FSM_TIMEOUT = 250;
@@ -369,6 +370,24 @@ describe('Vending Machine', () => {
       expect(coinsDispensedSecondAttempt.length).toBe(0);
       await powerOffSystem();
     });
+
+    it(`Should display ${VM_STR_SOLD_OUT} when cola selected and it is out of stock`, async () => {
+      await powerOnSystem();
+      vendingMechanismProductSelectAdapter.setProductOutOfStockStatus(Products.COLA);
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.50');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.75');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('1.00');
+      vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
+      const foundSoldOutMessage = await waitForVendingMachineToDisplay(VM_STR_SOLD_OUT);
+      expect(foundSoldOutMessage).toBe(true);
+      await powerOffSystem();
+    });
+
 });
 
 async function waitForMachineToDispenseCoins(expectedNumberOfCoins: number): Promise<void> {
