@@ -159,19 +159,19 @@ describe('Simulator', () => {
   it('should simulate product COLA is out of stock when the 1 key is pressed followed by the enter key', async () => {
     await mockInputHandler.simulateKeyPress(Keys.One);
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
-    expect(mockVendingMechanismProductSelectSimulatorAdapter.readProductOutOfStockStatus(Products.COLA)).toBe(true);
+    expect(mockVendingMechanismProductSelectSimulatorAdapter.getLastProductOutOfStockStatusSet()).toBe(Products.COLA);
   });
 
   it('should simulate product CANDY is out of stock when the 2 key is pressed followed by the enter key', async () => {
     await mockInputHandler.simulateKeyPress(Keys.Two);
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
-    expect(mockVendingMechanismProductSelectSimulatorAdapter.readProductOutOfStockStatus(Products.CANDY)).toBe(true);
+    expect(mockVendingMechanismProductSelectSimulatorAdapter.getLastProductOutOfStockStatusSet()).toBe(Products.CANDY);
   });
 
   it('should simulate product CHIPS are out of stock when the 3 key is pressed followed by the enter key', async () => {
     await mockInputHandler.simulateKeyPress(Keys.Three);
     await mockInputHandler.simulateKeyPress(Keys.ENTER);
-    expect(mockVendingMechanismProductSelectSimulatorAdapter.readProductOutOfStockStatus(Products.CHIPS)).toBe(true);
+    expect(mockVendingMechanismProductSelectSimulatorAdapter.getLastProductOutOfStockStatusSet()).toBe(Products.CHIPS);
   });
 
 });
@@ -256,12 +256,11 @@ function fakeSimulatorStop(): void {
 
 class MockVendingMechanismProductSelectSimulatorAdapter implements VendingMechanismProductSelectInterface {
   private selectedProduct!: Products;
-  private colaOutOfStock = false;
-  private candyOutOfStock = false;
-  private chipsOutOfStock = false;
+  private lastProductOutOfStockSet: Products;
 
   constructor() {
       this.selectedProduct = Products.NO_PRODUCT;
+      this.lastProductOutOfStockSet = Products.NO_PRODUCT;
   }
 
   public selectProduct(product: Products): void {
@@ -272,30 +271,16 @@ class MockVendingMechanismProductSelectSimulatorAdapter implements VendingMechan
       return this.selectedProduct;
   }
 
-  
   public setProductOutOfStockStatus(product: Products): void {
-    if (product === Products.COLA) {
-      this.colaOutOfStock = true;
-    }
-    if (product === Products.CANDY) {
-      this.candyOutOfStock = true;
-    }
-    if (product === Products.CHIPS) {
-      this.chipsOutOfStock = true;
-    }
+    this.lastProductOutOfStockSet = product;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public readProductOutOfStockStatus(product: Products): boolean {
-    if (product === Products.COLA) {
-      return this.colaOutOfStock;
-    }
-    if (product === Products.CANDY) {
-      return this.candyOutOfStock;
-    }
-    if (product === Products.CHIPS) {
-      return this.chipsOutOfStock;
-    }
     return false;
   }
 
+  public getLastProductOutOfStockStatusSet(): Products {
+    return this.lastProductOutOfStockSet;
+  }
 }
