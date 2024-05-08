@@ -11,3 +11,4 @@ export const VM_STR_ACTION = 'ACTION:'
 export const VM_STR_COIN_REJECTED = 'was rejected and placed in the coin return';
 export const VM_STR_PRODUCT_DISPENSED = 'product was dispensed';
 export const VM_STR_COIN_WAS_DISPENSED = 'was dispensed';
+export const VM_STR_PRODUCT_EMPTY_SWITCH_SET = 'product empty switch set';
