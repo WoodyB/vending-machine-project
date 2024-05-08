@@ -168,6 +168,12 @@ describe('Simulator', () => {
     expect(mockVendingMechanismProductSelectSimulatorAdapter.readProductOutOfStockStatus(Products.CANDY)).toBe(true);
   });
 
+  it('should simulate product CHIPS are out of stock when the 3 key is pressed followed by the enter key', async () => {
+    await mockInputHandler.simulateKeyPress(Keys.Three);
+    await mockInputHandler.simulateKeyPress(Keys.ENTER);
+    expect(mockVendingMechanismProductSelectSimulatorAdapter.readProductOutOfStockStatus(Products.CHIPS)).toBe(true);
+  });
+
 });
 
 class MockInputHandler {
@@ -252,6 +258,7 @@ class MockVendingMechanismProductSelectSimulatorAdapter implements VendingMechan
   private selectedProduct!: Products;
   private colaOutOfStock = false;
   private candyOutOfStock = false;
+  private chipsOutOfStock = false;
 
   constructor() {
       this.selectedProduct = Products.NO_PRODUCT;
@@ -273,7 +280,9 @@ class MockVendingMechanismProductSelectSimulatorAdapter implements VendingMechan
     if (product === Products.CANDY) {
       this.candyOutOfStock = true;
     }
-
+    if (product === Products.CHIPS) {
+      this.chipsOutOfStock = true;
+    }
   }
 
   public readProductOutOfStockStatus(product: Products): boolean {
@@ -282,6 +291,9 @@ class MockVendingMechanismProductSelectSimulatorAdapter implements VendingMechan
     }
     if (product === Products.CANDY) {
       return this.candyOutOfStock;
+    }
+    if (product === Products.CHIPS) {
+      return this.chipsOutOfStock;
     }
     return false;
   }
