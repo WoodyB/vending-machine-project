@@ -388,6 +388,36 @@ describe('Vending Machine', () => {
       await powerOffSystem();
     });
 
+    it(`Should display pending amount after displaying ${VM_STR_SOLD_OUT}`, async () => {
+      await powerOnSystem();
+      vendingMechanismProductSelectAdapter.setProductOutOfStockStatus(Products.COLA);
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.50');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.75');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('1.00');
+      mockDisplayAdapter.clearStringsDisplayed();      
+      vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
+      await waitForVendingMachineToDisplay(VM_STR_SOLD_OUT);
+      const foundPendingAmount = await waitForVendingMachineToDisplay('1.00');
+      expect(foundPendingAmount).toBe(true);
+      await powerOffSystem();
+    });
+
+    it(`Should display ${VM_STR_INSERT_COIN} after displaying ${VM_STR_SOLD_OUT} when pending amount is zero`, async () => {
+      await powerOnSystem();
+      vendingMechanismProductSelectAdapter.setProductOutOfStockStatus(Products.COLA);
+      vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
+      await waitForVendingMachineToDisplay(VM_STR_SOLD_OUT);
+      mockDisplayAdapter.clearStringsDisplayed();      
+      const foundInsertCoinMessage = await waitForVendingMachineToDisplay(VM_STR_INSERT_COIN);
+      expect(foundInsertCoinMessage).toBe(true);
+      await powerOffSystem();
+    });
+
 });
 
 async function waitForMachineToDispenseCoins(expectedNumberOfCoins: number): Promise<void> {

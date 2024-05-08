@@ -166,7 +166,7 @@ export class VendingMachine {
     private async soldOutAction(): Promise<void> {
         this.displayAdapter.output(`${VM_STR_SOLD_OUT}`);
         await delay(1000);
-        this.state = States.IDLE;
+        this.state = States.PENDING_TRANSACTION;
     }
 
     private powerDownAction(): void {
