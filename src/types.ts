@@ -17,7 +17,8 @@ export enum States {
     INSUFFICIENT_FUNDS = 'INSUFFICIENT_FUNDS',
     POWER_DOWN = 'POWER_DOWN',
     MAKE_CHANGE = 'MAKE_CHANGE',
-    RETURN_COINS = 'RETURN_COINS'
+    RETURN_COINS = 'RETURN_COINS',
+    SOLD_OUT = 'SOLD_OUT'
 }
 
 export enum SystemEvents {
