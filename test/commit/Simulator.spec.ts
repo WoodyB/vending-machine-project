@@ -156,6 +156,18 @@ describe('Simulator', () => {
     expect(mockCoinMechanismInsertedCoinsAdapter.readReturnCoinsStatus()).toBe(true);
   });
 
+  it('should simulate product COLA is out of stock when the 1 key is pressed followed by the enter key', async () => {
+    await mockInputHandler.simulateKeyPress(Keys.One);
+    await mockInputHandler.simulateKeyPress(Keys.ENTER);
+    expect(mockVendingMechanismProductSelectSimulatorAdapter.readProductOutOfStockStatus(Products.COLA)).toBe(true);
+  });
+
+  it('should simulate product CANDY is out of stock when the 2 key is pressed followed by the enter key', async () => {
+    await mockInputHandler.simulateKeyPress(Keys.Two);
+    await mockInputHandler.simulateKeyPress(Keys.ENTER);
+    expect(mockVendingMechanismProductSelectSimulatorAdapter.readProductOutOfStockStatus(Products.CANDY)).toBe(true);
+  });
+
 });
 
 class MockInputHandler {
@@ -238,6 +250,8 @@ function fakeSimulatorStop(): void {
 
 class MockVendingMechanismProductSelectSimulatorAdapter implements VendingMechanismProductSelectInterface {
   private selectedProduct!: Products;
+  private colaOutOfStock = false;
+  private candyOutOfStock = false;
 
   constructor() {
       this.selectedProduct = Products.NO_PRODUCT;
@@ -251,14 +265,25 @@ class MockVendingMechanismProductSelectSimulatorAdapter implements VendingMechan
       return this.selectedProduct;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  
   public setProductOutOfStockStatus(product: Products): void {
+    if (product === Products.COLA) {
+      this.colaOutOfStock = true;
+    }
+    if (product === Products.CANDY) {
+      this.candyOutOfStock = true;
+    }
 
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public readProductOutOfStockStatus(product: Products): boolean {
-      return false;  
+    if (product === Products.COLA) {
+      return this.colaOutOfStock;
+    }
+    if (product === Products.CANDY) {
+      return this.candyOutOfStock;
+    }
+    return false;
   }
 
 }

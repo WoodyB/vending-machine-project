@@ -25,6 +25,8 @@ export class Simulator {
         coinMechanismAdapter: CoinMechanismInsertedCoinsInterface,
         systemAdapter: SystemInterface,
         vendingMechanismProductSelectAdapter: VendingMechanismProductSelectInterface) {
+        this.deferredKeyFunctionMap[Keys.One] = this.One_KeyHandler.bind(this);
+        this.deferredKeyFunctionMap[Keys.Two] = this.Two_KeyHandler.bind(this);
         this.deferredKeyFunctionMap[Keys.Q] = this.Q_KeyHandler.bind(this);
         this.deferredKeyFunctionMap[Keys.D] = this.D_KeyHandler.bind(this);
         this.deferredKeyFunctionMap[Keys.N] = this.N_KeyHandler.bind(this);
@@ -63,6 +65,15 @@ export class Simulator {
     public stop(): void {
         process.exit(0);
     }
+
+    private async One_KeyHandler(): Promise<void> {
+        this.vendingMechanismProductSelectAdapter.setProductOutOfStockStatus(Products.COLA);
+    }
+
+    private async Two_KeyHandler(): Promise<void> {
+        this.vendingMechanismProductSelectAdapter.setProductOutOfStockStatus(Products.CANDY);
+    }
+
 
     private async A_KeyHandler(): Promise<void> {
         this.vendingMechanismProductSelectAdapter.selectProduct(Products.COLA);
