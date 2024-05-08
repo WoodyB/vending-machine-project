@@ -2,8 +2,9 @@ import {
   CoinMechanismInsertedCoinsInterface,
   CoinMechanismDispenseCoinsInterface,
   VendingMechanismProductDispenseInterface,
-  DisplayInterface 
+  DisplayInterface
 } from '../../src/interfaces';
+import { TerminalInterface } from '../../src/Simulator/interfaces'
 import { VendingMechanismProductSelectSimulatorAdapter } from '../../src/VendingMechanismAdapters/VendingMechanismProductSelectSimulatorAdapter';
 import { SystemSimulatorAdapter } from '../../src/SystemAdapters/SystemSimulatorAdapter'
 import { VendingMachine } from '../../src/VendingMachine';
@@ -27,6 +28,7 @@ let mockCoinMechanismMakeChangeAdapter: MockCoinMechanismMakeChangeAdapter;
 let vendingMechanismProductSelectAdapter: VendingMechanismProductSelectSimulatorAdapter;
 let mockVendingMechanismProductDispenseSimulatorAdapter: MockVendingMechanismProductDispenseSimulatorAdapter;
 let mockDisplayAdapter: MockDisplayAdapter;
+let terminalStub: TerminalStub;
 let systemSimulatorAdapter: SystemSimulatorAdapter;
 let currencyHandler: CurrencyHandler;
 let vendingHandler: VendingHandler;
@@ -39,7 +41,8 @@ describe('Vending Machine', () => {
       mockVendingMechanismProductDispenseSimulatorAdapter = new MockVendingMechanismProductDispenseSimulatorAdapter(null);
       mockDisplayAdapter = new MockDisplayAdapter();
       systemSimulatorAdapter = new SystemSimulatorAdapter();
-      vendingMechanismProductSelectAdapter = new VendingMechanismProductSelectSimulatorAdapter();
+      terminalStub = new TerminalStub();
+      vendingMechanismProductSelectAdapter = new VendingMechanismProductSelectSimulatorAdapter(terminalStub);
       vendingHandler = new VendingHandler(vendingMechanismProductSelectAdapter, mockVendingMechanismProductDispenseSimulatorAdapter);
 
       new VendingMachine(
@@ -552,4 +555,10 @@ class MockDisplayAdapter implements DisplayInterface{
     this.stringsDisplayed = [];
     this.previousOutputString = '';
   }
-}    
+}
+
+class TerminalStub implements TerminalInterface {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  output(str: string): void {
+  }  
+}

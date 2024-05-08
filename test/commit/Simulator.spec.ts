@@ -156,6 +156,24 @@ describe('Simulator', () => {
     expect(mockCoinMechanismInsertedCoinsAdapter.readReturnCoinsStatus()).toBe(true);
   });
 
+  it('should simulate product COLA is out of stock when the 1 key is pressed followed by the enter key', async () => {
+    await mockInputHandler.simulateKeyPress(Keys.One);
+    await mockInputHandler.simulateKeyPress(Keys.ENTER);
+    expect(mockVendingMechanismProductSelectSimulatorAdapter.getLastProductOutOfStockStatusSet()).toBe(Products.COLA);
+  });
+
+  it('should simulate product CANDY is out of stock when the 2 key is pressed followed by the enter key', async () => {
+    await mockInputHandler.simulateKeyPress(Keys.Two);
+    await mockInputHandler.simulateKeyPress(Keys.ENTER);
+    expect(mockVendingMechanismProductSelectSimulatorAdapter.getLastProductOutOfStockStatusSet()).toBe(Products.CANDY);
+  });
+
+  it('should simulate product CHIPS are out of stock when the 3 key is pressed followed by the enter key', async () => {
+    await mockInputHandler.simulateKeyPress(Keys.Three);
+    await mockInputHandler.simulateKeyPress(Keys.ENTER);
+    expect(mockVendingMechanismProductSelectSimulatorAdapter.getLastProductOutOfStockStatusSet()).toBe(Products.CHIPS);
+  });
+
 });
 
 class MockInputHandler {
@@ -238,9 +256,11 @@ function fakeSimulatorStop(): void {
 
 class MockVendingMechanismProductSelectSimulatorAdapter implements VendingMechanismProductSelectInterface {
   private selectedProduct!: Products;
+  private lastProductOutOfStockSet: Products;
 
   constructor() {
       this.selectedProduct = Products.NO_PRODUCT;
+      this.lastProductOutOfStockSet = Products.NO_PRODUCT;
   }
 
   public selectProduct(product: Products): void {
@@ -251,14 +271,16 @@ class MockVendingMechanismProductSelectSimulatorAdapter implements VendingMechan
       return this.selectedProduct;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public setProductOutOfStockStatus(product: Products): void {
-
+    this.lastProductOutOfStockSet = product;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public readProductOutOfStockStatus(product: Products): boolean {
-      return false;  
+    return false;
   }
 
+  public getLastProductOutOfStockStatusSet(): Products {
+    return this.lastProductOutOfStockSet;
+  }
 }

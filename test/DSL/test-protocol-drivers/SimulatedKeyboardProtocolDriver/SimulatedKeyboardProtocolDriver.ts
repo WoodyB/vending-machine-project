@@ -49,6 +49,12 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         [Products.CHIPS]: 'c',
         [Products.NO_PRODUCT]: ''
     };
+    private outOfStockKeyMap: Record<Products, string> = {
+        [Products.COLA]: '1',
+        [Products.CANDY]: '2',
+        [Products.CHIPS]: '3',
+        [Products.NO_PRODUCT]: ''
+    }
 
     constructor() {
         super();
@@ -61,7 +67,7 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         this.currencyHandler = new CurrencyHandler(this.coinMechanismInsertedCoinsSimulatorAdapter, this.coinMechanismDispenseCoinsSimulatorAdapter);
         this.displaySimulatorAdapter = new DisplaySimulatorAdapter(this.fakeTerminal);
         this.systemSimulatorAdapter = new SystemSimulatorAdapter();
-        this.vendingMechanismProductSelectSimulatorAdapter = new VendingMechanismProductSelectSimulatorAdapter();
+        this.vendingMechanismProductSelectSimulatorAdapter = new VendingMechanismProductSelectSimulatorAdapter(this.fakeTerminal);
         this.vendingMechanismProductDispenseSimulatorAdapter = new VendingMechanismProductDispenseSimulatorAdapter(this.fakeTerminal);
         this.vendingHandler = new VendingHandler(this.vendingMechanismProductSelectSimulatorAdapter, this.vendingMechanismProductDispenseSimulatorAdapter);
 
@@ -121,6 +127,16 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         await this.simulatedKeyboardInputHandler.simulateKeyPress('r');
         await this.simulatedKeyboardInputHandler.simulateKeyPress('\r');    
     }
+
+    public override async simulateProductEmptyEvent(product: Products): Promise<void> {
+        const outOfStockKey = this.outOfStockKeyMap[product];
+        if (outOfStockKey) {
+            await this.simulatedKeyboardInputHandler.simulateKeyPress(outOfStockKey);
+        }
+
+        await this.simulatedKeyboardInputHandler.simulateKeyPress('\r');
+    }
+
 
     private fakeSimulatorStop(): void {
         return;
