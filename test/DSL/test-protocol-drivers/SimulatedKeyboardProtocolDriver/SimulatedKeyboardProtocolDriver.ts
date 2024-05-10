@@ -137,6 +137,13 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         await this.simulatedKeyboardInputHandler.simulateKeyPress('\r');
     }
 
+    public override clearSavedDisplayOutputMessages(): void {
+        this.fakeTerminal.clearDisplayMessages();
+    }
+
+    public override clearSavedActionOutputMessages(): void {
+        this.fakeTerminal.clearActionMessages();
+    }
 
     private fakeSimulatorStop(): void {
         return;

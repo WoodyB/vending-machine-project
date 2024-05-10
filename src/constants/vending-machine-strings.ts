@@ -6,7 +6,7 @@ export const VM_STR_POWERING_DOWN = 'Vending Machine Powering Down';
 export const VM_STR_SOLD_OUT = 'SOLD OUT';
 
 export const VM_STR_DISPLAY = 'DISPLAY:';
-export const VM_STR_ACTION = 'ACTION:'
+export const VM_STR_ACTION = 'ACTION:';
 
 export const VM_STR_COIN_REJECTED = 'was rejected and placed in the coin return';
 export const VM_STR_PRODUCT_DISPENSED = 'product was dispensed';
