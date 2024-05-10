@@ -20,6 +20,7 @@
 * [2024.04.14](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.04.14)
 * [2024.04.22](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.04.22)
 * [2024.05.06](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.05.06)
+* [2024.05.10](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.05.10)
 
 ## Supporting Documents
 
