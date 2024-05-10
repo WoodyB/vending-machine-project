@@ -30,6 +30,18 @@ export abstract class BaseDriver {
         return false;
     }
 
+    public clearSavedDisplayOutputMessages(): void {
+        this.failWithMethodNotImplemented(`clearSavedDisplayOutputMessages()`);
+    }
+
+    public clearSavedActionOutputMessages(): void {
+        this.failWithMethodNotImplemented(`clearSavedActionOutputMessages()`);
+    }
+
+    public clearSavedAllOutputMessages(): void {
+        this.failWithMethodNotImplemented(`clearSavedAllOutputMessages()`);
+    }  
+
     public async verifyActionOutput(str: string): Promise<boolean> {
         this.failWithMethodNotImplemented(`verifyActionOutput(${str}))`);
         return false;
