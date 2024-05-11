@@ -8,6 +8,7 @@
     "test": "jest %1",
     "test:commit": "jest test/commit/",
     "test:acceptance": "jest test/acceptance/",
+    "test:all": "jest --coverage test/",
     "lint": "eslint ./src --ext .ts",
     "start": "node bin/index.js"
   },
