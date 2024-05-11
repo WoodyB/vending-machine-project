@@ -10,8 +10,9 @@ module.exports = {
       "^.+\\.(ts|tsx)$": ["ts-jest", {tsconfig: "tsconfig.json"}]
     },
     collectCoverageFrom: [
-      "**/*.{js,jsx,ts,tsx}",
+      "**/*.{jsx,ts,tsx}",
       "!**/*.d.ts",
       "!**/node_modules/**",
+      "!**/test/**"
     ],
   }
