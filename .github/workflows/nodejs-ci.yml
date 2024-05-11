@@ -32,7 +32,7 @@ jobs:
     - name: Show git config information
       run: |
         git config --list > git-info.txt
-        concat git-info.txt
+        cat git-info.txt
 
     - name: Install dependencies
       run: npm ci
