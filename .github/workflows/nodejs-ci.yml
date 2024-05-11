@@ -24,10 +24,15 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Set git user name
-      #run: git config user.name "${{ github.actor }}"
-      run: git config user.name "wbeverleyaws@gmail.com"
-      #env:
-        #GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+      run: git config user.name "${{ github.actor }}"
+      #run: git config user.name "wbeverleyaws@gmail.com"
+      env:
+        GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+
+    - name: Show git config information
+      run: |
+        git config --list > git-info.txt
+        cat git-info.txt
 
     - name: Install dependencies
       run: npm ci
