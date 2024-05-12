@@ -21,10 +21,6 @@ export class VendingHandler {
     public readProductSelection(): Products {
         return this.vendingMechanismProductSelectAdapter.readProductSelection();
     }
-
-    public selectProduct(product: Products): void {
-        this.vendingMechanismProductSelectAdapter.selectProduct(product);
-    }
     
     public getProductPrice(product: Products): number {
         return this.productPricesMap[product];
