@@ -30,7 +30,6 @@ export class VendingHandler {
         return this.vendingMechanismProductSelectAdapter.readProductOutOfStockStatus(product);
     }
 
-
     public dispenseProduct(product: Products, pendingTransactionTotal: number): States {
         if (this.readProductOutOfStockStatus(product)) {
             return(States.SOLD_OUT);
