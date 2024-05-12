@@ -21,10 +21,6 @@ export class VendingHandler {
     public readProductSelection(): Products {
         return this.vendingMechanismProductSelectAdapter.readProductSelection();
     }
-
-    public selectProduct(product: Products): void {
-        this.vendingMechanismProductSelectAdapter.selectProduct(product);
-    }
     
     public getProductPrice(product: Products): number {
         return this.productPricesMap[product];
@@ -33,7 +29,6 @@ export class VendingHandler {
     public readProductOutOfStockStatus(product: Products): boolean {
         return this.vendingMechanismProductSelectAdapter.readProductOutOfStockStatus(product);
     }
-
 
     public dispenseProduct(product: Products, pendingTransactionTotal: number): States {
         if (this.readProductOutOfStockStatus(product)) {
