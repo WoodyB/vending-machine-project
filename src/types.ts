@@ -35,3 +35,4 @@ export enum Products {
 }
 
 export type PendingTotal = {changed: boolean, amount: number};
+export type CoinsInventory = {quarters: number, dimes: number, nickels: number};
