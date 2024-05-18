@@ -4,7 +4,7 @@ import {
   CoinMechanismDispenseCoinsInterface,
   CoinHandlerInterface
 } from './interfaces';
-import { Coins, PendingTotal } from './types';
+import { Coins, PendingTotal, CoinsInventory } from './types';
 
 export class CurrencyHandler {
   private pendingTransactionTotal: number;
@@ -50,25 +50,8 @@ export class CurrencyHandler {
 }
 
   public transactionCompleted(): void {
-    let numberOfQuarters: number = 0;
-    let numberOfDimes: number = 0;
-    let numberOfNickels: number = 0;
-
-    for (const coin of this.pendingTransactionCoins) {
-      if (coin === Coins.QUARTER) {
-        numberOfQuarters += 1;
-      }
-
-      if (coin === Coins.DIME) {
-        numberOfDimes += 1;
-      }
-      
-      if (coin === Coins.NICKEL) {
-        numberOfNickels += 1;
-      }
-    }
-    this.currencyInventory.addCoinsToInventory(
-      {quarters: numberOfQuarters, dimes: numberOfDimes, nickels: numberOfNickels});
+    const inventoryOfCoinsToAdd = this.convertArrayOfCoinsToCoinsInventory(this.pendingTransactionCoins);
+    this.currencyInventory.addCoinsToInventory(inventoryOfCoinsToAdd);
       this.resetPendingTransactionTotal();    
   }
 
@@ -88,27 +71,12 @@ export class CurrencyHandler {
   }
   
   private dispenseCoins(coins: Coins[]): void {
-    let numberOfQuarters: number = 0;
-    let numberOfDimes: number = 0;
-    let numberOfNickels: number = 0;
 
     for (const coin of coins) {
       this.coinMechanismDispenseCoinsAdapter.dispenseCoin(coin);
-
-      if (coin === Coins.QUARTER) {
-        numberOfQuarters += 1;
-      }
-
-      if (coin === Coins.DIME) {
-        numberOfDimes += 1;
-      }
-      
-      if (coin === Coins.NICKEL) {
-        numberOfNickels += 1;
-      }
     }
-    this.currencyInventory.deleteCoinsFromInventory(
-      {quarters: numberOfQuarters, dimes: numberOfDimes, nickels: numberOfNickels});
+    const inventoryOfCoinsToDelete = this.convertArrayOfCoinsToCoinsInventory(coins);
+    this.currencyInventory.deleteCoinsFromInventory(inventoryOfCoinsToDelete);
   }
 
   private determineChangeInCoins(change: number): Coins[] {
@@ -159,6 +127,27 @@ export class CurrencyHandler {
   private resetPendingTransactionTotal(): void {
     this.pendingTransactionTotal = 0;
     this.pendingTransactionCoins = [];
+  }
+
+  private convertArrayOfCoinsToCoinsInventory(arrayOfCoins: Coins[]): CoinsInventory {
+    let numberOfQuarters: number = 0;
+    let numberOfDimes: number = 0;
+    let numberOfNickels: number = 0;
+
+    for (const coin of arrayOfCoins) {
+      if (coin === Coins.QUARTER) {
+        numberOfQuarters += 1;
+      }
+
+      if (coin === Coins.DIME) {
+        numberOfDimes += 1;
+      }
+
+      if (coin === Coins.NICKEL) {
+        numberOfNickels += 1;
+      }
+    }
+    return {quarters: numberOfQuarters, dimes: numberOfDimes, nickels: numberOfNickels};    
   }
 }
 
