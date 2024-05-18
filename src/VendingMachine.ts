@@ -147,7 +147,7 @@ export class VendingMachine {
         this.displayAdapter.output(VM_STR_THANK_YOU);
         await delay(1000);
         this.pendingTransactionTotal = 0;
-        this.currencyHandler.resetPendingTransactionTotal();    
+        this.currencyHandler.transactionCompleted();    
         this.state = States.IDLE;
     }
 

@@ -4,7 +4,7 @@ import {
   CoinMechanismDispenseCoinsInterface,
   CoinHandlerInterface
 } from './interfaces';
-import { Coins, PendingTotal } from './types';
+import { Coins, PendingTotal, CoinsInventory } from './types';
 
 export class CurrencyHandler {
   private pendingTransactionTotal: number;
@@ -49,9 +49,10 @@ export class CurrencyHandler {
     return result;
 }
 
-  public resetPendingTransactionTotal(): void {
-      this.pendingTransactionTotal = 0;
-      this.pendingTransactionCoins = [];
+  public transactionCompleted(): void {
+    const inventoryOfCoinsToAdd = this.convertArrayOfCoinsToCoinsInventory(this.pendingTransactionCoins);
+    this.currencyInventory.addCoinsToInventory(inventoryOfCoinsToAdd);
+      this.resetPendingTransactionTotal();    
   }
 
   public dispenseChange(totalSubmitted: number, productCost: number): void {
@@ -70,9 +71,12 @@ export class CurrencyHandler {
   }
   
   private dispenseCoins(coins: Coins[]): void {
+
     for (const coin of coins) {
       this.coinMechanismDispenseCoinsAdapter.dispenseCoin(coin);
     }
+    const inventoryOfCoinsToDelete = this.convertArrayOfCoinsToCoinsInventory(coins);
+    this.currencyInventory.deleteCoinsFromInventory(inventoryOfCoinsToDelete);
   }
 
   private determineChangeInCoins(change: number): Coins[] {
@@ -118,7 +122,33 @@ export class CurrencyHandler {
       arrayOfCoins.push(coinType);
     }
     return arrayOfCoins;
-  }  
+  }
+  
+  private resetPendingTransactionTotal(): void {
+    this.pendingTransactionTotal = 0;
+    this.pendingTransactionCoins = [];
+  }
+
+  private convertArrayOfCoinsToCoinsInventory(arrayOfCoins: Coins[]): CoinsInventory {
+    let numberOfQuarters: number = 0;
+    let numberOfDimes: number = 0;
+    let numberOfNickels: number = 0;
+
+    for (const coin of arrayOfCoins) {
+      if (coin === Coins.QUARTER) {
+        numberOfQuarters += 1;
+      }
+
+      if (coin === Coins.DIME) {
+        numberOfDimes += 1;
+      }
+
+      if (coin === Coins.NICKEL) {
+        numberOfNickels += 1;
+      }
+    }
+    return {quarters: numberOfQuarters, dimes: numberOfDimes, nickels: numberOfNickels};    
+  }
 }
 
 class QuarterHandler implements CoinHandlerInterface {
