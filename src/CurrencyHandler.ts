@@ -49,9 +49,27 @@ export class CurrencyHandler {
     return result;
 }
 
-  public resetPendingTransactionTotal(): void {
-      this.pendingTransactionTotal = 0;
-      this.pendingTransactionCoins = [];
+  public transactionCompleted(): void {
+    let numberOfQuarters: number = 0;
+    let numberOfDimes: number = 0;
+    let numberOfNickels: number = 0;
+
+    for (const coin of this.pendingTransactionCoins) {
+      if (coin === Coins.QUARTER) {
+        numberOfQuarters += 1;
+      }
+
+      if (coin === Coins.DIME) {
+        numberOfDimes += 1;
+      }
+      
+      if (coin === Coins.NICKEL) {
+        numberOfNickels += 1;
+      }
+    }
+    this.currencyInventory.addCoinsToInventory(
+      {quarters: numberOfQuarters, dimes: numberOfDimes, nickels: numberOfNickels});
+      this.resetPendingTransactionTotal();    
   }
 
   public dispenseChange(totalSubmitted: number, productCost: number): void {
@@ -70,9 +88,27 @@ export class CurrencyHandler {
   }
   
   private dispenseCoins(coins: Coins[]): void {
+    let numberOfQuarters: number = 0;
+    let numberOfDimes: number = 0;
+    let numberOfNickels: number = 0;
+
     for (const coin of coins) {
       this.coinMechanismDispenseCoinsAdapter.dispenseCoin(coin);
+
+      if (coin === Coins.QUARTER) {
+        numberOfQuarters += 1;
+      }
+
+      if (coin === Coins.DIME) {
+        numberOfDimes += 1;
+      }
+      
+      if (coin === Coins.NICKEL) {
+        numberOfNickels += 1;
+      }
     }
+    this.currencyInventory.deleteCoinsFromInventory(
+      {quarters: numberOfQuarters, dimes: numberOfDimes, nickels: numberOfNickels});
   }
 
   private determineChangeInCoins(change: number): Coins[] {
@@ -118,7 +154,12 @@ export class CurrencyHandler {
       arrayOfCoins.push(coinType);
     }
     return arrayOfCoins;
-  }  
+  }
+  
+  private resetPendingTransactionTotal(): void {
+    this.pendingTransactionTotal = 0;
+    this.pendingTransactionCoins = [];
+  }
 }
 
 class QuarterHandler implements CoinHandlerInterface {

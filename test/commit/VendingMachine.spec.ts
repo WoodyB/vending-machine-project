@@ -444,6 +444,38 @@ describe('Vending Machine', () => {
       expect(coinsDispensed[1]).toBe(Coins.NICKEL);
       await powerOffSystem();
     });
+
+    it('Should decrement inventory of dimes after dispensing a dime in change', async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.50');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.75');
+      vendingMechanismProductSelectAdapter.selectProduct(Products.CANDY);
+      await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
+      const inventoryOfCoins = currencyInventory.getCoinInventory();
+      expect(inventoryOfCoins.dimes).toBe(NUMBER_OF_DIMES - 1);
+      await powerOffSystem();
+    });
+
+    it('Should increment inventory of quarters by 3 after purchase of product using 3 quarters', async () => {
+      await powerOnSystem();
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.50');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.75');
+      vendingMechanismProductSelectAdapter.selectProduct(Products.CANDY);
+      mockDisplayAdapter.clearStringsDisplayed();
+      await waitForVendingMachineToDisplay(VM_STR_INSERT_COIN);
+      const inventoryOfCoins = currencyInventory.getCoinInventory();
+      expect(inventoryOfCoins.quarters).toBe(NUMBER_OF_QUARTERS + 3);
+      await powerOffSystem();
+    });
+
 });
 
 async function waitForMachineToDispenseCoins(expectedNumberOfCoins: number): Promise<void> {
