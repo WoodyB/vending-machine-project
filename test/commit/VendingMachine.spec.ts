@@ -9,9 +9,10 @@ import { VendingMechanismProductSelectSimulatorAdapter } from '../../src/Vending
 import { SystemSimulatorAdapter } from '../../src/SystemAdapters/SystemSimulatorAdapter'
 import { VendingMachine } from '../../src/VendingMachine';
 import { CurrencyHandler } from '../../src/CurrencyHandler';
+import { CurrencyInventory } from '../../src/CurrencyInventory';
 import { VendingHandler } from '../../src/VendingHandler';
 import { delay } from '../../src/utils/delay';
-import { SystemEvents, Products, Coins } from '../../src/types';
+import { SystemEvents, Products, Coins, CoinsInventory } from '../../src/types';
 import { VM_STR_THANK_YOU, VM_STR_PRICE } from '../../src/constants/vending-machine-strings';
 
 import { 
@@ -30,14 +31,20 @@ let mockVendingMechanismProductDispenseSimulatorAdapter: MockVendingMechanismPro
 let mockDisplayAdapter: MockDisplayAdapter;
 let terminalStub: TerminalStub;
 let systemSimulatorAdapter: SystemSimulatorAdapter;
+let currencyInventory: CurrencyInventory;
 let currencyHandler: CurrencyHandler;
 let vendingHandler: VendingHandler;
+const NUMBER_OF_QUARTERS: number = 10;
+const NUMBER_OF_DIMES: number = 10;
+const NUMBER_OF_NICKELS: number = 10;
 
 describe('Vending Machine', () => { 
     beforeEach(() => {
+      const coinsInventory: CoinsInventory = {quarters: NUMBER_OF_QUARTERS, dimes: NUMBER_OF_DIMES, nickels: NUMBER_OF_NICKELS};
       mockCoinMechanismInsertedCoinsAdapter = new MockCoinMechanismInsertedCoinsAdapter();
       mockCoinMechanismMakeChangeAdapter = new MockCoinMechanismMakeChangeAdapter();
-      currencyHandler = new CurrencyHandler(mockCoinMechanismInsertedCoinsAdapter, mockCoinMechanismMakeChangeAdapter)
+      currencyInventory = new CurrencyInventory(coinsInventory);
+      currencyHandler = new CurrencyHandler(mockCoinMechanismInsertedCoinsAdapter, mockCoinMechanismMakeChangeAdapter, currencyInventory)
       mockVendingMechanismProductDispenseSimulatorAdapter = new MockVendingMechanismProductDispenseSimulatorAdapter(null);
       mockDisplayAdapter = new MockDisplayAdapter();
       systemSimulatorAdapter = new SystemSimulatorAdapter();
@@ -99,7 +106,7 @@ describe('Vending Machine', () => {
       await powerOffSystem();
     });
 
-    it('Should display 0.80 after 2 quarters, 2 dimes, 2 nickels are inserted inserted', async () => {
+    it('Should display 0.80 after 2 quarters, 2 dimes, 2 nickels are inserted', async () => {
       await powerOnSystem();
       mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
       await waitForVendingMachineToDisplay('0.25');
@@ -421,6 +428,22 @@ describe('Vending Machine', () => {
       await powerOffSystem();
     });
 
+    it('Should dispense 2 Nickels when the machine is out of dimes after inserting 75 cents and purchasing a product that costs 65 cents', async () => {
+      await powerOnSystem();
+      currencyInventory.deleteCoinsFromInventory({quarters: 0, dimes: NUMBER_OF_DIMES, nickels: 0});
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.50');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.75');
+      vendingMechanismProductSelectAdapter.selectProduct(Products.CANDY);
+      await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
+      const coinsDispensed = mockCoinMechanismMakeChangeAdapter.getCoinsDispensed();
+      expect(coinsDispensed[0]).toBe(Coins.NICKEL);
+      expect(coinsDispensed[1]).toBe(Coins.NICKEL);
+      await powerOffSystem();
+    });
 });
 
 async function waitForMachineToDispenseCoins(expectedNumberOfCoins: number): Promise<void> {
