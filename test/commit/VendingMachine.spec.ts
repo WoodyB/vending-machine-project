@@ -442,7 +442,6 @@ describe('Vending Machine', () => {
       const coinsDispensed = mockCoinMechanismMakeChangeAdapter.getCoinsDispensed();
       expect(coinsDispensed[0]).toBe(Coins.NICKEL);
       expect(coinsDispensed[1]).toBe(Coins.NICKEL);
-      //setCoinInventory({quarters: 100, dimes: 100, nickels: 100});
       await powerOffSystem();
     });
 });
