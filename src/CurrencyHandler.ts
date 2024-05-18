@@ -1,3 +1,4 @@
+import { CurrencyInventory } from './CurrencyInventory';
 import {
   CoinMechanismInsertedCoinsInterface,
   CoinMechanismDispenseCoinsInterface,
@@ -22,7 +23,8 @@ export class CurrencyHandler {
 
   constructor(
     private coinMechanismInsertedCoinsAdapter: CoinMechanismInsertedCoinsInterface,
-    private coinMechanismDispenseCoinsAdapter: CoinMechanismDispenseCoinsInterface
+    private coinMechanismDispenseCoinsAdapter: CoinMechanismDispenseCoinsInterface,
+    private currencyInventory: CurrencyInventory
 
     ) {
       this.pendingTransactionTotal = 0;
@@ -77,15 +79,15 @@ export class CurrencyHandler {
     let arrayOfCoins: Coins[] = [];
 
     const quarters = this.determineNumberOfCoins(Coins.QUARTER, change);
-    change %= this.coinValuesMap[Coins.QUARTER];
+    change -= quarters.length * this.coinValuesMap[Coins.QUARTER];
     arrayOfCoins = arrayOfCoins.concat(quarters);
 
     const dimes = this.determineNumberOfCoins(Coins.DIME, change);
-    change %= this.coinValuesMap[Coins.DIME];
+    change -= dimes.length * this.coinValuesMap[Coins.DIME];
     arrayOfCoins = arrayOfCoins.concat(dimes);
 
     const nickels = this.determineNumberOfCoins(Coins.NICKEL, change);
-    change %= this.coinValuesMap[Coins.NICKEL];
+    change -= nickels.length * this.coinValuesMap[Coins.NICKEL];
     arrayOfCoins = arrayOfCoins.concat(nickels);
     
     return arrayOfCoins;
@@ -93,8 +95,25 @@ export class CurrencyHandler {
 
   private determineNumberOfCoins(coinType: Coins, amount: number): Coins[] {
     const arrayOfCoins: Coins[] = [];
-    
-    const numberOfCoins = Math.floor(amount / this.coinValuesMap[coinType]);
+    let coinInventory: number = 0;    
+    const coinsInventory = this.currencyInventory.getCoinInventory();
+
+    if (coinType === Coins.QUARTER) {
+      coinInventory = coinsInventory.quarters;
+    }
+    if (coinType === Coins.DIME) {
+      coinInventory = coinsInventory.dimes;
+    }
+    if (coinType === Coins.NICKEL) {
+      coinInventory = coinsInventory.nickels;
+    }
+
+    let numberOfCoins = Math.floor(amount / this.coinValuesMap[coinType]);
+
+    if (numberOfCoins > coinInventory) {
+      numberOfCoins = coinInventory;
+    } 
+
     for (let i=0; i < numberOfCoins; i++) {
       arrayOfCoins.push(coinType);
     }
