@@ -9,6 +9,7 @@ import { SystemSimulatorAdapter } from '../../../../src/SystemAdapters/SystemSim
 import { Simulator } from '../../../../src/Simulator/Simulator';
 import { FakeTerminal } from './FakeTerminal';
 import { SimulatedKeyboardInputHandler } from './SimulateKeyboardInputHandler';
+import { CurrencyInventory } from '../../../../src/CurrencyInventory';
 import { CurrencyHandler } from '../../../../src/CurrencyHandler';
 import { VendingHandler } from '../../../../src/VendingHandler';
 import { VendingMachine } from '../../../../src/VendingMachine';
@@ -23,6 +24,7 @@ import {
 export class SimulatedKeyboardDriver extends BaseDriver {
     private coinMechanismInsertedCoinsSimulatorAdapter!: CoinMechanismInsertedCoinsSimulatorAdapter;
     private coinMechanismDispenseCoinsSimulatorAdapter!: CoinMechanismDispenseCoinsSimulatorAdapter;
+    private currencyInventory!: CurrencyInventory;
     private currencyHandler!: CurrencyHandler;
     private vendingMechanismProductSelectSimulatorAdapter!: VendingMechanismProductSelectSimulatorAdapter;
     private vendingMechanismProductDispenseSimulatorAdapter!: VendingMechanismProductDispenseSimulatorAdapter;
@@ -64,7 +66,8 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         this.fakeTerminal = new FakeTerminal();
         this.coinMechanismInsertedCoinsSimulatorAdapter = new CoinMechanismInsertedCoinsSimulatorAdapter(this.fakeTerminal);
         this.coinMechanismDispenseCoinsSimulatorAdapter = new CoinMechanismDispenseCoinsSimulatorAdapter(this.fakeTerminal);
-        this.currencyHandler = new CurrencyHandler(this.coinMechanismInsertedCoinsSimulatorAdapter, this.coinMechanismDispenseCoinsSimulatorAdapter);
+        this.currencyInventory = new CurrencyInventory({quarters: 100, dimes: 100, nickels: 100});
+        this.currencyHandler = new CurrencyHandler(this.coinMechanismInsertedCoinsSimulatorAdapter, this.coinMechanismDispenseCoinsSimulatorAdapter, this.currencyInventory);
         this.displaySimulatorAdapter = new DisplaySimulatorAdapter(this.fakeTerminal);
         this.systemSimulatorAdapter = new SystemSimulatorAdapter();
         this.vendingMechanismProductSelectSimulatorAdapter = new VendingMechanismProductSelectSimulatorAdapter(this.fakeTerminal);
