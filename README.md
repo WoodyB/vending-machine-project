@@ -68,7 +68,7 @@ symbols, or something of that nature.
 
 ### Select Product
 
-You are awsome!!!
+You are awesome!!!
 
 _As a vendor_  
 _I want customers to select products_
@@ -115,3 +115,10 @@ _So that I can determine if I can buy something with the money I have before ins
 
 When the machine is not able to make change with the money in the machine for any of the items that it sells, it will
 display EXACT CHANGE ONLY instead of INSERT COIN.
+
+## Scratchpad For Onboarding
+
+Here's a spot for new contributors to make their first change to the project when onboarding
+Welcome aboard contributor, we are glad you are here!
+
+* jcontreras28: You are awesome!!!
