@@ -116,7 +116,7 @@ display EXACT CHANGE ONLY instead of INSERT COIN.
 
 ## Scratchpad For Onboarding
 
-Here's a spot for new contributors to make their first change to the project when onboarding
+Here's a spot for new contributors to make their first change to the project when onboarding.
 Welcome aboard contributor, we are glad you are here!
 
 - jcontreras28: You are awesome!!!
