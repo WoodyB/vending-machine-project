@@ -68,8 +68,6 @@ symbols, or something of that nature.
 
 ### Select Product
 
-You are awesome!!!
-
 _As a vendor_  
 _I want customers to select products_
 _So that I can give them an incentive to put money in the machine_
@@ -121,4 +119,4 @@ display EXACT CHANGE ONLY instead of INSERT COIN.
 Here's a spot for new contributors to make their first change to the project when onboarding
 Welcome aboard contributor, we are glad you are here!
 
-* jcontreras28: You are awesome!!!
+- jcontreras28: You are awesome!!!

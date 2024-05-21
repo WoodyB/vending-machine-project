@@ -19,7 +19,8 @@ import {
   VM_STR_INSERT_COIN,
   VM_STR_VERSION,
   VM_STR_POWERING_DOWN,
-  VM_STR_SOLD_OUT
+  VM_STR_SOLD_OUT,
+  VM_STR_EXACT_CHANGE_ONLY
 } from '../../src/constants/vending-machine-strings';
 
 const FSM_TIMEOUT = 250;
@@ -475,7 +476,64 @@ describe('Vending Machine', () => {
       expect(inventoryOfCoins.quarters).toBe(NUMBER_OF_QUARTERS + 3);
       await powerOffSystem();
     });
+    
+    it(`Should display ${VM_STR_EXACT_CHANGE_ONLY} after a transaction reduces the coin inventory so that it cannot make correct change`, async () => {
+      await powerOnSystem();
+      currencyInventory.deleteCoinsFromInventory({quarters: 0, dimes: NUMBER_OF_DIMES - 1, nickels: NUMBER_OF_NICKELS - 1});
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.50');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.75');
+      vendingMechanismProductSelectAdapter.selectProduct(Products.CANDY);
+      const foundExactChangeMessage = await waitForVendingMachineToDisplay(VM_STR_EXACT_CHANGE_ONLY);
+      expect(foundExactChangeMessage).toBe(true);
+      await powerOffSystem();
+    });
 
+    it(`Should display 0.25 after entering ${VM_STR_EXACT_CHANGE_ONLY} mode and a quarter is inserted`, async () => {
+      await powerOnSystem();
+      currencyInventory.deleteCoinsFromInventory({quarters: NUMBER_OF_QUARTERS, dimes: NUMBER_OF_DIMES, nickels: NUMBER_OF_NICKELS});
+      await waitForVendingMachineToDisplay(VM_STR_EXACT_CHANGE_ONLY);
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      const found25Cents = await waitForVendingMachineToDisplay('0.25');
+      expect(found25Cents).toBe(true);
+      await powerOffSystem();
+    });
+
+    it(`Should return all coins in pending transaction after entering ${VM_STR_EXACT_CHANGE_ONLY} mode when coin return is activated`, async () => {
+      await powerOnSystem();
+      currencyInventory.deleteCoinsFromInventory({quarters: NUMBER_OF_QUARTERS, dimes: NUMBER_OF_DIMES, nickels: NUMBER_OF_NICKELS});
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.DIME);
+      await waitForVendingMachineToDisplay('0.35');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.NICKEL);
+      await waitForVendingMachineToDisplay('0.40');
+      mockCoinMechanismInsertedCoinsAdapter.setReturnCoinsStatusToTrue();
+      await waitForMachineToDispenseCoins(3);
+      const coinsDispensed = mockCoinMechanismMakeChangeAdapter.getCoinsDispensed();
+      expect(coinsDispensed.length).toBe(3);
+      expect(coinsDispensed.includes(Coins.QUARTER)).toBe(true);
+      expect(coinsDispensed.includes(Coins.DIME)).toBe(true);
+      expect(coinsDispensed.includes(Coins.NICKEL)).toBe(true);
+      await powerOffSystem();
+    });
+
+    it(`Should dispense CHIPS after entering ${VM_STR_EXACT_CHANGE_ONLY} mode after inserting 0.50 and selecting CHIPS`, async () => {
+      await powerOnSystem();
+      currencyInventory.deleteCoinsFromInventory({quarters: NUMBER_OF_QUARTERS, dimes: NUMBER_OF_DIMES, nickels: NUMBER_OF_NICKELS});
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.25');
+      mockCoinMechanismInsertedCoinsAdapter.insertCoin(Coins.QUARTER);
+      await waitForVendingMachineToDisplay('0.50');
+      vendingMechanismProductSelectAdapter.selectProduct(Products.CHIPS);
+      await waitForVendingMachineToDisplay(VM_STR_THANK_YOU);
+      const lastProductDispensed = mockVendingMechanismProductDispenseSimulatorAdapter.getLastProductDispensed();
+      expect(lastProductDispensed).toBe(Products.CHIPS);
+      await powerOffSystem();
+    });
 });
 
 async function waitForMachineToDispenseCoins(expectedNumberOfCoins: number): Promise<void> {
