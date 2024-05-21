@@ -3,6 +3,7 @@
 ** Until there's a real Vending Machine (probably never) we will be shipping the simulator as the product
 ** This is why we are importing simulator adapters below
 */
+import { appData } from './app-data';
 import { VendingMachine } from './VendingMachine';
 import { CoinMechanismInsertedCoinsSimulatorAdapter } from './CoinMechanismAdapters/CoinMechanismInsertedCoinsSimulatorAdapter';
 import { CoinMechanismDispenseCoinsSimulatorAdapter } from './CoinMechanismAdapters/CoinMechanismDispenseCoinsSimulatorAdapter';
@@ -24,7 +25,7 @@ const displaySimulatorAdapter = new DisplaySimulatorAdapter(terminal);
 const systemSimulatorAdapter = new SystemSimulatorAdapter();
 const vendingMechanismProductSelectSimulatorAdapter = new VendingMechanismProductSelectSimulatorAdapter(terminal);
 const vendingMechanismProductDispenseSimulatorAdapter = new VendingMechanismProductDispenseSimulatorAdapter(terminal);
-const currencyInventory = new CurrencyInventory({quarters: 50, dimes: 50, nickels: 50});
+const currencyInventory = new CurrencyInventory({quarters: appData.numberOfQuarters, dimes: appData.numberOfDimes, nickels: appData.numberOfNickels});
 const currencyHandler = new CurrencyHandler(coinMechanismInsertedCoinsSimulatorAdapter, coinMechanismDispenseCoinsSimulatorAdapter, currencyInventory);
 const vendingHandler = new VendingHandler(vendingMechanismProductSelectSimulatorAdapter, vendingMechanismProductDispenseSimulatorAdapter);
 const simulator = new Simulator(

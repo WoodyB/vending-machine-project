@@ -18,7 +18,8 @@ export enum States {
     POWER_DOWN = 'POWER_DOWN',
     MAKE_CHANGE = 'MAKE_CHANGE',
     RETURN_COINS = 'RETURN_COINS',
-    SOLD_OUT = 'SOLD_OUT'
+    SOLD_OUT = 'SOLD_OUT',
+    EXACT_CHANGE_ONLY = 'EXACT_CHANGE_ONLY'
 }
 
 export enum SystemEvents {

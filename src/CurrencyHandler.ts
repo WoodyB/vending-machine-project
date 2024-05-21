@@ -69,7 +69,16 @@ export class CurrencyHandler {
     this.dispenseCoins(this.pendingTransactionCoins);
     this.resetPendingTransactionTotal();
   }
+
+  public isConditionExactChangeOnly(): boolean {
+    const coinInventory = this.currencyInventory.getCoinInventory();
+    if (coinInventory.dimes < 1 && coinInventory.nickels < 2) {
+      return true;
+    }
+    return false;
+  }
   
+
   private dispenseCoins(coins: Coins[]): void {
 
     for (const coin of coins) {
