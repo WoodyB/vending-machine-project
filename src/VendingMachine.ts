@@ -13,7 +13,8 @@ import {
     VM_STR_VERSION,
     VM_STR_THANK_YOU,
     VM_STR_PRICE,
-    VM_STR_SOLD_OUT
+    VM_STR_SOLD_OUT,
+    VM_STR_EXACT_CHANGE_ONLY
 } from './constants/vending-machine-strings';
 
 export class VendingMachine {
@@ -85,6 +86,10 @@ export class VendingMachine {
                     await this.soldOutAction();
                 break;
 
+                case States.EXACT_CHANGE_ONLY:
+                    this.exactChangeOnlyAction();
+                break;
+
                 case States.POWER_DOWN:
                     this.powerDownAction();
                 break;                    
@@ -99,6 +104,11 @@ export class VendingMachine {
     }
     
     private idleAction(): void {
+        if (this.currencyHandler.isConditionExactChangeOnly()) {
+            this.state = States.EXACT_CHANGE_ONLY;
+            return;            
+        }
+    
         const pendingTotal = this.currencyHandler.readPendingTransactionTotal();
         const returnCoinsStatus = this.currencyHandler.readReturnCoinsStatus();
         
@@ -167,6 +177,34 @@ export class VendingMachine {
         this.displayAdapter.output(`${VM_STR_SOLD_OUT}`);
         await delay(1000);
         this.state = States.PENDING_TRANSACTION;
+    }
+
+    private exactChangeOnlyAction(): void {
+        const pendingTotal = this.currencyHandler.readPendingTransactionTotal();
+        const returnCoinsStatus = this.currencyHandler.readReturnCoinsStatus();
+        
+        if (returnCoinsStatus === true) {
+            this.state = States.RETURN_COINS;
+            return;
+        }
+
+        this.pendingTransactionTotal = pendingTotal.amount;
+        if ( pendingTotal.changed || this.productSelectedWithInsufficientFunds) {
+            this.state = States.PENDING_TRANSACTION;
+            return;
+        }
+        
+        if (this.pendingTransactionTotal === 0) {
+            this.displayAdapter.output(VM_STR_EXACT_CHANGE_ONLY);
+        }
+
+        this.productSelected = this.vendingHandler.readProductSelection();
+        if (this.productSelected != Products.NO_PRODUCT) {
+            this.state = States.PRODUCT_SELECTED;
+            return;
+        }
+
+        this.state = States.EXACT_CHANGE_ONLY;
     }
 
     private powerDownAction(): void {
