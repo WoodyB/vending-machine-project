@@ -24,9 +24,10 @@ jobs:
     - uses: actions/checkout@v4
 
     #git config user.name "${{ github.actor }}"
+    #git config user.name "Fairbanks"
     - name: Set git user name
       run: |
-        git config user.name "Fairbanks"
+        git config user.name "${{ github.actor }}"
         git config user.email "wbeverleyaws@gmail.com"
       env:
         GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
