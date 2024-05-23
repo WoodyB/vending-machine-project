@@ -4,7 +4,7 @@ on:
     branches: [ "main" ]
 env:
   GIT_USER: "${{ github.actor }}"
-  GIT_EMAIL: "${{ github.event.pusher.email }}"
+  GIT_EMAIL: "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
   
 permissions:
   contents: write
