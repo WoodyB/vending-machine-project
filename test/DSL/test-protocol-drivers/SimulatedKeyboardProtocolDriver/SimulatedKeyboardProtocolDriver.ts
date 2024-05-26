@@ -1,5 +1,5 @@
 import { BaseDriver } from '../../bases/BaseDriver';
-import { Coins, Products } from '../../../../src/types';
+import { Coins, Products, CoinsInventory } from '../../../../src/types';
 import { CoinMechanismInsertedCoinsSimulatorAdapter } from '../../../../src/CoinMechanismAdapters/CoinMechanismInsertedCoinsSimulatorAdapter';
 import { CoinMechanismDispenseCoinsSimulatorAdapter } from '../../../../src/CoinMechanismAdapters/CoinMechanismDispenseCoinsSimulatorAdapter'
 import { VendingMechanismProductSelectSimulatorAdapter } from '../../../../src/VendingMechanismAdapters/VendingMechanismProductSelectSimulatorAdapter'
@@ -17,7 +17,8 @@ import { delay } from '../../../../src/utils/delay';
 import {
     VM_STR_INSERT_COIN,
     VM_STR_DISPLAY,
-    VM_STR_ACTION
+    VM_STR_ACTION,
+    VM_STR_EXACT_CHANGE_ONLY
 } from '../../../../src/constants/vending-machine-strings';
 
 
@@ -34,7 +35,7 @@ export class SimulatedKeyboardDriver extends BaseDriver {
     private simulator!: Simulator;
     private fakeTerminal!: FakeTerminal;
     private simulatedKeyboardInputHandler!: SimulatedKeyboardInputHandler;
-    private TIMEOUT: number = 100;
+    private TIMEOUT: number = 60;
 
     private coinKeyMap: Record<Coins, string> = {
         [Coins.QUARTER]: 'q',
@@ -97,16 +98,15 @@ export class SimulatedKeyboardDriver extends BaseDriver {
     }
 
     public override async insertCoin(coin: Coins): Promise<void> {
-        await this.waitForVendingMachineToDisplay(`${VM_STR_DISPLAY} ${VM_STR_INSERT_COIN}`);
+        await this.waitForVendingMachineToDisplayEitherString1OrString2(`${VM_STR_DISPLAY} ${VM_STR_INSERT_COIN}`, `${VM_STR_DISPLAY} ${VM_STR_EXACT_CHANGE_ONLY}`);
 
         const coinKey = this.coinKeyMap[coin];
         if (coinKey) {
             await this.simulatedKeyboardInputHandler.simulateKeyPress(coinKey);
         }
+        await delay(200); //Inner key typing delay between coin and enter
         await this.simulatedKeyboardInputHandler.simulateKeyPress('\r');
-        // This works but it's not optimal. What would be better maybe is
-        // waiting for the fake terminal to display "DISPLAY: x.xx"
-        await delay(200);
+        await this.waitForVendingMachineToDisplayRegExString(`${VM_STR_DISPLAY} \\d.\\d\\d`);        
     }
 
     public override async selectProduct(product: Products): Promise<void> {
@@ -148,6 +148,16 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         this.fakeTerminal.clearActionMessages();
     }
 
+    public override clearAllSavedOutputMessages(): void {
+        this.fakeTerminal.clearAllMessages();
+    }
+
+    public override setCoinInventory(newInventoryOfCoins: CoinsInventory): void {
+        const currentCoinInventory = this.currencyInventory.getCoinInventory();
+        this.currencyInventory.deleteCoinsFromInventory(currentCoinInventory);
+        this.currencyInventory.addCoinsToInventory(newInventoryOfCoins);
+    }
+
     private fakeSimulatorStop(): void {
         return;
     }
@@ -165,4 +175,38 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         }
         return false;
     }
+
+    private async waitForVendingMachineToDisplayEitherString1OrString2(expectedDisplayOutput1: string, expectedDisplayOutput2: string): Promise<boolean> {
+        let count = this.TIMEOUT;
+
+        while (count > 0) {
+            const stringsDisplayed = this.fakeTerminal.getStringsDisplayed();
+            if (stringsDisplayed.includes(expectedDisplayOutput1)) {
+                return true;
+            }
+            if (stringsDisplayed.includes(expectedDisplayOutput2)) {
+                return true;
+            }
+            await delay(50);
+            count--;
+        }
+        return false;
+    }
+
+    private async waitForVendingMachineToDisplayRegExString(expectedRegExDisplayOutput: string): Promise<boolean> {
+        let count = this.TIMEOUT;
+
+        while (count > 0) {
+            const stringsDisplayed = this.fakeTerminal.getStringsDisplayed();
+            const regex = new RegExp(expectedRegExDisplayOutput, 'g');
+            for (const string of stringsDisplayed)
+            if ( regex.test(string) ) {
+                return true;
+              }             
+            await delay(50);
+            count--;
+        }
+        return false;
+    }
+
 }
