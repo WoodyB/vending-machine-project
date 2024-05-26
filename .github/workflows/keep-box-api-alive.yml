@@ -1,0 +1,94 @@
+name: Keep Alive For Box.com API
+
+on:
+    workflow_dispatch:
+    schedule:
+      - cron:  '0 2 * * *'
+jobs:
+    keep_box_api_alive:
+        concurrency:
+            group: create_release
+        runs-on: ubuntu-latest
+        steps:
+          - name: Fetch Run ID For Artifact    
+            id: fetch-runid
+            run: |
+              run_id=$(curl -s "https://api.github.com/repos/WoodyB/vending-machine-project/actions/artifacts?name=fester-honker" | jq -r '.artifacts[0].workflow_run.id')
+              echo "run_id of workflow that produced the artifact is $run_id"
+              echo "run_id=$run_id" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
+          
+          - name: Download Artifact
+            uses: actions/download-artifact@v4
+            with:
+              name: fester-honker
+              github-token: ${{ secrets.USER_TOKEN }}
+              merge-multiple: false
+              repository: WoodyB/vending-machine-project
+              run-id: ${{ env.run_id }}
+          
+          - name: Get Access Token For Box
+            run: |
+              echo "Use Box API to get a fresh access token"
+              encrypted_fester_honker=$(cat fester-honker.txt)
+                      
+              if [ -z "$encrypted_fester_honker" ]; then
+                echo "Error: fester-honker.txt is empty. Exiting."
+                exit 1
+              fi
+      
+              fester_honker=$(echo "$encrypted_fester_honker" | openssl enc -d -base64 -pbkdf2 -nopad -nosalt -k ${{secrets.ENCRYPTION_KEY}})
+              echo "::add-mask::$fester_honker"        
+      
+              response=$(curl -s -i -X POST "https://api.box.com/oauth2/token" \
+                 -H "content-type: application/x-www-form-urlencoded" \
+                 -d "client_id=${{ secrets.BOX_CLIENT_ID }}" \
+                 -d "client_secret=${{ secrets.BOX_CLIENT_SECRET }}" \
+                 -d "refresh_token=$fester_honker" \
+                 -d "grant_type=refresh_token" 2>&1)
+      
+              http_status=$(echo "$response" | head -n 1 | awk '{print $2}')    
+              if [ "$http_status" -ge 400 ]; then
+                  echo "HTTP request failed with status code $http_status"
+                  exit 1
+              fi
+      
+              access_token=$(echo "$response" | grep -o '"access_token":"[^"]*' | sed 's/"access_token":"//')
+              echo "::add-mask::$access_token"
+      
+              new_fester_honker=$(echo "$response" | grep -o '"refresh_token":"[^"]*' | sed 's/"refresh_token":"//')
+              echo "::add-mask::$new_fester_honker"
+              
+              new_encrypted_fester_honker=$(echo "$new_fester_honker" | openssl enc -e -base64 -pbkdf2 -nopad -nosalt -k ${{secrets.ENCRYPTION_KEY}})
+              echo "::add-mask::$new_encrypted_fester_honker"        
+              
+              echo "access_token=$access_token" >> $GITHUB_ENV
+              echo "$new_encrypted_fester_honker" > fester-honker.txt
+      
+              if [ -z "$access_token" ]; then
+                echo "Error: access_token is empty. Exiting."
+                exit 1
+              fi
+              
+              if [ -z "$new_encrypted_fester_honker" ]; then
+                echo "Error: new_encrypted_fester_honker is empty. Exiting."
+                exit 1
+              fi
+                                      
+          - name: Delete Old Artifact   
+            run: |
+              artifact_id=$(curl -s -X GET \
+                -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
+                "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | \
+                jq -r '.artifacts[] | select(.name == "fester-honker") | .id')
+            
+              curl -X DELETE \
+                -H "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
+                "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id"    
+                                            
+          - name: Upload New Artifact
+            uses: actions/upload-artifact@v4
+            with:
+              name: fester-honker
+              path: fester-honker.txt
+
+          
