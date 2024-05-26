@@ -1,4 +1,4 @@
-import { Coins, Products } from '../../../src/types';
+import { Coins, Products, CoinsInventory } from '../../../src/types';
 
 export abstract class BaseDriver {
     public async setup(): Promise<void> {
@@ -38,13 +38,17 @@ export abstract class BaseDriver {
         this.failWithMethodNotImplemented(`clearSavedActionOutputMessages()`);
     }
 
-    public clearSavedAllOutputMessages(): void {
-        this.failWithMethodNotImplemented(`clearSavedAllOutputMessages()`);
+    public clearAllSavedOutputMessages(): void {
+        this.failWithMethodNotImplemented(`clearAllSavedOutputMessages()`);
     }  
 
     public async verifyActionOutput(str: string): Promise<boolean> {
         this.failWithMethodNotImplemented(`verifyActionOutput(${str}))`);
         return false;
+    }
+
+    public setCoinInventory(inventoryOfCoins: CoinsInventory): void {
+        this.failWithMethodNotImplemented(`setCoinInventory(${inventoryOfCoins}))`);
     }
 
     private failWithMethodNotImplemented(methodName: string): void {
