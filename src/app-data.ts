@@ -18,9 +18,10 @@ export const appData = {
     ** Start Money
     ** 
     ** It is OK to modify these values for testing purposes in bin/app-data.js.
-    ** Please DO NOT modify these default values directly in src/app-data.ts
+    ** Please DO NOT modify these default values directly in src/app-data.ts before
+    ** checking with WoodyB
     */
-    numberOfQuarters: 10,
-    numberOfDimes: 10,
-    numberOfNickels: 20
+    numberOfQuarters: 0,
+    numberOfDimes: 0,
+    numberOfNickels: 2
 }
