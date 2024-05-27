@@ -55,7 +55,7 @@ export class VendingMachine {
                 break;
                 
                 case States.IDLE:
-                    this.idleAction();
+                    this.idleAction(States.IDLE);
                 break;
 
                 case States.PENDING_TRANSACTION:
@@ -87,7 +87,7 @@ export class VendingMachine {
                 break;
 
                 case States.EXACT_CHANGE_ONLY:
-                    this.exactChangeOnlyAction();
+                    this.idleAction(States.EXACT_CHANGE_ONLY);
                 break;
 
                 case States.POWER_DOWN:
@@ -103,8 +103,8 @@ export class VendingMachine {
         this.state = States.IDLE;
     }
     
-    private idleAction(): void {
-        if (this.currencyHandler.isConditionExactChangeOnly()) {
+    private idleAction(state: States): void {
+        if (state === States.IDLE && this.currencyHandler.isConditionExactChangeOnly()) {
             this.state = States.EXACT_CHANGE_ONLY;
             return;            
         }
@@ -123,8 +123,12 @@ export class VendingMachine {
             return;
         }
         
-        if (this.pendingTransactionTotal === 0) {
+        if (this.pendingTransactionTotal === 0 && state === States.IDLE) {
             this.displayAdapter.output(VM_STR_INSERT_COIN);
+        }
+
+        if (this.pendingTransactionTotal === 0 && state === States.EXACT_CHANGE_ONLY) {
+            this.displayAdapter.output(VM_STR_EXACT_CHANGE_ONLY);
         }
 
         this.productSelected = this.vendingHandler.readProductSelection();
@@ -132,8 +136,6 @@ export class VendingMachine {
             this.state = States.PRODUCT_SELECTED;
             return;
         }
-
-        this.state = States.IDLE;
     }
 
     private pendingTransactionAction(): void {
@@ -177,34 +179,6 @@ export class VendingMachine {
         this.displayAdapter.output(`${VM_STR_SOLD_OUT}`);
         await delay(1000);
         this.state = States.PENDING_TRANSACTION;
-    }
-
-    private exactChangeOnlyAction(): void {
-        const pendingTotal = this.currencyHandler.readPendingTransactionTotal();
-        const returnCoinsStatus = this.currencyHandler.readReturnCoinsStatus();
-        
-        if (returnCoinsStatus === true) {
-            this.state = States.RETURN_COINS;
-            return;
-        }
-
-        this.pendingTransactionTotal = pendingTotal.amount;
-        if ( pendingTotal.changed || this.productSelectedWithInsufficientFunds) {
-            this.state = States.PENDING_TRANSACTION;
-            return;
-        }
-        
-        if (this.pendingTransactionTotal === 0) {
-            this.displayAdapter.output(VM_STR_EXACT_CHANGE_ONLY);
-        }
-
-        this.productSelected = this.vendingHandler.readProductSelection();
-        if (this.productSelected != Products.NO_PRODUCT) {
-            this.state = States.PRODUCT_SELECTED;
-            return;
-        }
-
-        this.state = States.EXACT_CHANGE_ONLY;
     }
 
     private powerDownAction(): void {
