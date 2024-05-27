@@ -1,5 +1,7 @@
 # Directory Of Developer's Log
 
+[<< Back to Project Code View](https://github.com/WoodyB/vending-machine-project)
+
 * [2023.12.29 Kickoff](https://woodyb.github.io/vending-machine-project/design/developers-log/2023.12.29-kickoff)
 * [2024.01.02](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.01.02)
 * [2024.01.09](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.01.09)
@@ -22,6 +24,7 @@
 * [2024.05.06](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.05.06)
 * [2024.05.10](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.05.10)
 * [2024.05.22](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.05.22)
+* [2024.05.27](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.05.27)
 
 ## Supporting Documents
 
