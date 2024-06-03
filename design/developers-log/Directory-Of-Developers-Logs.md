@@ -26,9 +26,12 @@
 * [2024.05.22](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.05.22)
 * [2024.05.27](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.05.27)
 * [2024.05.31](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.05.31)
+* [2024.06.03](https://woodyb.github.io/vending-machine-project/design/developers-log/2024.06.03)
 
 ## Supporting Documents
 
 * [CD Deployment Pipelines](https://woodyb.github.io/vending-machine-project/design/CD-Deployment-Pipelines.pdf)
 * [Vending Machine Diagram](https://woodyb.github.io/vending-machine-project/design/vending-machine-diagram.pdf)
 * [Harnessing The Power of Hexagonal Architecture](https://woodyb.github.io/vending-machine-project/design/Harnessing-The-Power-of-Hexagonal-Architecture.pdf)
+* [Vending Machine Project Retrospective](https://woodyb.github.io/vending-machine-project/design/vending-machine-project-retrospective.pdf)
+
