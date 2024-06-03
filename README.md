@@ -34,6 +34,7 @@ Viewing the developer's log via GitHubs file viewer works but it's a better expe
 - [CD Deployment Pipelines](https://woodyb.github.io/vending-machine-project/design/CD-Deployment-Pipelines.pdf)
 - [Vending Machine Diagram](https://woodyb.github.io/vending-machine-project/design/vending-machine-diagram.pdf)
 - [Harnessing The Power of Hexagonal Architecture](https://woodyb.github.io/vending-machine-project/design/Harnessing-The-Power-of-Hexagonal-Architecture.pdf)
+- [Vending Machine Project Retrospective](https://woodyb.github.io/vending-machine-project/design/vending-machine-project-retrospective.pdf)
 
 ## Why The Vending Machine Code Kata
 
