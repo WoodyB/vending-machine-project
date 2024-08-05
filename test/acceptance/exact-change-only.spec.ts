@@ -4,6 +4,7 @@ import {
     VM_STR_PRODUCT_DISPENSED,
     VM_STR_EXACT_CHANGE_ONLY,
     VM_STR_INSERT_COIN,
+    VM_STR_COIN_WAS_DISPENSED
 } from '../../src/constants/vending-machine-strings'
 
 jest.setTimeout(30000);
@@ -49,5 +50,24 @@ describe("Vending Machine", () => {
         const foundInsertCoinMessage = await driver.verifyDisplayOutput(VM_STR_INSERT_COIN);
         expect(foundInsertCoinMessage).toBe(true);
     });
-
+    
+    it(`Should return correct change when in ${VM_STR_EXACT_CHANGE_ONLY} and customer inserts needed coins in same transaction issue #532`, async () => {
+        driver.setCoinInventory({quarters: 10, dimes: 0, nickels: 0});
+        const foundExactChangeOnlyMessage = await driver.verifyDisplayOutput(VM_STR_EXACT_CHANGE_ONLY);
+        if (!foundExactChangeOnlyMessage) {
+            throw Error(`Cannot continue because ${VM_STR_EXACT_CHANGE_ONLY} was not found`);
+        }
+        await driver.insertCoin(Coins.DIME);
+        await driver.insertCoin(Coins.DIME);
+        await driver.insertCoin(Coins.DIME);
+        await driver.insertCoin(Coins.DIME);
+        await driver.insertCoin(Coins.DIME);
+        await driver.insertCoin(Coins.DIME);
+        await driver.insertCoin(Coins.NICKEL);
+        await driver.selectProduct(Products.CHIPS);
+        const foundDimeDispensed = await driver.verifyActionOutput(`${Coins.DIME} ${VM_STR_COIN_WAS_DISPENSED}`);
+        expect(foundDimeDispensed).toBe(true);
+        const foundNickelDispensed = await driver.verifyActionOutput(`${Coins.NICKEL} ${VM_STR_COIN_WAS_DISPENSED}`);
+        expect(foundNickelDispensed).toBe(true);
+    });
 });

@@ -1,4 +1,4 @@
-import { CoinsInventory } from './types';
+import { CoinsInventory, Coins } from './types';
 
 export class CurrencyInventory {
     private inventoryOfCoins: CoinsInventory;
@@ -14,6 +14,23 @@ export class CurrencyInventory {
     public addCoinsToInventory(inventoryOfCoinsToAdd: CoinsInventory): void {
         for (const coinType of Object.keys(inventoryOfCoinsToAdd) as (keyof CoinsInventory)[]) {
             this.inventoryOfCoins[coinType] += inventoryOfCoinsToAdd[coinType];
+        }
+    }
+
+    public addCoinToInventory(coin: Coins): void {
+        if (coin === Coins.QUARTER) {
+            this.inventoryOfCoins.quarters += 1;
+            return;
+        }
+    
+        if (coin === Coins.DIME) {
+            this.inventoryOfCoins.dimes += 1;
+            return;
+        }
+
+        if (coin === Coins.NICKEL) {
+            this.inventoryOfCoins.nickels += 1;
+            return;
         }
     }
 

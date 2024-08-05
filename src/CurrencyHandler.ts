@@ -44,15 +44,14 @@ export class CurrencyHandler {
         this.pendingTransactionTotal = coinHandler.handleCoin(this.pendingTransactionTotal);
         result.changed = true;
         this.pendingTransactionCoins.push(coin);
+        this.currencyInventory.addCoinToInventory(coin);
     }
     result.amount = this.pendingTransactionTotal;
     return result;
 }
 
   public transactionCompleted(): void {
-    const inventoryOfCoinsToAdd = this.convertArrayOfCoinsToCoinsInventory(this.pendingTransactionCoins);
-    this.currencyInventory.addCoinsToInventory(inventoryOfCoinsToAdd);
-      this.resetPendingTransactionTotal();    
+    this.resetPendingTransactionTotal();    
   }
 
   public dispenseChange(totalSubmitted: number, productCost: number): void {
