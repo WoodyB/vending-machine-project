@@ -1,5 +1,6 @@
 name: NodeJS Continuous Delivery
 
+# It may be a bad idea to have both the workflow dispatch trigger enabled at the same time as the schedule trigger
 on:
   workflow_dispatch:
   schedule:
