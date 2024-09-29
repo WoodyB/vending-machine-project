@@ -83,6 +83,7 @@ jobs:
       with:
         name: rc-${{ github.run_number }}-binaries
         path: ./
+        include-hidden-files: true
   
   merge_to_main:
     needs: build_and_test
