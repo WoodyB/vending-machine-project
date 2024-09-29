@@ -76,10 +76,11 @@ jobs:
     - name: Print app-data.js
       run: cat ./bin/app-data.js
 
+    # chmod a+x node_modules/.bin/jest  
     - name: Run Acceptance Tests
       id: acceptance_tests
       run: |
-        chmod a+x node_modules/.bin/jest
+        ls node_modules/.bin
         npm run test:acceptance
       continue-on-error: true
 
