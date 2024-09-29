@@ -1,10 +1,10 @@
 import { ProtocolDriverTypes } from './constants';
+import { TestProtocolDriverInterface } from './interfaces';
 import { SimulatedKeyboardDriver } from './test-protocol-drivers/SimulatedKeyboardProtocolDriver/SimulatedKeyboardProtocolDriver';
-import { BaseDriver } from './bases/BaseDriver';
 import { STDIODriver } from './test-protocol-drivers/STDIOProtocolDriver/STDIOProtocolDriver';
 
 
-export function determineProtocolDriver(): BaseDriver {
+export function determineProtocolDriver(): TestProtocolDriverInterface {
     const protocolDriverType = getProtocolDriverType();
     return resolveDriverType(protocolDriverType);
 }
@@ -17,8 +17,8 @@ function getProtocolDriverType(): ProtocolDriverTypes {
     return ProtocolDriverTypes[process.env.PROTOCOL_DRIVER as keyof typeof ProtocolDriverTypes];
 }
 
-function resolveDriverType(type: ProtocolDriverTypes): BaseDriver {
-    const driverMap = new Map<ProtocolDriverTypes, { new (): BaseDriver }>();
+function resolveDriverType(type: ProtocolDriverTypes): TestProtocolDriverInterface {
+    const driverMap = new Map<ProtocolDriverTypes, { new (): TestProtocolDriverInterface }>();
 
     driverMap.set(ProtocolDriverTypes.SIM_KEYBOARD, SimulatedKeyboardDriver);
     driverMap.set(ProtocolDriverTypes.STDIO, STDIODriver);
