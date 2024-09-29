@@ -1,4 +1,4 @@
-import { BaseDriver } from '../../bases/BaseDriver';
+import { TestProtocolDriverInterface } from '../../interfaces';
 import { Coins, Products, CoinsInventory } from '../../../../src/types';
 import { CoinMechanismInsertedCoinsSimulatorAdapter } from '../../../../src/CoinMechanismAdapters/CoinMechanismInsertedCoinsSimulatorAdapter';
 import { CoinMechanismDispenseCoinsSimulatorAdapter } from '../../../../src/CoinMechanismAdapters/CoinMechanismDispenseCoinsSimulatorAdapter'
@@ -22,7 +22,7 @@ import {
 } from '../../../../src/constants/vending-machine-strings';
 
 
-export class SimulatedKeyboardDriver extends BaseDriver {
+export class SimulatedKeyboardDriver implements TestProtocolDriverInterface {
     private coinMechanismInsertedCoinsSimulatorAdapter!: CoinMechanismInsertedCoinsSimulatorAdapter;
     private coinMechanismDispenseCoinsSimulatorAdapter!: CoinMechanismDispenseCoinsSimulatorAdapter;
     private currencyInventory!: CurrencyInventory;
@@ -59,11 +59,7 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         [Products.NO_PRODUCT]: ''
     }
 
-    constructor() {
-        super();
-    }
-
-    public override async setup(): Promise<void> {
+    async setup(): Promise<void> {
         this.fakeTerminal = new FakeTerminal();
         this.coinMechanismInsertedCoinsSimulatorAdapter = new CoinMechanismInsertedCoinsSimulatorAdapter(this.fakeTerminal);
         this.coinMechanismDispenseCoinsSimulatorAdapter = new CoinMechanismDispenseCoinsSimulatorAdapter(this.fakeTerminal);
@@ -92,12 +88,12 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         this.simulatedKeyboardInputHandler = new SimulatedKeyboardInputHandler(this.simulator);
     }
 
-    public override async teardown(): Promise<void> {
+    public async teardown(): Promise<void> {
         await this.simulatedKeyboardInputHandler.simulateKeyPress('x');
         await delay(1000);
     }
 
-    public override async insertCoin(coin: Coins): Promise<void> {
+    public async insertCoin(coin: Coins): Promise<void> {
         await this.waitForVendingMachineToDisplayEitherString1OrString2(`${VM_STR_DISPLAY} ${VM_STR_INSERT_COIN}`, `${VM_STR_DISPLAY} ${VM_STR_EXACT_CHANGE_ONLY}`);
 
         const coinKey = this.coinKeyMap[coin];
@@ -109,7 +105,7 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         await this.waitForVendingMachineToDisplayRegExString(`${VM_STR_DISPLAY} \\d.\\d\\d`);        
     }
 
-    public override async selectProduct(product: Products): Promise<void> {
+    public async selectProduct(product: Products): Promise<void> {
         const productKey = this.productKeyMap[product];
         if (productKey) {
             await this.simulatedKeyboardInputHandler.simulateKeyPress(productKey);
@@ -118,20 +114,20 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         await this.simulatedKeyboardInputHandler.simulateKeyPress('\r');
     }
 
-    public override async verifyDisplayOutput(str: string): Promise<boolean> {
+    public async verifyDisplayOutput(str: string): Promise<boolean> {
         return this.waitForVendingMachineToDisplay(`${VM_STR_DISPLAY} ${str}`);
     }
 
-    public override async verifyActionOutput(str: string): Promise<boolean> {
+    public async verifyActionOutput(str: string): Promise<boolean> {
         return this.waitForVendingMachineToDisplay(`${VM_STR_ACTION} ${str}`);
     }
 
-    public override async returnCoins(): Promise<void> {
+    public async returnCoins(): Promise<void> {
         await this.simulatedKeyboardInputHandler.simulateKeyPress('r');
         await this.simulatedKeyboardInputHandler.simulateKeyPress('\r');    
     }
 
-    public override async simulateProductEmptyEvent(product: Products): Promise<void> {
+    public async simulateProductEmptyEvent(product: Products): Promise<void> {
         const outOfStockKey = this.outOfStockKeyMap[product];
         if (outOfStockKey) {
             await this.simulatedKeyboardInputHandler.simulateKeyPress(outOfStockKey);
@@ -140,19 +136,19 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         await this.simulatedKeyboardInputHandler.simulateKeyPress('\r');
     }
 
-    public override clearSavedDisplayOutputMessages(): void {
+    public clearSavedDisplayOutputMessages(): void {
         this.fakeTerminal.clearDisplayMessages();
     }
 
-    public override clearSavedActionOutputMessages(): void {
+    public clearSavedActionOutputMessages(): void {
         this.fakeTerminal.clearActionMessages();
     }
 
-    public override clearAllSavedOutputMessages(): void {
+    public clearAllSavedOutputMessages(): void {
         this.fakeTerminal.clearAllMessages();
     }
 
-    public override setCoinInventory(newInventoryOfCoins: CoinsInventory): void {
+    public setCoinInventory(newInventoryOfCoins: CoinsInventory): void {
         const currentCoinInventory = this.currencyInventory.getCoinInventory();
         this.currencyInventory.deleteCoinsFromInventory(currentCoinInventory);
         this.currencyInventory.addCoinsToInventory(newInventoryOfCoins);
@@ -208,5 +204,4 @@ export class SimulatedKeyboardDriver extends BaseDriver {
         }
         return false;
     }
-
 }
