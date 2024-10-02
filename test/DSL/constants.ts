@@ -3,3 +3,4 @@ export enum ProtocolDriverTypes {
     STDIO = 'STDIO',
     MANUAL = 'MANUAL'
 }
+export const MANUAL_TEST_TIMEOUT = 50000;
