@@ -6,17 +6,18 @@ import {
     VM_STR_COIN_WAS_DISPENSED
 } from '../../src/constants/vending-machine-strings'
 
-jest.setTimeout(15000);
 
 describe("Vending Machine", () => {
     const driver = determineProtocolDriver();
 
     beforeEach(async () => {
         await driver.setup();
+        console.log(`TEST: ${expect.getState().currentTestName}`);
     });
 
     afterEach(async () => {
         await driver.teardown();
+        console.log('');
     });
 
     it('Should return 10 cents change after inserting three quarters and a 65 cents product is purchased', async () => {

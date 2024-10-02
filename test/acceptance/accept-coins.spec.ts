@@ -2,17 +2,17 @@ import { determineProtocolDriver } from '../DSL/determineProtocolDriver';
 import { Coins } from '../../src/types';
 import { VM_STR_INSERT_COIN, VM_STR_COIN_REJECTED } from '../../src/constants/vending-machine-strings'
 
-jest.setTimeout(15000);
-
 describe("Vending Machine", () => {
     const driver = determineProtocolDriver();
-
+    
     beforeEach(async () => {
         await driver.setup();
+        console.log(`TEST: ${expect.getState().currentTestName}`);
     });
 
     afterEach(async () => {
         await driver.teardown();
+        console.log('');
     });
 
     it(`should display ${VM_STR_INSERT_COIN}`, async () => {

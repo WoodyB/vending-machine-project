@@ -8,17 +8,18 @@ import {
     VM_STR_INSERT_COIN
 } from '../../src/constants/vending-machine-strings'
 
-jest.setTimeout(15000);
 
 describe("Vending Machine", () => {
     const driver = determineProtocolDriver();
 
     beforeEach(async () => {
         await driver.setup();
+        console.log(`TEST: ${expect.getState().currentTestName}`);
     });
 
     afterEach(async () => {
         await driver.teardown();
+        console.log('');
     });
 
     it(`should dispense ${Products.COLA } after inserting four quarters and selecting ${Products.COLA }`, async () => {
