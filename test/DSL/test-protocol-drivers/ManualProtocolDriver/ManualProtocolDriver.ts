@@ -1,54 +1,56 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Coins, CoinsInventory, Products } from "../../../../src/types";
 import { TestProtocolDriverInterface } from "../../interfaces";
+import { ManualTester } from "./ManualTester";
 
 export class ManualProtocolDriver implements TestProtocolDriverInterface {
+    private manualTester = new ManualTester();
+
     public setup(): Promise<void> {
-        throw Error('Not implemented');
+        return this.manualTester.instruct('SETUP: Start the Vending Machine in a terminal');
     }
 
     public teardown(): Promise<void> {
-        throw Error('Not implemented');
+        return this.manualTester.instruct('TEARDOWN: Shut down the Vending Machine in the terminal');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public insertCoin(coin: Coins): Promise<void> {
-        throw Error('Not implemented');
+        return this.manualTester.instruct(`Insert ${coin}`);
     }
     
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public selectProduct(product: Products): Promise<void> {
-        throw Error('Not implemented');
+        return this.manualTester.instruct(`Select ${product}`);
     }
 
     public returnCoins(): Promise<void> {
-        throw Error('Not implemented');
+        return this.manualTester.instruct('Activate coin return');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public simulateProductEmptyEvent(product: Products): Promise<void> {
-        throw Error('Not implemented');
+        return this.manualTester.instruct(`Simulate product empty ${product}`);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public verifyDisplayOutput(str: string): Promise<boolean> {
-        throw Error('Not implemented');
+        return this.manualTester.queryYesNo(`Did message "${str}" display`);
     }
 
     public clearSavedDisplayOutputMessages(): void {
-        throw Error('Not implemented');
+        // Nothing to do in manual mode
+        return;
     }
 
     public clearSavedActionOutputMessages(): void {
-        throw Error('Not implemented');
+        // Nothing to do in manual mode
+        return;
     }
 
     public clearAllSavedOutputMessages(): void {
-        throw Error('Not implemented');
+        // Nothing to do in manual mode
+        return;
     }
 
     public verifyActionOutput(str: string): Promise<boolean> {
-        throw Error('Not implemented');
+        return this.manualTester.queryYesNo(`Did "${str}" action display`);
     }
 
     public setCoinInventory(inventoryOfCoins: CoinsInventory): void {
