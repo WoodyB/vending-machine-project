@@ -11,14 +11,18 @@ import {
 describe("Vending Machine", () => {
     const driver = determineProtocolDriver();
 
+    beforeAll(() => {
+        console.log(`TEST SCRIPT: ${expect.getState().testPath}`);
+    });
+
     beforeEach(async () => {
+        console.log(`TEST CASE: ${expect.getState().currentTestName}`);
         await driver.setup();
-        console.log(`TEST: ${expect.getState().currentTestName}`);
     });
 
     afterEach(async () => {
         await driver.teardown();
-        console.log('');
+        console.log('END TEST CASE\n');
     });
 
     it(`Should display ${VM_STR_EXACT_CHANGE_ONLY} after a transaction reduces the coin inventory so that it cannot make correct change`, async () => {

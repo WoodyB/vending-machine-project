@@ -6,14 +6,18 @@ import { VM_STR_COIN_WAS_DISPENSED, VM_STR_INSERT_COIN } from '../../src/constan
 describe("Vending Machine", () => {
     const driver = determineProtocolDriver();
 
+    beforeAll(() => {
+        console.log(`TEST SCRIPT: ${expect.getState().testPath}`);
+    });
+
     beforeEach(async () => {
+        console.log(`TEST CASE: ${expect.getState().currentTestName}`);
         await driver.setup();
-        console.log(`TEST: ${expect.getState().currentTestName}`);
     });
 
     afterEach(async () => {
         await driver.teardown();
-        console.log('');
+        console.log('END TEST CASE\n');
     });
 
     it('should return a quarter, a dime and a nickel after they are inserted and coin return is activated', async () => {
