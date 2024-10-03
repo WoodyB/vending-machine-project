@@ -10,6 +10,7 @@
     "test:commit": "jest test/commit/",
     "test:acceptance": "node node_modules/jest/bin/jest --silent test/acceptance/ test/smoke/",
     "test:acceptance:manual": "CI=true PROTOCOL_DRIVER=MANUAL node node_modules/jest/bin/jest --testTimeout=60000 --maxWorkers=1 --config ./jest.config.manual.js test/acceptance/",
+    "test:acceptance:manual:document": "echo See file manual-test-cases.txt when finished && CI=true PROTOCOL_DRIVER=MANUAL DOCUMENT=true node node_modules/jest/bin/jest --testTimeout=60000 --maxWorkers=1 --config ./jest.config.manual.doc.js test/acceptance/ > manual-test-cases.txt && exit 1",
     "test:all": "jest --coverage test/",
     "lint": "eslint ./src --ext .ts",
     "start": "node bin/index.js"

@@ -1,11 +1,11 @@
 module.exports = {
-    setupFilesAfterEnv: ["./config.console.js"],
-    reporters: [
-      "default",
-      ["./node_modules/jest-html-reporter", {
-        "pageTitle": "Test Report"
-      }]
+    setupFilesAfterEnv: [
+        "./config.console.js",
+        // NOTE: Here we would substitute a console that logs to a file(s).
+        // For now we are just creating a file using a linus > in the package.json
+        // script to create manual-test-cases.txt
     ],
+    reporters: [],
     roots: [
       "<rootDir>/"
     ],

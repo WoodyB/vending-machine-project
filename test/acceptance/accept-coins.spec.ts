@@ -4,15 +4,18 @@ import { VM_STR_INSERT_COIN, VM_STR_COIN_REJECTED } from '../../src/constants/ve
 
 describe("Vending Machine", () => {
     const driver = determineProtocolDriver();
-    
+    beforeAll(() => {
+        console.log(`TEST SCRIPT: ${expect.getState().testPath}`);
+    });
+
     beforeEach(async () => {
+        console.log(`TEST CASE: ${expect.getState().currentTestName}`);
         await driver.setup();
-        console.log(`TEST: ${expect.getState().currentTestName}`);
     });
 
     afterEach(async () => {
         await driver.teardown();
-        console.log('');
+        console.log('END TEST CASE\n');
     });
 
     it(`should display ${VM_STR_INSERT_COIN}`, async () => {

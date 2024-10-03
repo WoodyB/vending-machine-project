@@ -4,5 +4,7 @@ coverage/
 bin/
 .DS_Store
 test-report.html
+manual-test-cases.txt
+
 
 
