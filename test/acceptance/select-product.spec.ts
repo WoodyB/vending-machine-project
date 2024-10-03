@@ -12,14 +12,18 @@ import {
 describe("Vending Machine", () => {
     const driver = determineProtocolDriver();
 
+    beforeAll(() => {
+        console.log(`TEST SCRIPT: ${expect.getState().testPath}`);
+    });
+
     beforeEach(async () => {
+        console.log(`TEST CASE: ${expect.getState().currentTestName}`);
         await driver.setup();
-        console.log(`TEST: ${expect.getState().currentTestName}`);
     });
 
     afterEach(async () => {
         await driver.teardown();
-        console.log('');
+        console.log('END TEST CASE\n');
     });
 
     it(`should dispense ${Products.COLA } after inserting four quarters and selecting ${Products.COLA }`, async () => {
