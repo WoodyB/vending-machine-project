@@ -56,8 +56,6 @@ jobs:
       group: acceptance_stage
     runs-on: ubuntu-latest
     if: ${{ needs.determine_latest_rc.outputs.CONDITION_MET == 'true' }}
-    env:
-      GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
     steps:
     - name: Fetch The Binaries For The RC    
       id: fetch-binaries
